@@ -1,20 +1,20 @@
 
 
 body {
-    color: DarkGreen;
-    background-color: Azure:
-}
-
-
-p {
+/*     color: DarkGreen;*/
+    color: black;
     background-color: MintCream;
 }
 
 
-ul {
-    background-color: MintCream;
+p:hover {
+    background-color: GhostWhite;
 }
 
+
+ul:hover {
+    background-color: GhostWhite;
+}
 
 
 a:link {
