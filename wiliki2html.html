@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0," /><link rel="stylesheet" type="text/css" href="main.css" /><link rel="shortcut icon" href="favicon.ico" /><title>wiliki2html</title
+></head
+><body>
+<p><strong>WiLiKi 記法から html への変換スクリプト</strong>
+</p>
+<hr>
+<h2>変換スクリプトについて
+</h2>
+<p>キーは
+</p>
+<pre> (srl:sxml-&gt;html (wiliki-parse iport))
+</pre>
+<p>の呼び出し。ファイルあるいは文字列の入力から
+html 形式が得られる。
+</p>
+<p>あとは前後にちょっと足して html としての体裁を整えるだけ。
+</p>
+<p>で、スクリプトの全体は以下
+</p>
+<pre>#!/usr/bin/env gosh
+;; -*- coding: utf-8 -*-
+
+(use srfi-1)
+(use text.html-lite)
+(use text.tree)
+(use sxml.serializer)
+(use wiliki.parse)
+
+(define (conv2html iport oport title)
+  (define (html-heada oport title)
+    (display (html-doctype :type ':xhtml-1.1) oport)
+    (display "&lt;html&gt;\n" oport)
+    (display
+     (tree-&gt;string
+      (html:head
+       (html:meta
+        :http-equiv "content-type"
+        :content "text/html; charset=UTF-8")
+       (html:meta
+        :name "viewport"
+        :content "width=device-width,initial-scale=1.0,")
+       (html:link
+        :rel "stylesheet"
+        :type "text/css"
+        :href "main.css"
+        )
+       (html:link
+        :rel "shortcut icon"
+        :href "favicon.ico"
+        )
+       (html:title (html-escape-string title)))
+      ) oport)
+    (display "&lt;body&gt;\n" oport)
+    )
+  (define (html-foota iport)
+    (display "&lt;/body&gt;&lt;/html&gt;\n" oport)
+    )
+  (html-heada oport title)
+  (display (srl:sxml-&gt;html (wiliki-parse iport)) oport)
+  (html-foota oport)
+  )
+
+(define (fnbase filename)
+  (let ((names (string-split filename ".")))
+    (string-join (take names (- (length names) 1)) ".")
+    )
+  )
+
+(define (main args)
+  (define (usage)
+    (format (current-error-port)
+            "Usage: ~a in-file out-file.\n" *program-name*)
+    (exit 2))
+
+  (if (null? (cdr args)) (usage))
+  (if (null? (cddr args)) (usage)) ;; use /dev/stdout to display
+  (if (not (null? (cdddr args))) (usage))
+
+  (let ((ifile (cadr args)) (ofile (caddr args)))
+    (call-with-input-file ifile
+      (lambda (in)
+        (call-with-output-file ofile
+          (lambda (out)
+            (conv2html in out (fnbase ifile)))))))
+  0)
+</pre>
+<p>使い方は usage に有るように、
+</p>
+<pre> $ wiliki2html.scm in.wiliki out.html
+</pre>
+<p>の様になる。（"$" はプロンプト。以下同様）オプションは無い。
+複数のファイルを扱うなら、シェルスクリプトを書くとか make を使うとかで。
+</p>
+<p>ちなみに、今使っているのは以下の makefile
+</p>
+<pre>CV              = wiliki2html.scm
+cvflags         =
+wilikifiles     = index.wiliki memo.wiliki start.wiliki wiliki2html.wiliki
+ofiles          = $(wilikifiles:.wiliki=.html)
+
+all: $(ofiles)
+
+$(ofiles): $(wilikifiles)
+
+clean:
+        rm *.html
+
+up: update
+update: commit
+        git push origin master
+
+co: commit
+commit:
+        git commit -m "`date +'%F-%R'`" -a
+
+
+.SUFFIXES: .wiliki .html
+
+.wiliki.html:
+        $(CV) $(cvflags) $&lt; $@
+</pre>
+<p>wilikifiles の項にソースを並べて行く。
+</p>
+<pre> $ make
+</pre>
+<p>で html ファイルを生成する。
+</p>
+<p>ファイル個々の依存関係をちゃんとハンドリングできていない気もするけど。
+</p>
+<pre> $ make co
+</pre>
+<p>でコミット
+</p>
+<pre> $ make up
+</pre>
+<p>で GitHub へアップロードする。また、その前にコミットもする。
+</p>
+<p>リポジトリへの add は手動。
+</p>
+<h2>補足
+</h2>
+<h3>text.html-lite モジュール
+</h3>
+<pre> (html:body (wiliki-parse iport))
+</pre>
+<p>の様に wiliki-parse の結果を埋め込むのは、text.html-lite の期待する
+形式が違うので、うまく行かない。
+</p>
+<p>なので、&lt;html&gt;&lt;head&gt; タグの部分だけ、利用している。
+</p>
+<h3>処理単位
+</h3>
+<p>入力／出力は 1 ページ単位の扱いとなる。
+</p>
+<p>マクロが使えない。特に wiki の個々のエントリへのリンクの様な
+機能が使えない。
+</p>
+<p>全体を 1 つの dbm に取り込む事ができれば、この辺は
+可能。
+<a href="http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B">静的なページ生成</a>
+が動けば済む話なのだが。
+</p>
+<p>ちょっと詳しい人なら、サクッと作ってしまうのだろうなぁ。
+</p>
+<h3>WiLiKi ソース
+</h3>
+<p>入力の例として。
+</p>
+<pre>
+'''WiLiKi 記法から html への変換スクリプト'''
+----
+* 変換スクリプトについて
+
+キーは
+ (srl:sxml-&gt;html (wiliki-parse iport))
+の呼び出し。ファイルあるいは文字列の入力から
+html 形式が得られる。
+
+あとは前後にちょっと足して html としての体裁を整えるだけ。
+
+で、スクリプトの全体は以下
+ {{{
+#!/usr/bin/env gosh
+;; -*- coding: utf-8 -*-
+
+(use srfi-1)
+(use text.html-lite)
+
+（略）
+
+(define (main args)
+  (define (usage)
+    (format (current-error-port)
+            "Usage: ~a in-file out-file.\n" *program-name*)
+    (exit 2))
+
+  (if (null? (cdr args)) (usage))
+  (if (null? (cddr args)) (usage)) ;; use /dev/stdout to display
+  (if (not (null? (cdddr args))) (usage))
+
+  (let ((ifile (cadr args)) (ofile (caddr args)))
+    (call-with-input-file ifile
+      (lambda (in)
+        (call-with-output-file ofile
+          (lambda (out)
+            (conv2html in out (fnbase ifile)))))))
+  0)
+ }}}
+
+使い方は usage に有るように、
+ $ wiliki2html.scm in.wiliki out.html
+の様になる。（"$" はプロンプト。以下同様）オプションは無い。
+複数のファイルを扱うなら、シェルスクリプトを書くとか make を使うとかで。
+
+ちなみに、今使っているのは以下の makefile
+ {{{
+CV              = wiliki2html.scm
+cvflags         =
+wilikikkfiles     = index.wiliki memo.wiliki start.wiliki wiliki2html.wiliki
+ofiles          = $(wilikifiles:.wiliki=.html)
+
+all: $(ofiles)
+
+（略）
+
+.SUFFIXES: .wiliki .html
+
+.wiliki.html:
+        $(CV) $(cvflags) $&lt; $@
+ }}}
+
+wilikifiles の項にソースを並べて行く。
+ $ make
+で html ファイルを生成する。
+
+ファイル個々の依存関係をちゃんとハンドリングできていない気もするけど。
+
+ $ make co
+でコミット
+ $ make up
+で GitHub へアップロードする。また、その前にコミットもする。
+
+
+リポジトリへの add は手動。
+
+
+* 補足
+** text.html-lite モジュール
+ (html:body (wiliki-parse iport))
+の様に wiliki-parse の結果を埋め込むのは、text.html-lite の期待する
+形式が違うので、うまく行かない。
+
+なので、&lt;html&gt;&lt;head&gt; タグの部分だけ、利用している。
+
+
+** 処理単位
+入力／出力は 1 ページ単位の扱いとなる。
+
+マクロが使えない。特に wiki の個々のエントリへのリンクの様な
+機能が使えない。
+
+全体を 1 つの dbm に取り込む事ができれば、この辺は
+可能。
+[http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B 静的なページ生成]
+が動けば済む話なのだが。
+
+ちょっと詳しい人なら、サクッと作ってしまうのだろうなぁ。
+</pre>
+<p>"{{{" と "}}}" は効果を消すため、先頭にスペースを入れてある
+</p></body></html>

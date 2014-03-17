@@ -1,0 +1,33 @@
+
+
+body {
+    color: DarkGreen;
+    background-color: Azure:
+}
+
+
+p {
+    background-color: MintCream;
+}
+
+
+ul {
+    background-color: MintCream;
+}
+
+
+
+a:link {
+    color: DarkGreen;
+}
+
+a:hover {
+    color: Peru;
+    background-color: AliceBlue;
+}
+
+pre {
+    background-color: AliceBlue;
+}
+
+

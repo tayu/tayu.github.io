@@ -4,36 +4,51 @@
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0," /><link rel="stylesheet" type="text/css" href="main.css" /><link rel="shortcut icon" href="favicon.ico" /><title>start</title
 ></head
 ><body>
-<p>最初に
+<p>さて、始めよう
 </p>
 <hr>
 <p>えーと、やっと日記、その他を書く準備ができた。
 </p>
 <p>このページは <a href="http://practical-scheme.net/wiliki/wiliki.cgi">WiLiKi</a> の記法で
-書いている。ただし、マクロは使えない。とにかく、html を生成するための
-最低限の機能だけ（または、見つけた分だけとも言う）で変換してるから。
+書いている。ただし、マクロは使えない。とにかく、テキストから　html を生成
+するための最低限の機能だけ、なんとか使える様になったところ。
 </p>
-<p>今の所、WiLiKi 記法のテキストファイルを作成し、html にコンバートしている。
-コンバート部分だけ、スクリプトを作成した。
+<p>将来的に、ページデータを全て dbm に放り込んで全ページを静的に生成
+するところまで持って行ければ良いのだが。過去には<a href="http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B">あった</a>らしいのだが、今のバージョンでは動かなかった。
 </p>
-<p>WiLiKi本来の動作の通り、dbm から引っ張って一揃いの html を生成する
-方が望ましいかもしれない。以前は<a href="http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B">あった</a>らしいのだが、今のバージョンでは動かなかった。
+<p>作者の人が今、<a href="http://blog.practical-scheme.net/shiro/20140101-blog-script">ブログエンジンを作っている</a>らしいけど、こちらは CGI としての実装なので、GitHub には
+載らない。
 </p>
-<p>最初は GitHub だし、マークダウンで書こうと思っていたけど、
-どうにもなじめなかった。特にコードブロックで<strong>各行</strong>の行頭に 4 個
-ずつスペースを入れろとか、どんだけ面倒なことをさせるんだって感じで。
+<p>最初は GitHub だし、マークダウンで書こうと思った。
+実を言うと、いくつかのフリーのブログでマークダウンを採用するところが
+出てきたので、そちらでやりかけてはいた。けど、どうにも
+馴染めなかった。で、色々見ていくと、なんだかんだで、どこのサイトも
+独自拡張をしているのが見えてきた。GitHub も例外ではなく、
+<a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a> (GFM) として拡張している。
 </p>
-<p>確かに、場所によって TAB でも可だったりもする。GitHub は自分の所用に
-拡張してたりする。
+<p>結局のところ、みんな使いにくいのだと思う。
 </p>
-<p>結局、みんな使いにくいのだろう。独自拡張が多過ぎ。
+<p>特にダメだったのがコートブロック。もうね、<strong>各行</strong>の行頭に
+<strong> 4 個</strong>のスペースとか、どんだけ面倒な事をさせるのか、と。
+各行、で 4 個、と。二重ややこしい。そんなのいちいち数えてらんない。
 </p>
-<p>次善として、GitHub の拡張（<a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>）を使おうとも思った。けど、
-ローカルで使える GFM から html へのコンバータが見当たらなかった。
-一々、修正の確認の為に GitHub サーバへアップロードするのは
-作業効率からも、やりたくない。
+<p>いや、もちろん、キーボードマクロとか使えば良いんだけど。
 </p>
-<p>で、結局、使い慣れてもいる WiLiKi 記法に戻る事にしたというワケ。
-ただ、コンバータの用意に手間取った。やっぱり初学者にはあのソースは
-難度がちょっと高かった。
+<p>一応補足すると、GFM では特別な行で囲む構文を拡張していて、
+各行とか行頭とかでとうこうする構文は使わなくとも書ける。
+なので、GFM で書く事は最後まで残った選択肢だった。
+でも、止めたのは、ローカルのコンバータが無かったから。
+ちょっとした修正の確認などで、いちいちコミット＆アップロードするのは
+どうにも効率が悪すぎる。また、無駄にコミット回数が増えるって事もある。
+</p>
+<p>で、そんなこんなで、マークダウンは諦めて wiki 、それも使い慣れた WiLiKi に
+する事にした。
+</p>
+<p>した、んだけど、コンバータが無い。ただ、 WiLiKi はソースが有ったので、
+必要な変換部分だけを切り出せないものか、と考えた。
+まぁ、初学者には結構キツかったし、今でもあんまり理解はしていない。
+けど、まぁ、何とか切り出せたのでオッケー。時間は掛かったけど。
+</p>
+<hr>
+<p>3/17
 </p></body></html>
