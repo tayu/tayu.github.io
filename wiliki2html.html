@@ -1,14 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
-<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0," /><link rel="stylesheet" type="text/css" href="main.css" /><link rel="shortcut icon" href="favicon.ico" /><title>wiliki2html</title
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja-JP" xml:lang="ja-JP"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0," /><link rel="stylesheet" type="text/css" href="main.css" /><link rel="shortcut icon" href="favicon.ico" /><title>wiliki2html</title
 ></head
-><body>
-<p><strong>WiLiKi 記法から html への変換スクリプト</strong>
-</p>
-<hr>
-<h2>変換スクリプトについて
+><body><h2>WiLiKi 記法から html への変換スクリプト
 </h2>
+<hr>
+<h3>スクリプト
+</h3>
 <p>キーは
 </p>
 <pre> (srl:sxml-&gt;html (wiliki-parse iport))
@@ -29,45 +28,37 @@ html 形式が得られる。
 (use sxml.serializer)
 (use wiliki.parse)
 
-(define (conv2html iport oport title)
-  (define (html-heada oport title)
-    (display (html-doctype :type ':xhtml-1.1) oport)
-    (display "&lt;html&gt;\n" oport)
-    (display
-     (tree-&gt;string
-      (html:head
-       (html:meta
-        :http-equiv "content-type"
-        :content "text/html; charset=UTF-8")
-       (html:meta
-        :name "viewport"
-        :content "width=device-width,initial-scale=1.0,")
-       (html:link
-        :rel "stylesheet"
-        :type "text/css"
-        :href "main.css"
-        )
-       (html:link
-        :rel "shortcut icon"
-        :href "favicon.ico"
-        )
-       (html:title (html-escape-string title)))
-      ) oport)
-    (display "&lt;body&gt;\n" oport)
-    )
-  (define (html-foota iport)
-    (display "&lt;/body&gt;&lt;/html&gt;\n" oport)
-    )
-  (html-heada oport title)
-  (display (srl:sxml-&gt;html (wiliki-parse iport)) oport)
-  (html-foota oport)
-  )
+(define (conv2html iport title)
+  (display "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n")
+  (display (html-doctype :type :xhtml-1.0-strict))
+  (display
+   (tree-&gt;string
+    (html:html
+     :xmlns "http://www.w3.org/1999/xhtml"
+     :lang "ja-JP"
+     :xml:lang "ja-JP"
+     (html:head
+      (html:meta
+       :http-equiv "content-type"
+       :content "text/html; charset=UTF-8")
+      (html:meta
+       :name "viewport"
+       :content "width=device-width,initial-scale=1.0,")
+      (html:link
+       :rel "stylesheet"
+       :type "text/css"
+       :href "main.css")
+      (html:link
+       :rel "shortcut icon"
+       :href "favicon.ico")
+      (html:title (html-escape-string title)))
+     (html:body
+      (srl:sxml-&gt;html (wiliki-parse iport)))))))
 
-(define (fnbase filename)
-  (let ((names (string-split filename ".")))
-    (string-join (take names (- (length names) 1)) ".")
-    )
-  )
+(define (base-name filename)
+  (define delm ".") ;; (define-constant ..) is error at here, ok at outside
+  (let ((names (string-split filename delm)))
+    (string-join (take names (- (length names) 1)) delm)))
 
 (define (main args)
   (define (usage)
@@ -76,17 +67,21 @@ html 形式が得られる。
     (exit 2))
 
   (if (null? (cdr args)) (usage))
-  (if (null? (cddr args)) (usage)) ;; use /dev/stdout to display
+  (if (null? (cddr args)) (usage)) ;; use /dev/stdout to display console
   (if (not (null? (cdddr args))) (usage))
 
   (let ((ifile (cadr args)) (ofile (caddr args)))
     (call-with-input-file ifile
       (lambda (in)
-        (call-with-output-file ofile
+        (call-with-output-file  ofile
           (lambda (out)
-            (conv2html in out (fnbase ifile)))))))
+            (with-output-to-port out
+              (lambda ()
+                (conv2html in (base-name ifile)))))))))
   0)
 </pre>
+<h3>使い方
+</h3>
 <p>使い方は usage に有るように、
 </p>
 <pre> $ wiliki2html.scm in.wiliki out.html
@@ -138,41 +133,34 @@ commit:
 </pre>
 <p>で GitHub へアップロードする。また、その前にコミットもする。
 </p>
-<p>リポジトリへの add は手動。html のみ。
+<p>新規ファイルのリポジトリへの add は手動。html のみとする。
 </p>
 <p>.gitignore に以下を登録しておく
 </p>
 <pre>makefile
 *.wiliki
 </pre>
-<h2>補足
-</h2>
-<h3>text.html-lite モジュール
+<h3>補足
 </h3>
-<pre> (html:body (wiliki-parse iport))
-</pre>
-<p>の様に wiliki-parse の結果を埋め込むのは、text.html-lite の期待する
-形式が違うので、うまく行かない。
-</p>
-<p>なので、&lt;html&gt;&lt;head&gt; タグの部分だけ、利用している。
-</p>
-<h3>処理単位
-</h3>
+<h4>処理単位
+</h4>
 <p>入力／出力は 1 ページ単位の扱いとなる。
 </p>
+<h4>制約
+</h4>
 <p>マクロが使えない。特に wiki の個々のエントリへのリンクの様な
 機能が使えない。
 </p>
-<p>全体を 1 つの dbm に取り込む事ができれば、この辺は
-可能。
-<a href="http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B">静的なページ生成</a>
-が動けば済む話なのだが。
+<h4>元ソースの管理
+</h4>
+<p>.wiliki ファイルは GitHub に上げないので、.git リポジトリには
+登録しない。とはいえ、ローカルでバージョン管理したい。
 </p>
-<p>ちょっと詳しい人なら、サクッと作ってしまうのだろうなぁ。
+<p>別途 git リポジトリをつくるか、あるいは Mercurial でやるか思案中。
 </p>
 <h3>WiLiKi ソース
 </h3>
-<p>入力の例として。
+<p>入力の例として。以前のバージョン
 </p>
 <pre>
 '''WiLiKi 記法から html への変換スクリプト'''
@@ -275,4 +263,6 @@ wilikifiles の項にソースを並べて行く。
 ちょっと詳しい人なら、サクッと作ってしまうのだろうなぁ。
 </pre>
 <p>"{{{" と "}}}" は効果を消すため、先頭にスペースを入れてある
-</p></body></html>
+</p></body
+></html
+>
