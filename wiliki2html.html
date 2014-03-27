@@ -89,16 +89,16 @@ html 形式が得られる。
 <p>の様になる。（"$" はプロンプト。以下同様）オプションは無い。
 複数のファイルを扱うなら、シェルスクリプトを書くとか make を使うとかで。
 </p>
-<p>ちなみに、今使っているのは以下の makefile
+<p>ちなみに、今使っているのは以下の様な makefile
 </p>
 <pre>CV              = wiliki2html.scm
 cvflags         =
-wilikifiles     = index.wiliki memo.wiliki start.wiliki wiliki2html.wiliki
-ofiles          = $(wilikifiles:.wiliki=.html)
 
-all: $(ofiles)
+infiles         = index.wiliki memo.wiliki
+outfiles        = $(infiles:.wiliki=.html)
 
-$(ofiles): $(wilikifiles)
+
+all: $(outfiles)
 
 clean:
         rm *.html
@@ -111,7 +111,6 @@ co: commit
 commit:
         git commit -m "`date +'%F-%R'`" -a
 
-
 .SUFFIXES: .wiliki .html
 
 .wiliki.html:
@@ -123,8 +122,6 @@ commit:
 </pre>
 <p>で html ファイルを生成する。
 </p>
-<p>ファイル個々の依存関係をちゃんとハンドリングできていない気もするけど。
-</p>
 <pre> $ make co
 </pre>
 <p>でコミット
@@ -135,7 +132,7 @@ commit:
 </p>
 <p>新規ファイルのリポジトリへの add は手動。html のみとする。
 </p>
-<p>.gitignore に以下を登録しておく
+<p>その為に .gitignore に以下を登録しておく
 </p>
 <pre>makefile
 *.wiliki
@@ -160,109 +157,22 @@ commit:
 </p>
 <h3>WiLiKi ソース
 </h3>
-<p>入力の例として。以前のバージョン
+<p>入力例
 </p>
-<pre>
-'''WiLiKi 記法から html への変換スクリプト'''
+<pre>* 日記とか
 ----
-* 変換スクリプトについて
+** 日記、備忘録、めも、その他
 
-キーは
- (srl:sxml-&gt;html (wiliki-parse iport))
-の呼び出し。ファイルあるいは文字列の入力から
-html 形式が得られる。
-
-あとは前後にちょっと足して html としての体裁を整えるだけ。
-
-で、スクリプトの全体は以下
- {{{
-#!/usr/bin/env gosh
-;; -*- coding: utf-8 -*-
-
-(use srfi-1)
-(use text.html-lite)
-
-（略）
-
-(define (main args)
-  (define (usage)
-    (format (current-error-port)
-            "Usage: ~a in-file out-file.\n" *program-name*)
-    (exit 2))
-
-  (if (null? (cdr args)) (usage))
-  (if (null? (cddr args)) (usage)) ;; use /dev/stdout to display
-  (if (not (null? (cdddr args))) (usage))
-
-  (let ((ifile (cadr args)) (ofile (caddr args)))
-    (call-with-input-file ifile
-      (lambda (in)
-        (call-with-output-file ofile
-          (lambda (out)
-            (conv2html in out (fnbase ifile)))))))
-  0)
- }}}
-
-使い方は usage に有るように、
- $ wiliki2html.scm in.wiliki out.html
-の様になる。（"$" はプロンプト。以下同様）オプションは無い。
-複数のファイルを扱うなら、シェルスクリプトを書くとか make を使うとかで。
-
-ちなみに、今使っているのは以下の makefile
- {{{
-CV              = wiliki2html.scm
-cvflags         =
-wilikikkfiles     = index.wiliki memo.wiliki start.wiliki wiliki2html.wiliki
-ofiles          = $(wilikifiles:.wiliki=.html)
-
-all: $(ofiles)
-
-（略）
-
-.SUFFIXES: .wiliki .html
-
-.wiliki.html:
-        $(CV) $(cvflags) $&lt; $@
- }}}
-
-wilikifiles の項にソースを並べて行く。
- $ make
-で html ファイルを生成する。
-
-ファイル個々の依存関係をちゃんとハンドリングできていない気もするけど。
-
- $ make co
-でコミット
- $ make up
-で GitHub へアップロードする。また、その前にコミットもする。
+- [http:pdumpfs.html バックアップツール pdumpfs]
+- [http:lang.html 言語めも]
+- [http:wiliki2html.html wiliki2html 変換スクリプト]
+- [http:markdown.html マークダウン]
+- [http:start.html 開始]
+- [http:memo.html めも]
 
 
-リポジトリへの add は手動。
-
-
-* 補足
-** text.html-lite モジュール
- (html:body (wiliki-parse iport))
-の様に wiliki-parse の結果を埋め込むのは、text.html-lite の期待する
-形式が違うので、うまく行かない。
-
-なので、&lt;html&gt;&lt;head&gt; タグの部分だけ、利用している。
-
-
-** 処理単位
-入力／出力は 1 ページ単位の扱いとなる。
-
-マクロが使えない。特に wiki の個々のエントリへのリンクの様な
-機能が使えない。
-
-全体を 1 つの dbm に取り込む事ができれば、この辺は
-可能。
-[http://practical-scheme.net/wiliki/wiliki.cgi?WiLiKi%3A%E9%9D%99%E7%9A%84HTML%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B 静的なページ生成]
-が動けば済む話なのだが。
-
-ちょっと詳しい人なら、サクッと作ってしまうのだろうなぁ。
-</pre>
-<p>"{{{" と "}}}" は効果を消すため、先頭にスペースを入れてある
-</p></body
+----
+[https://github.com/tayu/ その他]
+</pre></body
 ></html
 >
