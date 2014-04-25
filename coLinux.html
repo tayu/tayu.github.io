@@ -279,6 +279,79 @@ Ubuntu でも手順は同様に実行できるのだが、バージョンによ�
 <pre> hda1="\Device\Harddisk0\Partition4"
 </pre>
 <p>などとする。
+</p>
+<h4>簡易サービスモード
+</h4>
+<p>特にサービスに登録しなくても ウインドウ非表示モードで起動すれば
+裏で動いてくれるので、表の邪魔をしない様にできる。
+この方法は一般ユーザ権限でできるので、特におすすめ。
+</p>
+<p>例えば、以下の様な VBScript のスクリプトで起動する
+</p>
+<pre>Option Explicit
+Const vbHide = 0
+
+Dim ws, eu
+Set ws = CreateObject( "WScript.Shell" )
+Set eu = ws.Environment( "User" )
+eu.Item( "COLINUX_CONSOLE_FONT" ) = "Lucida Console:12"
+eu.Item( "COLINUX_CONSOLE_EXIT_ON_DETACH" ) = "1"
+eu.Item( "COLINUX_NO_SMP_WORKAROUND" ) = "Y"
+ws.Run """C:\Program Files\coLinux\colinux-daemon.exe"" -v 3 -t nt @colinux.conf", vbHide, False
+Set eu = Nothing
+Set ws = Nothing
+</pre>
+<h4>キーボード
+</h4>
+<p>初期状態では英語キーボードになっている。
+</p>
+<p>Windows は日本語キーボードなので、どうかすると
+入力できない文字があったりする。あるいは入力はできるけど、
+全く別のキーからだったり。
+</p>
+<p>この辺で悩まなくて済む一番簡単な手は console を使わないこと。
+<a href="http://sourceforge.jp/projects/ttssh2/">Tera Term</a> 等のターミナルソフト
+で接続する。
+</p>
+<p>キー入力は Windows のものが送られるので、Windows での入力と異なる事は無い。
+結果、悩まなくて済む。
+</p>
+<p>サービス、あるいは上項の様にウインドウ無しで動かす場合も便利。
+</p>
+<p>coLinux 側に telnetd か ssh 、使う方をインストールする。
+ssh は sshd がパッケージとして分離されていないので、ssh
+パッケージでクライアント＆サーバをインストールする事になる。
+まぁ、同一 PC 上で暗号化が必要とも思わないけど、使い方に慣れる
+意味で ssh 推奨。
+</p>
+<h4>X Window System を使う
+</h4>
+<p>本物の X を使ってみたくはないか？
+</p>
+<p>coLinux に X 関係のパッケージと日本語フォント回りをインストールすると、
+X の環境ができる。それに
+<a href="http://sourceforge.net/projects/xming/">Xming X Server for Windows</a>
+を使って接続できる。
+</p>
+<p>VNC でも同じことはできるけど、coLinux 側で VNC サーバを立ち上げる
+手間が無い分、こちらが使いやすい。
+</p>
+<p>おすすめはウインドウマネージャを起動する方法。icewm を起動する様に設定して
+保存すると、以下の様な .xlaunch ファイルが作成される。
+</p>
+<pre>&lt;?xml version="1.0"?&gt;
+&lt;XLaunch xmlns="http://www.straightrunning.com/XmingNotes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.straightrunning.com/XmingNotes XLaunch.xsd" WindowMode="Windowed" ClientMode="StartProgram" Program="icewm" ClientStart="PuTTY" PW="userpass" RemoteHost="127.0.0.1" RemoteUser="username" ExtraSSH="-X -P 22" Display="0" Clipboard="true" ExtraParams="-screen 0 800 600"/&gt;
+</pre>
+<p>まぁ、ちょっとオプション指定が増えているけど。
+</p>
+<p>ssh で接続する様にしておくと使用するポートは 1 つだけで済む。slirp で
+リダイレクトの設定をしておいて、上記の「 -X -P 22」の設定と合わせて
+おけば良い。
+</p>
+<p>接続後に中で rxvt とか xterm とか KTerm とかを、いくつでも開けば良い。
+日本語入力回りは起動していないので、起動用のスクリプトを作るなりする。
+</p>
+<p>例えば Linux 上のブラウザでの見た目の確認とかに使えると思う。
 </p></body
 ></html
 >
