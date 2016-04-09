@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>HTML5 文法チェッカ</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="./html5/validator/tomcat/java/install/2016/04/02/html5-validator/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>HTML5 文法チェッカ</h1>
+    <p class="meta">Apr 2, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <ul id="markdown-toc">
+  <li><a href="#html5--lint-">HTML5 の lint が欲しい</a></li>
+  <li><a href="#section">必要なもの</a></li>
+  <li><a href="#tomcat-">Tomcat のインストール</a></li>
+  <li><a href="#java-">Java のインストール</a>    <ul>
+      <li><a href="#section-1">入手</a></li>
+      <li><a href="#section-2">展開</a></li>
+      <li><a href="#section-3">移動</a></li>
+      <li><a href="#section-4">リンクを張る</a></li>
+      <li><a href="#java--1">デフォルトの java 関連コマンドのすり替え</a></li>
+      <li><a href="#tomcat--1">Tomcat の再起動</a></li>
+    </ul>
+  </li>
+  <li><a href="#nu-html-checker-">Nu Html Checker のインストール</a></li>
+  <li><a href="#section-5">おまけ</a>    <ul>
+      <li><a href="#nu-html-checker--1">Nu Html Checker の再起動</a></li>
+      <li><a href="#jar-">.jar 版を動かす</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="html5--lint-">HTML5 の lint が欲しい</h1>
+
+<p>ローカルで動く html の lint って事で、もう、長いこと
+<a href="http://openlab.jp/k16/htmllint/htmllint.html">Another HTML-lint</a>
+を使ってきたのだけど、これは HTML5 に対応していない。</p>
+
+<p>検索してみると、これを HTML5 に対応させたサービスは存在したのだけど、
+ダウンロードのリンクは見当たらない。でも、ローカルで動かしたかった。</p>
+
+<p>で、色々調べてみて、<a href="https://validator.w3.org/">W3C</a> でも使われている
+<a href="https://validator.w3.org/nu/">Nu Html Checker</a>を見つけた。
+ここの <code>get the latest release</code> から .jar ファイルを取得できる。
+また、インストール関係の説明もここから辿れる。</p>
+
+<p>で、<a href="http://www.debian.org/">Debian</a> にインストールしてみた。
+少し作業が必要になったので、めも。</p>
+
+<p>ゴールは Tomcat で動かすこと。</p>
+
+<p>Nu Html Checker は .jar と .war の 2 種類の方法で提供されている。
+.jar は java コマンドで動かす。.war ファイルは Tomcat 等でサーブレット
+として動かす。毎回手動で動かすのは面倒なのでパス。
+スクリプトを書いて、起動時に動かしても良いが、
+今回は Tomcat でやる事にした。</p>
+
+<h1 id="section">必要なもの</h1>
+<ul>
+  <li>Tomcat</li>
+  <li>Java</li>
+</ul>
+
+<p>Tomcat はパッケージになっている。でも Java は java8 が必要だけど、
+パッケージには無い。
+なので Oracle からダウンロードしてインストールする。
+この辺りの手順は<a href="http://astah.change-vision.com/ja/feature/install-linux-debian.html">ここ</a>を参考にした。</p>
+
+<h1 id="tomcat-">Tomcat のインストール</h1>
+<p>パッケージを入れる</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get install tomcat8
+</pre></div>
+</div>
+</div>
+
+<p>確認の為に <code>http://localhost:8080/</code> にアクセスする。
+<code>It works !</code> の表示が出たら OK 。</p>
+
+<p>Tomcat を先にインストールするのは、</p>
+
+<ul>
+  <li>依存関係で JDK が Oracle のとは別にインストールされ、設定が上書きされる</li>
+  <li>Tomcat 単体で動作確認できる</li>
+</ul>
+
+<p>辺りが理由</p>
+
+<h1 id="java-">Java のインストール</h1>
+
+<h2 id="section-1">入手</h2>
+<p><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">OracelのJavaダウンロードページ</a> から環境に合わせてダウンロードする。
+今回は Linux 用 64 bit で、.tar.gz な物を選択した。</p>
+
+<h2 id="section-2">展開</h2>
+<p>適当なディレクトリで</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ tar xvf jdk-8u77-linux-x64.tar.gz
+</pre></div>
+</div>
+</div>
+
+<p>する。<code>jdk1.8.0_77/</code> ディレクトリが作成され、その中に展開される。</p>
+
+<h2 id="section-3">移動</h2>
+<p>ディレクトリ一式を <code>/usr/lib/jvm</code> 配下へ移動する。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># mv jdk1.8.0_77 /usr/lib/jvm
+</pre></div>
+</div>
+</div>
+
+<p>また、他（OpenJDK など）と同様にオーナーを root にしておく。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># chown -R root:root jdk1.8.0_77
+</pre></div>
+</div>
+</div>
+
+<h2 id="section-4">リンクを張る</h2>
+<p><code>/usr/lib/jvm</code> 中の <code>default-java</code> が <code>jdk1.8.0_77</code> を指すようにする。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># rm default-java
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># ln -sf jdk1.8.0_77 default-java
+</pre></div>
+</div>
+</div>
+
+<p>Tomcat の起動スクリプト(<code>/etc/init.d/tomcat8</code>) を見てみると
+<code>/usr/lib/jvm</code> 中で Oracel等の JDK がインストールされているか、
+探している。その中のパスの 1 つが <code>default-java</code> で、
+これを Oracel の JDK に向けてやる事で取りあえず動くように
+なった。</p>
+
+<p>つまり、正式な手段でもないし将来に渡って大丈夫とも言えない。</p>
+
+<h2 id="java--1">デフォルトの java 関連コマンドのすり替え</h2>
+<p>Debian の機構を使って java コマンドなどを Oracel の JDK に向けてやる。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># update-alternatives --install /usr/bin/java java /usr/lib/jvm/default-java/bin/java 1
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/default-java/bin/javac 1
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span># update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/default-java/bin/javaws 1
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span># update-alternatives --config java
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span># update-alternatives --config javac
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span># update-alternatives --config javaws
+</pre></div>
+</div>
+</div>
+<p>選択を求められたら Java8 を選択する。</p>
+
+<h2 id="tomcat--1">Tomcat の再起動</h2>
+<p>java 関連のパスが変わったので、再起動して反映させる。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># /etc/init.d/tomcat8 restart
+</pre></div>
+</div>
+</div>
+
+<h1 id="nu-html-checker-">Nu Html Checker のインストール</h1>
+<p>取得した .war ファイルを <code>/var/lib/tomcat8/webapps</code> にコピーする。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># cp vnu.war /var/lib/tomcat8/webapps
+</pre></div>
+</div>
+</div>
+
+<p>Tomcat が自動的に展開し、<code>vnu</code> ディレクトリが作られる。</p>
+
+<p><code>http://localhost:8080/vnu/</code> にアクセスして、Nu Html Checker の
+画面が表示されたら成功。</p>
+
+<h1 id="section-5">おまけ</h1>
+
+<h2 id="nu-html-checker--1">Nu Html Checker の再起動</h2>
+<p>Tomcat は設定ファイルの更新を監視しているので、web.xml を編集して
+保存するとサーブレットの再読み込みが行われる。簡単にやるなら、
+単にファイルの時刻を更新するだけで良い。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># touch /var/lib/tomcat8/webapps/vnu/WEB-INF/web.xml
+</pre></div>
+</div>
+</div>
+
+<h2 id="jar-">.jar 版を動かす</h2>
+<p>ドキュメントにある通り</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ java -cp ./vnu.jar nu.validator.servlet.Main 8888
+</pre></div>
+</div>
+</div>
+<p>とする。<code>http://localhost:8888</code> にアクセスすると画面が表示される。</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    <a class="post-link"
+       href="./../../../../../../../../../allpost/">
+      全記事</a>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#jekyll">
+	jekyll</a>
+      (5)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#memo">
+	memo</a>
+      (4)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li>めもなど</li>
+        <li><a href="mailto:"></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

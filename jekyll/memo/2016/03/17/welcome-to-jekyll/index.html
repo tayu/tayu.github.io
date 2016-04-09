@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>re-blog by Jekyll</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="./jekyll/memo/2016/03/17/welcome-to-jekyll/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>re-blog by Jekyll</h1>
+    <p class="meta">Mar 17, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <h1 id="section">ブログ、再開する。</h1>
+
+<p>いろいろ調べていたら、とある人が GitHub Pages でブログをしていて、
+その生成環境も公開していた。で、ちょっと見てみたら、どうやら Jekyll って
+のを使っている様だった。</p>
+
+<p>で、ちょっと調べてみたら、自分がブログをするのに課題になっていた事が
+ほぼできるパッケージになっている様だった。</p>
+
+<p>少し、何やかやを試して、まぁ大丈夫そうなので、自分の GitHub Pages を
+これで作成することにした。</p>
+
+<h1 id="section-1">めも</h1>
+<p>いろいろと細部で作業が残っているが、先に公開状態まで
+持っていく事にした。</p>
+
+<p>作業を進めるのと同時にメモを取り、更新していく。この方が
+楽そう。</p>
+
+<h1 id="section-2">一般的な手順</h1>
+<p>まぁ、この程度はちょっと検索すると、どこのページでも書いてある。
+が、メモなので一応、備忘的に。</p>
+
+<h2 id="section-3">インストール</h2>
+<p>環境は Linux の Debian でやってる。</p>
+
+<p>インストールは jekyll パッケージを導入するだけ。</p>
+
+<p>シンタックスハイライトに pygments を使う場合は
+そっちのインストールも必要になる。
+Debian だと ruby-pygments.rb なんてパッケージになっている。
+パッケージになっていない場合でも Ruby のパッケージ管理システムで
+ある gem でインストールできる。</p>
+
+<h2 id="section-4">準備</h2>
+<p>Jekyll コマンドにはいろいろな機能がある。
+その 1 つとして、元ファイル一式の生成がある。</p>
+
+<p>作業ディレクトリで下記コマンドを実行する。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ jekyll new .
+</pre></div>
+</div>
+</div>
+
+<p>これで、元となるファイル／ディレクトリの一式を生成してくれる。</p>
+
+<p>必ず、空のディレクトリで行う。</p>
+
+<h2 id="section-5">ページ生成</h2>
+<p>作業ディレクトリで下記コマンドを実行する。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ jekyll build
+</pre></div>
+</div>
+</div>
+
+<p>_site  ディレクトリが生成され、その中に html 他、一式が作成される。
+公開するのはこの _site ディレクトリの内容となる。</p>
+
+<p>GitHub Pages で公開するなら、_site ディレクトリの内容を username.github.io へ
+そっくり更新すれば良い。</p>
+
+<h2 id="section-6">記事の作成</h2>
+<p>記事は _posts 配下に YYYY-MM-DD-some-theme.md の様な、先頭に日付を含めた
+ファイル名で作成していく。</p>
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    <a class="post-link"
+       href="./../../../../../../allpost/">
+      全記事</a>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (5)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#memo">
+	memo</a>
+      (4)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li>めもなど</li>
+        <li><a href="mailto:"></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

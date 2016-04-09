@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>めもなど</title>
+    <description>作業めも等。日記、雑記、その他何でも</description>
+    <link>./</link>
+    <atom:link href="./feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sun, 10 Apr 2016 04:24:02 +0900</pubDate>
+    <lastBuildDate>Sun, 10 Apr 2016 04:24:02 +0900</lastBuildDate>
+    <generator>Jekyll v2.2.0</generator>
+    
+      <item>
+        <title>CSS チェッカ</title>
+        <description>
+  CSS のチェッカが欲しい
+  環境
+  インストール手順    
+      GitHub からソースを取得する
+      ライブラリへのパスを修正する
+      .war を作成する
+      .war を Tomca...</description>
+        <pubDate>Tue, 05 Apr 2016 00:00:00 +0900</pubDate>
+        <link>./css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</link>
+        <guid isPermaLink="true">./css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</guid>
+        
+        
+        <category>css</category>
+        
+        <category>validator</category>
+        
+        <category>tomcat</category>
+        
+        <category>java</category>
+        
+        <category>install</category>
+        
+        <category>w3c</category>
+        
+      </item>
+    
+      <item>
+        <title>HTML5 文法チェッカ</title>
+        <description>
+  HTML5 の lint が欲しい
+  必要なもの
+  Tomcat のインストール
+  Java のインストール    
+      入手
+      展開
+      移動
+      リンクを張る
+      デフォルトの...</description>
+        <pubDate>Sat, 02 Apr 2016 00:00:00 +0900</pubDate>
+        <link>./html5/validator/tomcat/java/install/2016/04/02/html5-validator/</link>
+        <guid isPermaLink="true">./html5/validator/tomcat/java/install/2016/04/02/html5-validator/</guid>
+        
+        
+        <category>html5</category>
+        
+        <category>validator</category>
+        
+        <category>tomcat</category>
+        
+        <category>java</category>
+        
+        <category>install</category>
+        
+      </item>
+    
+      <item>
+        <title>TIPS</title>
+        <description>
+  目次を生成する
+
+
+目次を生成する
+次の 2 行を .md 中に記述する
+
+* TOC
+{:toc}
+
+http://www.seanbuscay.com/blog/jekyll-toc-markdown/
+
+kramdown ...</description>
+        <pubDate>Fri, 01 Apr 2016 00:00:00 +0900</pubDate>
+        <link>./jekyll/tips/2016/04/01/jekyll-tips/</link>
+        <guid isPermaLink="true">./jekyll/tips/2016/04/01/jekyll-tips/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>tips</category>
+        
+      </item>
+    
+      <item>
+        <title>ページ構成について</title>
+        <description>方針を決める
+ページ分担とか、レイアウトとかの方針を決める。
+
+レイアウト
+ヘッダ、フッタ、サイドバー付き。合計 4 ペイン
+
+ページ構成
+メインページは直近の記事のみ。
+以下は独立したページとして作成する
+
+
+  
+    
+   ...</description>
+        <pubDate>Sat, 26 Mar 2016 00:00:00 +0900</pubDate>
+        <link>./jekyll/memo/2016/03/26/jekyll-config/</link>
+        <guid isPermaLink="true">./jekyll/memo/2016/03/26/jekyll-config/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>memo</category>
+        
+      </item>
+    
+      <item>
+        <title>Jekyll: 設定</title>
+        <description>基本情報
+
+
+  本家サイト
+  日本語
+  Liquid
+  変数
+  シンタックスハイライト
+GitHub 上のドキュメントもあったはず。
+Pygments
+
+
+設定の調整
+
+コードブロックの行番号とコードが近くて見にくい
+行番号...</description>
+        <pubDate>Sat, 19 Mar 2016 00:00:00 +0900</pubDate>
+        <link>./jekyll/memo/2016/03/19/jekyll-config/</link>
+        <guid isPermaLink="true">./jekyll/memo/2016/03/19/jekyll-config/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>memo</category>
+        
+      </item>
+    
+      <item>
+        <title>Jekyll: 最初にやるべきこと</title>
+        <description>最初にやるべきこと
+
+出力先の指定
+GitHub Pages の html 置き場に直接生成する。
+
+_config.yml に以下を追記する
+
+
+  1destination: ../../username.github.io
+
+
+...</description>
+        <pubDate>Fri, 18 Mar 2016 00:00:00 +0900</pubDate>
+        <link>./jekyll/memo/2016/03/18/jekyll-first-work/</link>
+        <guid isPermaLink="true">./jekyll/memo/2016/03/18/jekyll-first-work/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>memo</category>
+        
+      </item>
+    
+      <item>
+        <title>re-blog by Jekyll</title>
+        <description>ブログ、再開する。
+
+いろいろ調べていたら、とある人が GitHub Pages でブログをしていて、
+その生成環境も公開していた。で、ちょっと見てみたら、どうやら Jekyll って
+のを使っている様だった。
+
+で、ちょっと調べてみ...</description>
+        <pubDate>Thu, 17 Mar 2016 00:00:00 +0900</pubDate>
+        <link>./jekyll/memo/2016/03/17/welcome-to-jekyll/</link>
+        <guid isPermaLink="true">./jekyll/memo/2016/03/17/welcome-to-jekyll/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>memo</category>
+        
+      </item>
+    
+  </channel>
+</rss>
