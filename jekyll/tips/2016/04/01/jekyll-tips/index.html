@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>TIPS</title>
+    <title>Jekyll の TIPS</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
     <link rel="canonical" href="./jekyll/tips/2016/04/01/jekyll-tips/">
@@ -97,13 +97,17 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>TIPS</h1>
+    <h1>Jekyll の TIPS</h1>
     <p class="meta">Apr 1, 2016</p>
   </header>
 
   <article class="post-content">
   <ul id="markdown-toc">
   <li><a href="#section">目次を生成する</a></li>
+  <li><a href="#section-1">相対パスを使用する</a></li>
+  <li><a href="#section-2">ページ内で使用する変数を先頭で宣言する</a></li>
+  <li><a href="#section-3">配列を使う</a></li>
+  <li><a href="#section-4">ハッシュを使う</a></li>
 </ul>
 
 <h1 id="section">目次を生成する</h1>
@@ -115,6 +119,107 @@
 <p>http://www.seanbuscay.com/blog/jekyll-toc-markdown/</p>
 
 <p>kramdown で有効らしい</p>
+
+<h1 id="section-1">相対パスを使用する</h1>
+
+<p>GitHub Pages では url は http://username.github.io/ の様に username は
+サイト名となるため、ファイルは絶対パスで指定できる。</p>
+
+<p>しかし、ローカルで参照する場合はそうも行かない。</p>
+
+<p>以下、例として CSS の場合。</p>
+
+<p><code>_includes/head.html</code> にコードを仕込み、各ページ生成時に
+上位ディレクトリを参照する様にする。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>{% assign urlpaths = page.url | split: '/' %}
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>{% assign csspath = &quot;/&quot; %}
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>{% assign limit = urlpaths.size | minus: 1 %}
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>{% for i in (1..limit) %}
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>  {% assign csspath = csspath | append: &quot;../&quot; %}
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>{% endfor %}
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>{% assign css = csspath | append: &quot;css/main.css&quot; %}
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>    <span style="color:#777">&lt;!-- Custom CSS --&gt;</span>
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>    <span style="color:#070;font-weight:bold">&lt;link</span> <span style="color:#b48">rel</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">stylesheet</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">{{ css | prepend: site.baseurl }}</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+</pre></div>
+</div>
+</div>
+
+<p>つまり、url のハスを分解してカウントし、その分上位に上る。
+<code>minus: 1</code> 辺りは完全に現物合わせ。</p>
+
+<h1 id="section-2">ページ内で使用する変数を先頭で宣言する</h1>
+
+<p>スクリプトとかで良くやる手。</p>
+
+<p>ファイル先頭の <a href="http://jekyllrb-ja.github.io/docs/frontmatter/">Front-matter</a>
+で、任意の変数と値を設定できる。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>var1: value1
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
+</pre></div>
+</div>
+</div>
+
+<p>参照は以下の様になる</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.var1 }}
+</pre></div>
+</div>
+</div>
+<p>html 生成時に <code>value1</code> と展開される</p>
+
+<h1 id="section-3">配列を使う</h1>
+<p>ファイル先頭の <code>Front-matter</code> で以下の様に書く</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>array1: [ e1, e2, e2 ]
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
+</pre></div>
+</div>
+</div>
+
+<p>参照は</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.array1[1] }}
+</pre></div>
+</div>
+</div>
+<p>の様になる。この時 <code>[ 1 ]</code> の様に括弧の前後にスペースを入れてはいけない。</p>
+
+<p>もちろん <code>for ～ in</code> 構文でアクセスできる。
+添え字でアクセスする場合は <code>for ～ in (1..3)</code> の構文が使える。</p>
+
+<h1 id="section-4">ハッシュを使う</h1>
+<p>ファイル先頭の <code>Front-matter</code> で以下の様に書く</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>hash1: { k1: v1, k2: v2, k3: v3 }
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
+</pre></div>
+</div>
+</div>
+
+<p><code>:</code>(コロン) ＋ ` `(スペース) でキーと値を指定する。</p>
+
+<p>参照は</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.hash1['k1'] }}
+</pre></div>
+</div>
+</div>
+<p>の様になる。
+配列と同様、括弧の前後にスペースを入れてはいけない。</p>
+
+<p><code>for ～ in</code> 構文でアクセスできるのも同様。</p>
 
 
   </article>
@@ -136,12 +241,12 @@
     <li>
       <a href="./../../../../../../categories/#jekyll">
 	jekyll</a>
-      (5)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#memo">
-	memo</a>
-      (4)</li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (1)</li>
     
     <li>
       <a href="./../../../../../../categories/#tips">
@@ -214,12 +319,6 @@
     <li>
       <a href="./../../../../../../date/#2016-Mar">
 	2016 Mar</a></li>
-    
-    
-    
-    
-    
-    
     
     
     

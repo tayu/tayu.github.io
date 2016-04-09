@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>re-blog by Jekyll</title>
+    <title>Jekyll の設定</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="./jekyll/memo/2016/03/17/welcome-to-jekyll/">
+    <link rel="canonical" href="./jekyll/config/2016/03/19/jekyll-config/">
     <!-- Custom CSS -->
     
 
@@ -97,79 +97,91 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>re-blog by Jekyll</h1>
-    <p class="meta">Mar 17, 2016</p>
+    <h1>Jekyll の設定</h1>
+    <p class="meta">Mar 19, 2016</p>
   </header>
 
   <article class="post-content">
-  <h1 id="section">ブログ、再開する。</h1>
+  <ul id="markdown-toc">
+  <li><a href="#section">情報源</a></li>
+  <li><a href="#configyml">_config.yml</a>    <ul>
+      <li><a href="#section-1">出力先の指定</a></li>
+      <li><a href="#url">ベース URL</a></li>
+      <li><a href="#section-2">マークダウンの書式</a></li>
+      <li><a href="#md-">.md ファイル中の改行を無視する</a></li>
+      <li><a href="#section-3">シンタックスハイライトのエンジンを指定する</a></li>
+    </ul>
+  </li>
+</ul>
 
-<p>いろいろ調べていたら、とある人が GitHub Pages でブログをしていて、
-その生成環境も公開していた。で、ちょっと見てみたら、どうやら Jekyll って
-のを使っている様だった。</p>
+<p>設定関連で変更した項目</p>
 
-<p>で、ちょっと調べてみたら、自分がブログをするのに課題になっていた事が
-ほぼできるパッケージになっている様だった。</p>
+<h1 id="section">情報源</h1>
 
-<p>少し、何やかやを試して、まぁ大丈夫そうなので、自分の GitHub Pages を
-これで作成することにした。</p>
+<ul>
+  <li><a href="http://jekyllrb.com/">本家サイト</a></li>
+  <li><a href="https://jekyllrb-ja.github.io/">日本語</a></li>
+  <li><a href="http://wiki.shopify.com/Liquid">Liquid</a></li>
+  <li><a href="http://jekyllrb-ja.github.io/docs/variables/">変数</a></li>
+  <li><a href="http://hhsprings.pinoko.jp/site-hhs/2015/06/pygments%E3%81%AE%E5%AF%BE%E5%BF%9C%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7/">シンタックスハイライト</a>
+GitHub 上のドキュメントもあったはず。
+<a href="http://pygments.org/languages/">Pygments</a></li>
+</ul>
 
-<h1 id="section-1">めも</h1>
-<p>いろいろと細部で作業が残っているが、先に公開状態まで
-持っていく事にした。</p>
+<h1 id="configyml">_config.yml</h1>
 
-<p>作業を進めるのと同時にメモを取り、更新していく。この方が
-楽そう。</p>
+<h2 id="section-1">出力先の指定</h2>
+<p>GitHub Pages の html 置き場に直接生成する。</p>
 
-<h1 id="section-2">一般的な手順</h1>
-<p>まぁ、この程度はちょっと検索すると、どこのページでも書いてある。
-が、メモなので一応、備忘的に。</p>
-
-<h2 id="section-3">インストール</h2>
-<p>環境は Linux の Debian でやってる。</p>
-
-<p>インストールは jekyll パッケージを導入するだけ。</p>
-
-<p>シンタックスハイライトに pygments を使う場合は
-そっちのインストールも必要になる。
-Debian だと ruby-pygments.rb なんてパッケージになっている。
-パッケージになっていない場合でも Ruby のパッケージ管理システムで
-ある gem でインストールできる。</p>
-
-<h2 id="section-4">準備</h2>
-<p>Jekyll コマンドにはいろいろな機能がある。
-その 1 つとして、元ファイル一式の生成がある。</p>
-
-<p>作業ディレクトリで下記コマンドを実行する。</p>
+<p>_config.yml に以下を追記する</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ jekyll new .
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">destination</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../../username.github.io</span></span>
 </pre></div>
 </div>
 </div>
 
-<p>これで、元となるファイル／ディレクトリの一式を生成してくれる。</p>
+<p>username は GitHub のアカウント名</p>
 
-<p>必ず、空のディレクトリで行う。</p>
-
-<h2 id="section-5">ページ生成</h2>
-<p>作業ディレクトリで下記コマンドを実行する。</p>
+<h2 id="url">ベース URL</h2>
+<p>相対パスでアクセスする様、~.~を前置する。
+そういう用途のものではない気もするが。</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ jekyll build
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">baseurl</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">.</span><span style="color:#710">&quot;</span></span>
 </pre></div>
 </div>
 </div>
 
-<p>_site  ディレクトリが生成され、その中に html 他、一式が作成される。
-公開するのはこの _site ディレクトリの内容となる。</p>
+<h2 id="section-2">マークダウンの書式</h2>
+<p>GFM(GitHub Flavored Markdown) とする</p>
 
-<p>GitHub Pages で公開するなら、_site ディレクトリの内容を username.github.io へ
-そっくり更新すれば良い。</p>
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">kramdown</span>:
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#606">input</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">GFM</span></span>
+</pre></div>
+</div>
+</div>
 
-<h2 id="section-6">記事の作成</h2>
-<p>記事は _posts 配下に YYYY-MM-DD-some-theme.md の様な、先頭に日付を含めた
-ファイル名で作成していく。</p>
+<h2 id="md-">.md ファイル中の改行を無視する</h2>
+<p>ちょっと驚いた。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">kramdown</span>:
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#606">hard_wrap</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+</pre></div>
+</div>
+</div>
+
+<h2 id="section-3">シンタックスハイライトのエンジンを指定する</h2>
+<p>シンタックスハイライトには pygments を使う。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">highlighter</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">pygments</span></span>
+</pre></div>
+</div>
+</div>
+
 
   </article>
 
@@ -190,12 +202,12 @@ Debian だと ruby-pygments.rb なんてパッケージになっている。
     <li>
       <a href="./../../../../../../categories/#jekyll">
 	jekyll</a>
-      (5)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#memo">
-	memo</a>
-      (4)</li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (1)</li>
     
     <li>
       <a href="./../../../../../../categories/#tips">
@@ -268,12 +280,6 @@ Debian だと ruby-pygments.rb なんてパッケージになっている。
     <li>
       <a href="./../../../../../../date/#2016-Mar">
 	2016 Mar</a></li>
-    
-    
-    
-    
-    
-    
     
     
     
