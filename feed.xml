@@ -5,9 +5,32 @@
     <description>作業めも等。日記、雑記、その他何でも</description>
     <link>./</link>
     <atom:link href="./feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 10 Apr 2016 19:07:20 +0900</pubDate>
-    <lastBuildDate>Sun, 10 Apr 2016 19:07:20 +0900</lastBuildDate>
+    <pubDate>Mon, 11 Apr 2016 03:03:59 +0900</pubDate>
+    <lastBuildDate>Mon, 11 Apr 2016 03:03:59 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
+    
+      <item>
+        <title>Ruby リファレンスマニュアルをローカルで使う</title>
+        <description>
+  Ruby のドキュメントを手元で参照する
+  概要
+  手順。    
+      概要
+      コマンドの準備
+      ソース取得
+      DB を作る（続けて更新する）
+      静的 html を生成する
+ ...</description>
+        <pubDate>Mon, 11 Apr 2016 00:00:00 +0900</pubDate>
+        <link>./ruby/rubydoc/2016/04/11/rubydoc-local/</link>
+        <guid isPermaLink="true">./ruby/rubydoc/2016/04/11/rubydoc-local/</guid>
+        
+        
+        <category>ruby</category>
+        
+        <category>rubydoc</category>
+        
+      </item>
     
       <item>
         <title>CSS チェッカ</title>
@@ -125,7 +148,8 @@ http://www...</description>
 時間ができたので調べ直していたら、さすがに最近はツールもいろいろ
 増えている様だった。
 
-で、その途中、とある人が G...</description>
+で、その途中、とある人
+が ...</description>
         <pubDate>Thu, 17 Mar 2016 00:00:00 +0900</pubDate>
         <link>./jekyll/2016/03/17/welcome-to-jekyll/</link>
         <guid isPermaLink="true">./jekyll/2016/03/17/welcome-to-jekyll/</guid>

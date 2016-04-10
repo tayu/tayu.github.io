@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Jekyll の設定</title>
+    <title>Ruby リファレンスマニュアルをローカルで使う</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="./jekyll/config/2016/03/19/jekyll-config/">
+    <link rel="canonical" href="./ruby/rubydoc/2016/04/11/rubydoc-local/">
     <!-- Custom CSS -->
     
 
@@ -97,90 +97,111 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Jekyll の設定</h1>
-    <p class="meta">Mar 19, 2016</p>
+    <h1>Ruby リファレンスマニュアルをローカルで使う</h1>
+    <p class="meta">Apr 11, 2016</p>
   </header>
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#section">情報源</a></li>
-  <li><a href="#configyml">_config.yml</a>    <ul>
-      <li><a href="#section-1">出力先の指定</a></li>
-      <li><a href="#url">ベース URL</a></li>
-      <li><a href="#section-2">マークダウンの書式</a></li>
-      <li><a href="#md-">.md ファイル中の改行を無視する</a></li>
-      <li><a href="#section-3">シンタックスハイライトのエンジンを指定する</a></li>
+  <li><a href="#ruby-">Ruby のドキュメントを手元で参照する</a></li>
+  <li><a href="#section">概要</a></li>
+  <li><a href="#section-1">手順。</a>    <ul>
+      <li><a href="#section-2">概要</a></li>
+      <li><a href="#section-3">コマンドの準備</a></li>
+      <li><a href="#section-4">ソース取得</a></li>
+      <li><a href="#db-">DB を作る（続けて更新する）</a></li>
+      <li><a href="#html-">静的 html を生成する</a></li>
+      <li><a href="#section-5">後始末</a></li>
     </ul>
   </li>
 </ul>
 
-<p>設定関連で変更した項目</p>
+<h1 id="ruby-">Ruby のドキュメントを手元で参照する</h1>
 
-<h1 id="section">情報源</h1>
+<p>手元にドキュメントを置いておくと何かと便利。
+Ruby のドキュメントをローカルで参照できるように
+したのでめもめも。</p>
 
-<ul>
-  <li><a href="http://jekyllrb.com/">本家サイト</a></li>
-  <li><a href="https://jekyllrb-ja.github.io/">日本語</a></li>
-  <li><a href="http://wiki.shopify.com/Liquid">Liquid</a></li>
-  <li><a href="http://jekyllrb-ja.github.io/docs/variables/">変数</a></li>
-  <li><a href="http://hhsprings.pinoko.jp/site-hhs/2015/06/pygments%E3%81%AE%E5%AF%BE%E5%BF%9C%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7/">シンタックスハイライト</a>
-GitHub 上のドキュメントもあったはず。
-<a href="http://pygments.org/languages/">Pygments</a></li>
-</ul>
+<p>実施したのはちょっと前なので今は古いかもしれない</p>
 
-<h1 id="configyml">_config.yml</h1>
+<h1 id="section">概要</h1>
+<p>Ruby のドキュメントは<a href="http://docs.ruby-lang.org/ja/">ここ</a>にある。
+が、html でまとめてダウンロードできる様なリンクは見当たらない。</p>
 
-<h2 id="section-1">出力先の指定</h2>
-<p>GitHub Pages の html 置き場に直接生成する。</p>
+<p>このページの一番下にある<a href="https://github.com/rurema">るりまプロジェクト</a>を
+見ていたら、html を作成する工程があった。
+そこから逆算する様に手順を調べ、やってみた。</p>
 
-<p>_config.yml に以下を追記する</p>
+<h1 id="section-1">手順。</h1>
+
+<h2 id="section-2">概要</h2>
+
+<p>大体の手順は以下の様になる</p>
+
+<ol>
+  <li>るりまの github リポジトリからソースを取得する。</li>
+  <li>DB を作る</li>
+  <li>DB から 静的 html を生成する</li>
+</ol>
+
+<p>元にした手順は<a href="https://github.com/rurema/doctree/wiki/Tutorial">Tutorial</a>と
+<a href="https://github.com/rurema/doctree/wiki/BitClust">BitClust</a>のページ</p>
+
+<h2 id="section-3">コマンドの準備</h2>
+
+<p><code>bitclust</code> を使える様にする。bitclust はパッケージになっていないので
+Ruby の gem としてインストールする。</p>
+
+<p>※ root 権限が不要な、ユーザのホーム配下にインストールする方法もある様だが、
+ここでは標準的な方法</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">destination</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../../username.github.io</span></span>
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ su -c 'gem install bitclust-core'
 </pre></div>
 </div>
 </div>
 
-<p>username は GitHub のアカウント名</p>
+<p>/usr/local/bin/bitclust がインストールされた。</p>
 
-<h2 id="url">ベース URL</h2>
-<p>相対パスでアクセスする様、<code>.</code>を前置する。
-そういう用途のものではない気もするが。</p>
+<h2 id="section-4">ソース取得</h2>
+<p>github から clone する。適当なディレクトリで以下を実行する。</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">baseurl</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">.</span><span style="color:#710">&quot;</span></span>
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ git clone git://github.com/rurema/doctree.git
 </pre></div>
 </div>
 </div>
 
-<h2 id="section-2">マークダウンの書式</h2>
-<p>GFM(GitHub Flavored Markdown) とする</p>
+<h2 id="db-">DB を作る（続けて更新する）</h2>
+
+<p>作業ディレクトリで <code>bitclust</code> を実行する</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">kramdown</span>:
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#606">input</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">GFM</span></span>
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cd doctree/refm/api
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ bitclust -d ./db-2.0.0 init version=2.0.0 encoding=UTF-8
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ bitclust -d ./db-2.0.0 update --stdlibtree=src
 </pre></div>
 </div>
 </div>
 
-<h2 id="md-">.md ファイル中の改行を無視する</h2>
-<p>そんな事をするとは。ちょっと驚いた。</p>
+<h2 id="html-">静的 html を生成する</h2>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">kramdown</span>:
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#606">hard_wrap</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mkdir -p ../../../html/function
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ bitclust -d ./db-2.0.0 statichtml -o ../../../html
 </pre></div>
 </div>
 </div>
+<p>リポジトリと別のディレクトリ（<code>html</code>）に出力する。</p>
 
-<h2 id="section-3">シンタックスハイライトのエンジンを指定する</h2>
-<p>シンタックスハイライトには pygments を使う。</p>
+<p>最初、エラーが出て終了したが、html/function/ ディレクトリを
+作ったらうまく行った</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#606">highlighter</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">pygments</span></span>
-</pre></div>
-</div>
-</div>
+<h2 id="section-5">後始末</h2>
+<p>db やリポジトリは不要なので消してしまう。</p>
+
+<p>翻訳作業とかするなら、別途 clone する方が
+余計なファイル（db）が無くて安全。</p>
 
 
   </article>
