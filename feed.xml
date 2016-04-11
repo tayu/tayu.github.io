@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0">
   <channel>
     <title>めもなど</title>
+    <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <link>./</link>
-    <atom:link href="./feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 11 Apr 2016 03:03:59 +0900</pubDate>
-    <lastBuildDate>Mon, 11 Apr 2016 03:03:59 +0900</lastBuildDate>
-    <generator>Jekyll v2.2.0</generator>
+    <pubDate>Mon, 11 Apr 2016 19:26:05 +0900</pubDate>
+
     
-      <item>
-        <title>Ruby リファレンスマニュアルをローカルで使う</title>
-        <description>
+    <item>
+      <title>Ruby リファレンスマニュアルをローカルで使う</title>
+      <link>http://tayu.github.io/ruby/rubydoc/2016/04/11/rubydoc-local/</link>
+      <description>
   Ruby のドキュメントを手元で参照する
   概要
   手順。    
@@ -21,20 +20,13 @@
       DB を作る（続けて更新する）
       静的 html を生成する
  ...</description>
-        <pubDate>Mon, 11 Apr 2016 00:00:00 +0900</pubDate>
-        <link>./ruby/rubydoc/2016/04/11/rubydoc-local/</link>
-        <guid isPermaLink="true">./ruby/rubydoc/2016/04/11/rubydoc-local/</guid>
-        
-        
-        <category>ruby</category>
-        
-        <category>rubydoc</category>
-        
-      </item>
+      <pubDate>Mon, 11 Apr 2016 00:00:00 +0900</pubDate>
+    </item>
     
-      <item>
-        <title>CSS チェッカ</title>
-        <description>
+    <item>
+      <title>CSS チェッカ</title>
+      <link>http://tayu.github.io/css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</link>
+      <description>
   CSS のチェッカが欲しい
   環境
   インストール手順    
@@ -42,28 +34,13 @@
       ライブラリへのパスを修正する
       .war を作成する
       .war を Tomca...</description>
-        <pubDate>Tue, 05 Apr 2016 00:00:00 +0900</pubDate>
-        <link>./css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</link>
-        <guid isPermaLink="true">./css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</guid>
-        
-        
-        <category>css</category>
-        
-        <category>validator</category>
-        
-        <category>tomcat</category>
-        
-        <category>java</category>
-        
-        <category>install</category>
-        
-        <category>w3c</category>
-        
-      </item>
+      <pubDate>Tue, 05 Apr 2016 00:00:00 +0900</pubDate>
+    </item>
     
-      <item>
-        <title>HTML5 文法チェッカ</title>
-        <description>
+    <item>
+      <title>HTML5 文法チェッカ</title>
+      <link>http://tayu.github.io/html5/validator/tomcat/java/install/2016/04/02/html5-validator/</link>
+      <description>
   HTML5 の lint が欲しい
   必要なもの
   Tomcat のインストール
@@ -73,26 +50,13 @@
       移動
       リンクを張る
       デフォルトの...</description>
-        <pubDate>Sat, 02 Apr 2016 00:00:00 +0900</pubDate>
-        <link>./html5/validator/tomcat/java/install/2016/04/02/html5-validator/</link>
-        <guid isPermaLink="true">./html5/validator/tomcat/java/install/2016/04/02/html5-validator/</guid>
-        
-        
-        <category>html5</category>
-        
-        <category>validator</category>
-        
-        <category>tomcat</category>
-        
-        <category>java</category>
-        
-        <category>install</category>
-        
-      </item>
+      <pubDate>Sat, 02 Apr 2016 00:00:00 +0900</pubDate>
+    </item>
     
-      <item>
-        <title>Jekyll の TIPS</title>
-        <description>
+    <item>
+      <title>Jekyll の TIPS</title>
+      <link>http://tayu.github.io/jekyll/tips/2016/04/01/jekyll-tips/</link>
+      <description>
   目次を生成する
   相対パスを使用する
   ページ内で使用する変数を先頭で宣言する
@@ -107,20 +71,13 @@
 {:toc}
 
 http://www...</description>
-        <pubDate>Fri, 01 Apr 2016 00:00:00 +0900</pubDate>
-        <link>./jekyll/tips/2016/04/01/jekyll-tips/</link>
-        <guid isPermaLink="true">./jekyll/tips/2016/04/01/jekyll-tips/</guid>
-        
-        
-        <category>jekyll</category>
-        
-        <category>tips</category>
-        
-      </item>
+      <pubDate>Fri, 01 Apr 2016 00:00:00 +0900</pubDate>
+    </item>
     
-      <item>
-        <title>Jekyll の設定</title>
-        <description>
+    <item>
+      <title>Jekyll の設定</title>
+      <link>http://tayu.github.io/jekyll/config/2016/03/19/jekyll-config/</link>
+      <description>
   情報源
   _config.yml    
       出力先の指定
@@ -128,20 +85,13 @@ http://www...</description>
       マークダウンの書式
       .md ファイル中の改行を無視する
       シンタックスハイライトのエンジンを指定...</description>
-        <pubDate>Sat, 19 Mar 2016 00:00:00 +0900</pubDate>
-        <link>./jekyll/config/2016/03/19/jekyll-config/</link>
-        <guid isPermaLink="true">./jekyll/config/2016/03/19/jekyll-config/</guid>
-        
-        
-        <category>jekyll</category>
-        
-        <category>config</category>
-        
-      </item>
+      <pubDate>Sat, 19 Mar 2016 00:00:00 +0900</pubDate>
+    </item>
     
-      <item>
-        <title>ブログ再開 by Jekyll</title>
-        <description>ブログ、再開する。
+    <item>
+      <title>ブログ再開 by Jekyll</title>
+      <link>http://tayu.github.io/jekyll/2016/03/17/welcome-to-jekyll/</link>
+      <description>ブログ、再開する。
 一時は別手段に逃げたものの、やっぱりマークダウンで書けると
 良さそうとの思いがずっとあった。
 
@@ -150,14 +100,10 @@ http://www...</description>
 
 で、その途中、とある人
 が ...</description>
-        <pubDate>Thu, 17 Mar 2016 00:00:00 +0900</pubDate>
-        <link>./jekyll/2016/03/17/welcome-to-jekyll/</link>
-        <guid isPermaLink="true">./jekyll/2016/03/17/welcome-to-jekyll/</guid>
-        
-        
-        <category>jekyll</category>
-        
-      </item>
+      <pubDate>Thu, 17 Mar 2016 00:00:00 +0900</pubDate>
+    </item>
     
+
   </channel>
 </rss>
+
