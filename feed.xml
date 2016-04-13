@@ -4,11 +4,28 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Mon, 11 Apr 2016 19:26:05 +0900</pubDate>
+    <pubDate>Wed, 13 Apr 2016 23:43:31 +0900</pubDate>
 
     
     <item>
-      <title>Ruby リファレンスマニュアルをローカルで使う</title>
+      <title>mp3 ファイルへの変換が 90 分で止まる</title>
+      <link>http://tayu.github.io/audio/convert/2016/04/12/audio-convert/</link>
+      <description>
+  現象
+  変換方法
+  原因
+  ストーリー
+  実際のところは
+  解決に向けて
+  要望    
+      wav 以外のフォーマットの採用
+      パイプ処理に適したフォーマットの提案
+      mplay と l...</description>
+      <pubDate>Tue, 12 Apr 2016 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>Ruby リファレンスマニュアルをローカルで参照する</title>
       <link>http://tayu.github.io/ruby/rubydoc/2016/04/11/rubydoc-local/</link>
       <description>
   Ruby のドキュメントを手元で参照する

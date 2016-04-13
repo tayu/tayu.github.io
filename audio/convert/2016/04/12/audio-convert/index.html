@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>mp3 ファイルへの変換が 90 分で止まる</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./audio/convert/2016/04/12/audio-convert/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>mp3 ファイルへの変換が 90 分で止まる</h1>
+    <p class="meta">Apr 12, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <ul id="markdown-toc">
+  <li><a href="#section">現象</a></li>
+  <li><a href="#section-1">変換方法</a></li>
+  <li><a href="#section-2">原因</a></li>
+  <li><a href="#section-3">ストーリー</a></li>
+  <li><a href="#section-4">実際のところは</a></li>
+  <li><a href="#section-5">解決に向けて</a></li>
+  <li><a href="#section-6">要望</a>    <ul>
+      <li><a href="#wav-">wav 以外のフォーマットの採用</a></li>
+      <li><a href="#section-7">パイプ処理に適したフォーマットの提案</a></li>
+      <li><a href="#mplay--lame-">mplay と lame の受け渡しに別のフォーマットが使えればなぁ</a></li>
+      <li><a href="#wav--1">wav フォーマットの拡張</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-8">参考</a></li>
+</ul>
+
+<h1 id="section">現象</h1>
+
+<p>録音した音声ファイルを別環境で聞くために、スクリプトで mp3 に変換
+していた。</p>
+
+<p>ある時、ふと気づいたら 2 時間あるはずなのに 1 時間 30 分辺りで
+終了するものがいくつも出てきた。でも、元ファイルはちゃんと 2 時間
+あった。</p>
+
+<p>以前、変換を始めた頃から 2 時間物はあって、その時はちゃんと変換できて
+いた。</p>
+
+<h1 id="section-1">変換方法</h1>
+
+<p>変換は以下の様にやっていた</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>mplayer -really-quiet -ao pcm:file=/dev/stdout infile.flv \
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  | lame  /dev/stdin outfile.mp3
+</pre></div>
+</div>
+</div>
+
+<p>入力は mplayer にお任せで wav ファイルをパイプで lame に渡して mp3 を
+作成する。lame 側にはビットレートの指定などオプションも入る。</p>
+
+<h1 id="section-2">原因</h1>
+
+<p>いろいろ疑って調査した結果、悪い（マズイ）のは wav をパイプって
+所だという結論になった。</p>
+
+<p><a href="http://oku.edu.mie-u.ac.jp/~okumura/wavefmt.html">wav ファイルのフォーマット</a>
+を見ると、最初にヘッダがあってファイルサイズが定義されている。
+これが <code>4 バイト</code>しかない。</p>
+
+<p><code>4</code> バイトである。つまり <code>4G</code> だ（実際には <code>2G</code> ）。</p>
+
+<p>また、パイプってのも問題。何がマズイのか？ ファイルの先頭にサイズ情報が
+あるって事だ。</p>
+
+<p>パイプって事は後戻りのできないストリームって事だ。でもサイズは変換処理が終了
+してみないと正確な値は分からない。処理が終わってから先頭に戻って正しい値を
+書き込む事がができないんだ。</p>
+
+<p>こんな条件で、どう処理すれば良いのだろう。とりあえず<code>十分に</code>大きな数値を
+書き込んでおき、可能なら後で修正する
+（いや、可能でないから問題化するのだが）しか無いだろう。</p>
+
+<p>では何故、大抵のファイルでは問題にならないか。単に End-Of-File 、つまり
+実ファイルの終端が先に来るからだろう。</p>
+
+<h1 id="section-3">ストーリー</h1>
+<p>つまり、起きていることはこんな事なのだろう</p>
+
+<ol>
+  <li>mplayer が /dev/stdout に書き出す時、ファイルサイズとして
+適当に大きな値でヘッダ出力する</li>
+  <li>通常の wav ファイル出力なら、最後に先頭に seek して正しい値を書き込む
+    <ul>
+      <li>そもそも mplayer は出力先が標準出力である事を知らない。または、
+分かっているからこそ、コマンドラインオプションに標準出力を用意していない</li>
+    </ul>
+  </li>
+  <li>lame は入力の先頭にあるヘッダ情報からサイズを取得する
+    <ul>
+      <li>これが正しくない事は上述の通り</li>
+    </ul>
+  </li>
+  <li>lame は入力で得られたサイズ（フレーム）分の処理を行い、正常に終了する</li>
+</ol>
+
+<h1 id="section-4">実際のところは</h1>
+
+<p>調査の一環としてパイプに出力されるサイズを見てみた</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</pre></div>
+</div>
+</div>
+<p><code>24  f0  ff  7f</code> の部分がサイズで 0x7ffff024 、10 進で 2,147,479,588 となる。
+負数にされない様に MSB は落としてあるので約 2G となっている。</p>
+
+<p>パイプでなく wav ファイルに出力させたものは</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ls -l sample.wav
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>-rwxrwx--- 1 root vboxsf 2768666668  4月 12 01:47 sample.wav
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ od -tax1 sample.wav | head -4
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000000   R   I   F   F   $ nul ack   %   W   A   V   E   f   m   t  sp
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         52  49  46  46  24  80  06  a5  57  41  56  45  66  6d  74  20
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+<span class="line-numbers"><a href="#n7" name="n7">7</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</pre></div>
+</div>
+</div>
+<p>と、なっていた。サイズは 2768666668 バイト。ヘッダ中の <code>24  80  06  a5</code> に
+フォーマット規約の通り +8 して、ちゃんと一致する。</p>
+
+<p>結局、mplayer が <code>24  80  06  a5</code> と出力してくれれば良いのだが、
+処理の最初にそれを知り得ないから、暫定で <code>24  f0  ff  7f</code> を出力
+しているって事で合ってる様に見える。</p>
+
+<p>ちなみに、もっと大きなファイル、5 時間位のものを wav に変換してみた
+所、3 時間位で終わっていた。そのヘッダは以下の様になっていた。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ od -tax1 sample2.wav | head -4
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  ff  57  41  56  45  66  6d  74  20
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</pre></div>
+</div>
+</div>
+<p><code>24  f0  ff  ff</code> になっている。上位バイトが 0xFF 0xFF 。ここが上限なのだろう。</p>
+
+<h1 id="section-5">解決に向けて</h1>
+
+<p>目的は mp3 に正しく変換する事だ。</p>
+
+<p>とりあえず <code>apt-cache search</code> してみたら pacpl というパッケージがあった。
+使ってみたら 5 時間ものも含めて正常な長さの mp3 に変換できた。</p>
+
+<p>ただ、これ、中間ファイルを作るんだよなぁ。wav の。つまり、めちゃくちゃ
+大きい中間ファイルを作る。今までの手法の良い所は中間ファイルを作らないって
+事だったのだが。</p>
+
+<p>とりあえず、ディスクの空き容量に気を付ければ実現できる方法は確保できた。
+もっと良い方法が無いか、もうちょっと調査してみるつもり。</p>
+
+<h1 id="section-6">要望</h1>
+
+<p>どうなれば良いのか。幾つか考えてみた。</p>
+
+<h2 id="wav-">wav 以外のフォーマットの採用</h2>
+
+<p>サイズの問題は認識されていて、64 ビットの wav フォーマットも提案されている
+らしい。ただ、普及していない。</p>
+
+<p>まぁ、RAW データのフォーマットとして別の何か、ファイルサイズの
+もっと大きいものが普及してくれれば良いだけなのだが。</p>
+
+<h2 id="section-7">パイプ処理に適したフォーマットの提案</h2>
+
+<p>後戻りできないストリームの先頭にサイズ情報を置くのが問題なんだから、
+そこにサイズ情報を置かなければ良い。</p>
+
+<p>例えば画像なら 1 ピクセルのデータの並びでデータを保持する事も行われる。
+1 ピクセルのデータサイズとか画像の横幅とかの情報が別途必要だが。</p>
+
+<p>同じ様に、サイズ以外の情報、サンプリングレートとかのみをヘッダに含め、
+データ量は終端まで読んで確定する。そんな処理を考慮したヘッダ形式。</p>
+
+<h2 id="mplay--lame-">mplay と lame の受け渡しに別のフォーマットが使えればなぁ</h2>
+
+<p>mplayer から lame へ渡す形式が wav 以外に可能なら
+問題は起こらない。サイズ情報が有っても、とりあえず大きな値を渡しておいて、
+終端で読み込み終了とするで良い。</p>
+
+<p>比較的最近制定されたフォーマットならサイズ制限はもっと
+大きいはず。</p>
+
+<p>両方が対応してくれると良いのだが。</p>
+
+<h2 id="wav--1">wav フォーマットの拡張</h2>
+
+<p>単に、ヘッダ情報のサイズを無視するフラグをヘッダの拡張域に持つとかで
+どうだろう。</p>
+
+<p>或いは、正しいサイズを拡張域に持つ様にするとか。</p>
+
+<p>この程度なら現行へのインパクトも小さそうだなぁ。対応していない
+アプリは拡張ヘッダを無視すれば良いだけだし。</p>
+
+<h1 id="section-8">参考</h1>
+
+<p>以前はできていた。この時はどうだったのか調べてみた。</p>
+
+<p>環境は Debian squeeze i386 。最近終了したが LTS が提供されていた。</p>
+
+<p>同じ様にパイプの先頭を見ると</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul soh nul stx nul nul   ; nul nul nul   n stx nul
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  01  00  02  00  80  bb  00  00  00  ee  02  00
+</pre></div>
+</div>
+</div>
+<p>と、なっている。サイズ情報は変わらない。</p>
+
+<p>次にファイル出力させたものをプレイヤーのプロパティで見てみたら、</p>
+
+<pre><code>Audio: PCM 48000Hz stereo 1536kbps [A: pcm_s16le, 48000 Hz, 2 channels, s16, 1536 kb/s]
+</code></pre>
+
+<p>となっていた。今の環境で変換したものだと</p>
+
+<pre><code>Audio: IEEE Float 48000Hz stereo 3072kbps [A: pcm_f32le, 48000 Hz, 2 channels, fp32, 3072 kb/s]
+</code></pre>
+<p>となっている。ビットレートが倍になっている。どうやら品質が違うようだ。</p>
+
+<p>ファイルサイズで見ても 1,384,325,164 と 2,768,666,668 であり、
+倍になっている。</p>
+
+<p>つまり、mplayer がデフォルトで出力する wav の品質が上がった為に、
+出力されるバイト数が増えて 2G を超えたため、今回の現象になったものらしい。</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    <a class="post-link"
+       href="./../../../../../../allpost/">
+      全記事</a>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li>めもなど</li>
+        <li><a href="mailto:"></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>
