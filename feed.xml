@@ -4,8 +4,23 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Tue, 17 May 2016 15:07:35 +0900</pubDate>
+    <pubDate>Tue, 17 May 2016 22:52:59 +0900</pubDate>
 
+    
+    <item>
+      <title>cron でメールを送るためのスクリプト</title>
+      <link>http://tayu.github.io/mail/msmtp/local/2016/05/18/send-mail/</link>
+      <description>自分への通知用に指定時刻にメールを送る。
+
+自分（の携帯など）に指定時刻にメールを送る様にしておくと便利な事がある。
+例えば特定の曜日の決まった時刻にやる事がある場合なんかに。
+
+5 分前にメールを受け取る様にしておくとか。
+
+
+  ...</description>
+      <pubDate>Wed, 18 May 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>JM の日本語マニュアルをローカルで参照する</title>
