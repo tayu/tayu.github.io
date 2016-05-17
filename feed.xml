@@ -4,8 +4,22 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Fri, 15 Apr 2016 00:27:37 +0900</pubDate>
+    <pubDate>Tue, 17 May 2016 14:59:15 +0900</pubDate>
 
+    
+    <item>
+      <title>JM の日本語マニュアルをローカルで参照する</title>
+      <link>http://tayu.github.io/jm/man/local/2016/05/17/jm-local/</link>
+      <description>何かとローカルに置きたがるので、JM も。
+
+実は前々からやりたかったのだが、html 化の為のスクリプトとかが
+無かったので止まっていた。で、改めてディレクトリ配下を眺めていて、
+最低限の、読める程度のものを生成してみた。
+
+
+  ...</description>
+      <pubDate>Tue, 17 May 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>mp3 ファイルへの変換が 90 分で止まる</title>
