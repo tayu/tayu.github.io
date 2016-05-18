@@ -4,8 +4,24 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Tue, 17 May 2016 23:45:59 +0900</pubDate>
+    <pubDate>Thu, 19 May 2016 00:41:28 +0900</pubDate>
 
+    
+    <item>
+      <title>Polipo の設定</title>
+      <link>http://tayu.github.io/proxy/config/2016/05/19/polipo-config/</link>
+      <description>vm 上の Debian で proxy として使用していた
+Polipo の設定を見直した。
+いやぁ、ちょっとあせった。
+
+
+  ディスクがフルに
+  犯人は・・・
+  とりあえず、空きをつくる
+  キャッシュさせないための設定
+ ...</description>
+      <pubDate>Thu, 19 May 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>cron でメールを送るためのスクリプト</title>
