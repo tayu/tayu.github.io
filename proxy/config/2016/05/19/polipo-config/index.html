@@ -174,7 +174,7 @@ http アクセスはローカルの proxy からホストの proxy へリレー�
 
 <ul>
   <li>キャッシュさせないためには <code>maxDiskCacheEntrySize</code></li>
-  <li>キャッシュさクリアさせるには <code>diskCacheUnlinkTime</code></li>
+  <li>キャッシュをクリアさせるには <code>diskCacheUnlinkTime</code></li>
 </ul>
 
 <p>を設定すれば良いことが分かった。</p>
@@ -189,12 +189,16 @@ http アクセスはローカルの proxy からホストの proxy へリレー�
 </pre></div>
 </div>
 </div>
+<p>キャッシュクリアは次の cron.daily 時。</p>
 
 <h1 id="section-4">そもそもなぜ</h1>
 <p>確か、polipo パッケージの説明にキャッシュしないって有ったはず。</p>
 
 <p>今、確認してみたら <code>caching web proxy</code> となっていた。
 どこかで変わったのだろうか。</p>
+
+<p>そうそう、polipo を使っている理由は別の proxy にリレーできる
+軽量なものが欲しかったから。データを溜めるのは LAN 内に 1 つあれば良い。</p>
 
   </article>
 
