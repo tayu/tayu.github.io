@@ -76,20 +76,70 @@
     <h1>分岐</h1>
   </header>
   <article class="post-content">
+<p>形式は
+<code>if list; then list; [ elif list; then list; ] ... [ else list; ] fi</code> 。</p>
+
 <h1 id="if-">単純な if 文</h1>
-<p>形式は <code>if ～ else ～ fi</code> となる。</p>
 
-<p>/home/mon/github/repository/pages/lang/_posts/2016-05-01-sh-selection.md</p>
-
-<p><a href="./../../../../../script/selection.sh">helloworld.sh</a></p>
+<p><a href="./../../../../../script/selection.sh">selection.sh</a></p>
 
 <div><div class="CodeRay">
   <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>#! /bin/sh
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>echo &quot;Hello World&quot;
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>P=$(expr `date '+%S'` % 2)
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>if [ 0 = $P ]; then
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>    echo &quot;hello .&quot;
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>fi
 </pre></div>
 </div>
 </div>
 
+<p>if ～ then 部分は 2 行に分けても良い。この辺のスタイルは好みで。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>if [ 0 = $P ]
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>then
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    echo &quot;hello .&quot;
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>fi
+</pre></div>
+</div>
+</div>
+
+<h1 id="a--b">A または B</h1>
+
+<p><a href="./../../../../../script/selection2.sh">selection2.sh</a></p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>#! /bin/sh
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>P=$(expr `date '+%S'` % 2)
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>if [ 0 = $P ]; then
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>    echo &quot;hello .&quot;
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>else
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>    echo &quot;goodby .&quot;
+<span class="line-numbers"><a href="#n7" name="n7">7</a></span>fi
+</pre></div>
+</div>
+</div>
+<p>else 節をもつ。必ずどちらかの処理を通る</p>
+
+<h1 id="section">場合が複数</h1>
+<p><a href="./../../../../../script/selection3.sh">selection3.sh</a></p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>#! /bin/sh
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>P=$(expr `date '+%S'` % 5)
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>if [ 0 = $P ]; then
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>    echo &quot;hello .&quot;
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>elif [ 1 = $P ]; then
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>    echo &quot;goodby .&quot;
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>elif [ 2 = $P ]; then
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>    echo &quot;hi .&quot;
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>else
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>    echo &quot;ho .&quot;
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>fi
+</pre></div>
+</div>
+</div>
+<p>複数の場合を持つ場合。ブロック if 文。</p>
 </article>
 </div>
 
