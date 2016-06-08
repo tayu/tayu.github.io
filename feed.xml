@@ -4,8 +4,26 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Sat, 21 May 2016 01:32:14 +0900</pubDate>
+    <pubDate>Wed, 08 Jun 2016 09:15:22 +0900</pubDate>
 
+    
+    <item>
+      <title>zsh で predict-on を使う</title>
+      <link>http://tayu.github.io/zsh/config/2016/06/02/zsi-config/</link>
+      <description>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
+ってやつ。ただ、先鋭過ぎてちょっと困っている。
+
+
+  先方予測機能とは
+  つ、使いにくい
+  調査
+  とりあえず回避
+
+
+先方予測機能とは
+コマンドラインの...</description>
+      <pubDate>Thu, 02 Jun 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>Polipo の設定</title>
@@ -148,21 +166,6 @@ http://www...</description>
       .md ファイル中の改行を無視する
       シンタックスハイライトのエンジンを指定...</description>
       <pubDate>Sat, 19 Mar 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>ブログ再開 by Jekyll</title>
-      <link>http://tayu.github.io/jekyll/2016/03/17/welcome-to-jekyll/</link>
-      <description>ブログ、再開する。
-一時は別手段に逃げたものの、やっぱりマークダウンで書けると
-良さそうとの思いがずっとあった。
-
-時間ができたので調べ直していたら、さすがに最近はツールもいろいろ
-増えている様だった。
-
-で、その途中、とある人
-が ...</description>
-      <pubDate>Thu, 17 Mar 2016 00:00:00 +0900</pubDate>
     </item>
     
 

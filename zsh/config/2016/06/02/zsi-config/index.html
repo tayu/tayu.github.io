@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Polipo の設定</title>
+    <title>zsh で predict-on を使う</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./proxy/config/2016/05/19/polipo-config/">
+    <link rel="canonical" href="http://tayu.github.io./zsh/config/2016/06/02/zsi-config/">
     <!-- Custom CSS -->
     
 
@@ -97,112 +97,104 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Polipo の設定</h1>
-    <p class="meta">May 19, 2016</p>
+    <h1>zsh で predict-on を使う</h1>
+    <p class="meta">Jun 2, 2016</p>
   </header>
 
   <article class="post-content">
-  <p>vm 上の Debian で proxy として使用していた
-<a href="http://www.pps.jussieu.fr/~jch/software/polipo/">Polipo</a> の設定を見直した。
-いやぁ、ちょっとあせった。</p>
+  <p>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
+ってやつ。ただ、先鋭過ぎてちょっと困っている。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">ディスクがフルに</a></li>
-  <li><a href="#section-1">犯人は・・・</a></li>
-  <li><a href="#section-2">とりあえず、空きをつくる</a></li>
-  <li><a href="#section-3">キャッシュさせないための設定</a></li>
-  <li><a href="#section-4">そもそもなぜ</a></li>
-  <li><a href="#section-5">環境について</a></li>
+  <li><a href="#section">先方予測機能とは</a></li>
+  <li><a href="#section-1">つ、使いにくい</a></li>
+  <li><a href="#section-2">調査</a></li>
+  <li><a href="#section-3">とりあえず回避</a></li>
 </ul>
 
-<h1 id="section">ディスクがフルに</h1>
-<p>走らせていた、とあるアプリケーションが止まった。再起動してみるかな、と
-思ったが、その前にちょっとだけ環境の確認、と df してみて驚いた。
-ルートのディスク使用率が 100% になっていた。</p>
+<h1 id="section">先方予測機能とは</h1>
+<p>コマンドラインの編集（ZLE）で、キー入力毎にヒストリを参照して
+候補を表示してくれる機能。</p>
 
-<p>いやぁ、ひさびさ。</p>
-
-<p>リブートしなくて良かった。起動中にログの書き込み失敗で
-エラー終了するものがそこそこあるってのは既にやった事がある。</p>
-
-<p>とりあえず、一寸で良い、ディスクに空きを作らなければ。
-/var/log 配下の .gz ファイルを全部消してみたりしたが、100% のまま。
-多分、キャッシュ分なのだろう。キャッシュを全て書き出すには
-空きが足りない、と。</p>
-
-<h1 id="section-1">犯人は・・・</h1>
-<p>直前に何かやってたかな、と考えてみた。
-思い当たるのは、ちょっとまとまった量を wget で
-ダウンロードさせていた事くらい。</p>
-
-<p>ひょっとしたらキャッシュ？</p>
-
-<p>確認のため、/var/cache/polipo/ で du してみる。バッチリ容量を
-食ってた。</p>
-
-<h1 id="section-2">とりあえず、空きをつくる</h1>
-<p>Polipo のパラメータの一覧から当たりをつける。</p>
+<p>有効にするには</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># polipo -v
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>autoload predict-on
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>predict-on
 </pre></div>
 </div>
 </div>
+<p>とする。</p>
 
-<p><code>/etc/polipo/config</code> を編集して</p>
+<p>web の解説を見ていると「鍛えれば非常に便利」とある。
+と言っても、自動的に鍛えられるので、やる事は単に使い続けるだけ。
+その一方、「合わなければ使わない方が良い」との記述もある。
+また、方々で公開されている .zshrc を見るとコメントアウト
+してある事が多い。</p>
+
+<p>つまり、非常にクセが強いって事なのだろう。
+特にある程度使い込むまでは。</p>
+
+<h1 id="section-1">つ、使いにくい</h1>
+<p>こなれてくるまで時間がかかる。それまではむしろ使いにくいって事は
+予想していた。</p>
+
+<p>でも、コマンドラインの編集モードが変わったと思える挙動が。</p>
+
+<p>編集業の途中にカーソルを持って行き、2 文字程度入力すると
+その位置から後ろが全部消されてしまう。</p>
+
+<p>例えば、</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>diskCacheTruncateSize = 0
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>diskCacheTruncateTime = 0
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>diskCacheUnlinkTime = 0
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>diskCacheWriteoutOnClose = 0
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ls /some/path/some.file
 </pre></div>
 </div>
 </div>
-<p>として、</p>
+<p>として、先頭にカーソルを持っていって</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># polipo -x
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /some/path/some.file
 </pre></div>
 </div>
 </div>
-
-<p>したところ、キャッシュが全て消え、無事、ディスクの空きができた。</p>
-
-<h1 id="section-3">キャッシュさせないための設定</h1>
-<p>その後、少し調べた結果</p>
-
-<ul>
-  <li>キャッシュさせないためには <code>maxDiskCacheEntrySize</code></li>
-  <li>キャッシュをクリアさせるには <code>diskCacheUnlinkTime</code></li>
-</ul>
-
-<p>を設定すれば良いことが分かった。</p>
-
-<p>最終的に、以下を追記した。</p>
+<p>としようとすると</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>maxDiskCacheEntrySize = 0
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>diskCacheUnlinkTime = 0
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ca
 </pre></div>
 </div>
 </div>
-<p>キャッシュクリアは次の cron.daily 時。</p>
+<p>なんて事になるって事。</p>
 
-<h1 id="section-4">そもそもなぜ</h1>
-<p>確か、polipo パッケージの説明にキャッシュしないって有ったはず。</p>
+<h1 id="section-2">調査</h1>
+<p>検索してみたけど、同様の現象に言及しているページが 1 件あっただけ
+だった。そのページでは単に使用をやめていただけなので、
+解決につながる情報は無かった。</p>
 
-<p>今、確認してみたら <code>caching web proxy</code> となっていた。
-思い違いをしてたらしい。</p>
+<p>で、いろいろ検索しつつ考えた。</p>
 
-<h1 id="section-5">環境について</h1>
-<p>VM が複数あり、そこからの http アクセスをキャッシュするのが目的。
-全てをホスト側にある proxy にリレーさせている。
-これで、キャッシュを重複して持たずに済む（つもりだった）。</p>
+<p>これって「後半を消去している」んではなくて、
+「ヒストリでマッチしたものを表示」しているんではないだろうか。</p>
 
-<p>VM に polipo をインストールするのは VM 内のアプリケーション
-の設定を 127.0.0.1 に統一できて良いかな、と思ったから。
-proxy のアドレスが変わった場合でも設定変更が 1 箇所で済む。</p>
+<p>と、いう事は「補完候補を見つけたら単にインサートする」って
+挙動にするオプションが有れば良いってことになるのか？</p>
+
+<h1 id="section-3">とりあえず回避</h1>
+<p>当面、predict-on と predict-off を手動で切り替える事にした。
+検索すると、トグルするコマンドを作ったページも有ったが、
+そこまではせず、単純に短いエイリアスを定義した。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>alias pon='predict-on'
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>alias poff='predict-off'
+</pre></div>
+</div>
+</div>
+<p>こんな感じ。行の途中で編集する場合は、先に poff を実行する。
+その後、pon で戻すって形。</p>
+
+<p>predict-on を使い続けるかどうか、まだ考え中。</p>
 
 
   </article>
