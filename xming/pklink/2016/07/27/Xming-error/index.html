@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Xming の接続エラー</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./xming/pklink/2016/07/27/Xming-error/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Xming の接続エラー</h1>
+    <p class="meta">Jul 27, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <p>VM 上の X11(Debian) への接続に
+<a href="http://www.straightrunning.com/XmingNotes/">Xming</a> を使っている。
+jessie(stable) への接続は問題なかったのだが、
+stretch(testing) への接続でエラーになっていた。
+結論として Xming のバージョンアップで解決すると思われるのだが、
+とりあえず対症療法で手当てしたのでめもめも。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#section">エラーの内容</a></li>
+  <li><a href="#section-1">原因</a>    <ul>
+      <li><a href="#section-2">検索してみる</a></li>
+      <li><a href="#section-3">テストしてみる</a></li>
+      <li><a href="#section-4">予想してみる</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-5">対症療法</a></li>
+  <li><a href="#section-6">結論</a></li>
+</ul>
+
+<h1 id="section">エラーの内容</h1>
+
+<p>接続時に</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>expected key exchange group packet from server
+</pre></div>
+</div>
+</div>
+
+<p>というメッセージボックスが表され、接続失敗になる。</p>
+
+<h1 id="section-1">原因</h1>
+
+<h2 id="section-2">検索してみる</h2>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>expected key exchange group packet from server
+</pre></div>
+</div>
+</div>
+
+<p>で検索してみると、「PuTTY Fatal Error: expected key exchange group packet from server」というページが先頭に来る。PuTTY が出しているメッセージらしい。</p>
+
+<p>確かに Xming では ssh で接続してしている。Xming で ssh 接続を担当するのは
+別プログラムになっている。plink.exe だ。 Xming のインストールディレクトリ内に
+置かれている。</p>
+
+<p>幾つか検索先を読んでいると plink.exe の設定（接続情報）をクリアする等と
+あるが、それらしいファイルは無い。レジストリかもしれないが、それだと
+ちょっと面倒。などと思っていた。</p>
+
+<h2 id="section-3">テストしてみる</h2>
+
+<p>とりあえず、接続できる方と失敗する方の動きを比べてみる。</p>
+
+<p>DOS 窓を開き、plink.exe を直接叩いてみる。</p>
+
+<p>接続に成功する場合は以下</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 59022 user@127.0.0.1
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 59022
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>Server version: SSH-2.0-OpenSSH_6.7p1 Debian-5+deb8u2
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>Doing Diffie-Hellman key exchange with hash SHA-256
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>Host key fingerprint is:
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>ssh-rsa 2048 2f:39:c1:1d:21:f0:13:bc:11:b2:fa:61:8d:62:b1:6c
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>Initialised AES-256 SDCTR client-&gt;server encryption
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>Initialised HMAC-SHA1 client-&gt;server MAC algorithm
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>Initialised AES-256 SDCTR server-&gt;client encryption
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>Initialised HMAC-SHA1 server-&gt;client MAC algorithm
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>Using username &quot;user&quot;.
+</pre></div>
+</div>
+</div>
+
+<p>接続に失敗する場合は以下</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 52022 user@127.0.0.1
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 52022
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
+<span class="line-numbers"><a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
+<span class="line-numbers"><a href="#n8" name="n8">8</a></span>expected key exchange group packet from server
+</pre></div>
+</div>
+</div>
+
+<p>どうやら鍵交換で止まっているらしい。</p>
+
+<h2 id="section-4">予想してみる</h2>
+<p>そういえば少し前、SSL が TSL に置き換わるとか SHA-1が非推奨になるとかの
+話題があったなぁ、と思い出した。</p>
+
+<p>これは、もしかしたら plink.exe が古い暗号化方式しか使えない一方、
+ssh サーバ側はそれらを全て廃止したために、双方で使用する方式の
+ネゴが失敗しているのではないか。そんな予想が立った。</p>
+
+<p>そうなら、対策は plink.exe を新しくすること、となる。</p>
+
+<h1 id="section-5">対症療法</h1>
+
+<p><a href="http://www.straightrunning.com/XmingNotes/">Xming</a> のページから
+辿って
+<a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</a> のページへ移動
+する。Download ページから各種プログラムのダウンロードができる。
+その中に Plink もあるのでダウンロードする。</p>
+
+<p>Xming のインストールディレクトリ中の plink.exe を入れ替え、前回と
+同様に DOS 窓で動かしてみる。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 52022 user@127.0.0.1
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 52022
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>We claim version: SSH-2.0-PuTTY_Release_0.67
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>Doing Diffie-Hellman key exchange with hash SHA-256
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>Host key fingerprint is:
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>WARNING - POTENTIAL SECURITY BREACH!
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>The server's host key does not match the one PuTTY has
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>cached in the registry. This means that either the
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>server administrator has changed the host key, or you
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>have actually connected to another computer pretending
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>to be the server.
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>The new rsa2 key fingerprint is:
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span>ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span>If you were expecting this change and trust the new key,
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>enter &quot;y&quot; to update PuTTY's cache and continue connecting.
+<span class="line-numbers"><a href="#n21" name="n21">21</a></span>If you want to carry on connecting but without updating
+<span class="line-numbers"><a href="#n22" name="n22">22</a></span>the cache, enter &quot;n&quot;.
+<span class="line-numbers"><a href="#n23" name="n23">23</a></span>If you want to abandon the connection completely, press
+<span class="line-numbers"><a href="#n24" name="n24">24</a></span>Return to cancel. Pressing Return is the ONLY guaranteed
+<span class="line-numbers"><a href="#n25" name="n25">25</a></span>safe choice.
+<span class="line-numbers"><a href="#n26" name="n26">26</a></span>Update cached key? (y/n, Return cancels connection) y
+<span class="line-numbers"><a href="#n27" name="n27">27</a></span>Initialised AES-256 SDCTR client-&gt;server encryption
+<span class="line-numbers"><a href="#n28" name="n28">28</a></span>Initialised HMAC-SHA-256 client-&gt;server MAC algorithm
+<span class="line-numbers"><a href="#n29" name="n29">29</a></span>Initialised AES-256 SDCTR server-&gt;client encryption
+<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>Initialised HMAC-SHA-256 server-&gt;client MAC algorithm
+<span class="line-numbers"><a href="#n31" name="n31">31</a></span>Using username &quot;user&quot;.
+<span class="line-numbers"><a href="#n32" name="n32">32</a></span>mon@127.0.0.1's password:
+<span class="line-numbers"><a href="#n33" name="n33">33</a></span>Sent password
+</pre></div>
+</div>
+</div>
+
+<p>一度入力待ちになるが、正常に接続できた。</p>
+
+<p>と、言うか。この、キャッシュ情報の更新を行わないと Xming の接続処理が
+途中で止まる。</p>
+
+<h1 id="section-6">結論</h1>
+
+<p>Xming の HP を久しぶりに見たのだが、新しいバージョンがリリースというか
+フリーダウンロードできるようになっている。今まで使っていたものは 6.9.0.31 。
+この時はバージョン 7 は有料になっていた記憶がある。で、今は 7.7.0.9 が
+ダウンロードできる。</p>
+
+<p>まぁ、これを使えば済む話だったと思う。</p>
+
+<p>ただ、まぁ、流れとして plink.exe を入れ替えて正しく動く事を
+確認したかったので、良し。</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#zsh">
+	zsh</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

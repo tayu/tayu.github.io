@@ -4,8 +4,19 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Mon, 13 Jun 2016 16:23:04 +0900</pubDate>
+    <pubDate>Thu, 28 Jul 2016 00:45:06 +0900</pubDate>
 
+    
+    <item>
+      <title>Xming の接続エラー</title>
+      <link>http://tayu.github.io/xming/pklink/2016/07/27/Xming-error/</link>
+      <description>VM 上の X11(Debian) への接続に
+Xming を使っている。
+jessie(stable) への接続は問題なかったのだが、
+stretch(testing) への接続でエラーになっていた。
+結論として Xming のバー...</description>
+      <pubDate>Wed, 27 Jul 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>zsh で predict-on を使う</title>
@@ -18,10 +29,10 @@
   つ、使いにくい
   調査
   とりあえず回避
+  追記：数ヶ月使った結果
 
 
-先方予測機能とは
-コマンドラインの...</description>
+先方予...</description>
       <pubDate>Thu, 02 Jun 2016 00:00:00 +0900</pubDate>
     </item>
     
@@ -152,20 +163,6 @@ Polipo の設定を見直した。
 
 http://www...</description>
       <pubDate>Fri, 01 Apr 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Jekyll の設定</title>
-      <link>http://tayu.github.io/jekyll/config/2016/03/19/jekyll-config/</link>
-      <description>
-  情報源
-  _config.yml    
-      出力先の指定
-      ベース URL
-      マークダウンの書式
-      .md ファイル中の改行を無視する
-      シンタックスハイライトのエンジンを指定...</description>
-      <pubDate>Sat, 19 Mar 2016 00:00:00 +0900</pubDate>
     </item>
     
 
