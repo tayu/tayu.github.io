@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ブログ再開 by Jekyll</title>
+    <title>rakiko の仕様変更</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./jekyll/2016/03/17/welcome-to-jekyll/">
+    <link rel="canonical" href="http://tayu.github.io./radiko/2016/10/15/radiko-change/">
     <!-- Custom CSS -->
     
 
@@ -95,65 +95,68 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>ブログ再開 by Jekyll</h1>
-    <p class="meta">Mar 17, 2016</p>
+    <h1>rakiko の仕様変更</h1>
+    <p class="meta">Oct 15, 2016</p>
   </header>
 
   <article class="post-content">
-  <h1 id="section">ブログ、再開する。</h1>
-<p>一時は別手段に逃げたものの、やっぱりマークダウンで書けると
-良さそうとの思いがずっとあった。</p>
+  <p>10/11 に始まった
+<a href="http://radiko.jp/">radiko</a>の
+<a href="http://radiko.jp/rg/timefree/">タイムフリー</a>視聴の影響
+なのだろう、仕様変更があり、今までのスクリプトが使えなくなった。</p>
 
-<p>時間ができたので調べ直していたら、さすがに最近はツールもいろいろ
-増えている様だった。</p>
+<ul id="markdown-toc">
+  <li><a href="#section">現状</a></li>
+  <li><a href="#section-1">変更点</a></li>
+  <li><a href="#section-2">まとめ</a></li>
+</ul>
 
-<p>で、その途中、<a href="https://twitter.com/satoh_fumiyasu">とある人</a>
-が GitHub Pages でブログをしていて、
-その生成環境も公開している事が分かった。それを見てみたら、
-どうやら Jekyll ってのを使っている様だった。</p>
+<h1 id="section">現状</h1>
+<p>心配していた通り、10/11 に PC を立ち上げて放送を聴こうとしたら、
+聴けなくなっていた。</p>
 
-<p>そこから Jekyll を調べてみたら、GFM もシンタックスハイライトも
-サポートしている事が分かった。更に、GitHub Pages で使用されて
-いるとの事だった。</p>
+<p>エラーを見ると、player.swf ファイルの取得ができない様だった。</p>
 
-<p>※ 「GitHub Pages で使われている」とはどういう事か。デフォルトの README.md 等
-の展開に使われているって事らしい。と、いう事は README.md 中に
-<code>{{ site.title. }}</code>
-なんて書けるって事になる。
-ただ、それはローカルで見れないよなぁ。
-やはり、ローカルで静的な html を生成して確認したい。</p>
+<p>その後、ダメ元で試してみたのだが、以前のファイルを置いてみたら、
+聴けてしまった。？？？</p>
 
-<h1 id="jekyll-">Jekyll について</h1>
-<p>いろいろ特徴はあるが、一番良かったのはプログラムできるって
-点だったと思う。</p>
+<p>どうやら player.swf の url が変わったらしい。
+当初はそれ位の変更なのだと思っていた。</p>
 
-<p>記事をカテゴリ毎に分けたり、月毎に分けたりなども、プログラムを
-ちょっとすることで実現できた。
-<a href="http://jekyllrb-ja.github.io/docs/sites/">Jekyllを使ったサイト</a> なんかを
-見てもそういう例が見当たらないので、最初はできないのかとも思ったけど。</p>
+<h1 id="section-1">変更点</h1>
 
-<p>まぁ、一般的な導入記事は多いので、始めるのは簡単。
-その先、拡張とか考え始めると結構掘れるって感じ。</p>
+<p>検索して情報を探していたのだが、ようやく対応した人に行き当たった。</p>
 
-<h1 id="section-1">カテゴリページについて</h1>
-<p>素の状態だと全記事を並べたページ位しか無い。
-でも一般のブログのようなタグクラウドとか日付の選択とかも
-欲しい。</p>
+<p><a href="https://gist.github.com/booska/8861693">Radikoを録音するWSH</a></p>
 
-<p>とりあえず少々のプログラムで実現できる範囲で作ってみた。</p>
+<p>そのスクリプトを見てみたところ、もう少し、微妙に変わっていた。</p>
 
-<p>ページに分割するとか、新規にページを作るとかはやっていない。
-カテゴリページの html を 1 枚作り、内部の <code>a</code> タグに id を設定して
-飛ばしている。ただ、全体の見た目が悪い（同じ記事が複数表示されたり）ので、
-CSS でなんとかできないか、考え中。</p>
+<p>変更点は以下らしい</p>
 
-<p>Jekyll はプラグインによる拡張ができて、中にはカテゴリ毎にページを
-生成できるものもある模様。</p>
+<ul>
+  <li>player.swf の url</li>
+  <li>swfextract の -b の数値</li>
+  <li>バージョン</li>
+</ul>
 
-<p>既存のプラグインを導入しても良いが、どうせなら自分で作ってみたいかな。
-ドキュメントを見ると、Ruby のコードを所定の場所に置けば、
-実行できるとの事。大抵は動かすまでに苦労するものだが、その部分は
-むしろ簡単らしい。</p>
+<p>修正したスクリプトは
+<a href="https://github.com/tayu/linuxtools/tree/master/radio">ここ</a>
+に置いた。</p>
+
+<h1 id="section-2">まとめ</h1>
+
+<p>つまり、メジャーバージョン を 3 –&gt; 4 に上げ、
+以前の url でダウンロードできない様にした。
+だけど、認証で接続する場合には両方のバージョンを
+受け付けている。今はそういう事の様だ。</p>
+
+<p>自作のスクリプトではダウンロードしたファイルを /tmp に置いている。
+/tmp 配下はブート時に消えてしまうため、問題が早く出たとも言える。</p>
+
+<p>今後、バージョン 3 で聴いていた人が、player.swf を取り直そうとした時に
+聴けなくなる事になる。あるいはバージョン 3 での認証を radiko 側が
+何時まで継続してくれるかって不安要素にもなる。</p>
+
 
   </article>
 

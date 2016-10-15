@@ -4,8 +4,27 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Thu, 28 Jul 2016 00:45:06 +0900</pubDate>
+    <pubDate>Sat, 15 Oct 2016 22:07:48 +0900</pubDate>
 
+    
+    <item>
+      <title>rakiko の仕様変更</title>
+      <link>http://tayu.github.io/radiko/2016/10/15/radiko-change/</link>
+      <description>10/11 に始まった
+radikoの
+タイムフリー視聴の影響
+なのだろう、仕様変更があり、今までのスクリプトが使えなくなった。
+
+
+  現状
+  変更点
+  まとめ
+
+
+現状
+心配していた通り、10/11 に PC を立ち上げて放送...</description>
+      <pubDate>Sat, 15 Oct 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>Xming の接続エラー</title>
@@ -142,27 +161,6 @@ Polipo の設定を見直した。
       リンクを張る
       デフォルトの...</description>
       <pubDate>Sat, 02 Apr 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Jekyll の TIPS</title>
-      <link>http://tayu.github.io/jekyll/tips/2016/04/01/jekyll-tips/</link>
-      <description>
-  目次を生成する
-  相対パスを使用する
-  ページ内で使用する変数を先頭で宣言する
-  配列を使う
-  ハッシュを使う
-
-
-目次を生成する
-次の 2 行を .md 中に記述する
-
-* TOC
-{:toc}
-
-http://www...</description>
-      <pubDate>Fri, 01 Apr 2016 00:00:00 +0900</pubDate>
     </item>
     
 
