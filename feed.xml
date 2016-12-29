@@ -4,8 +4,30 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Sun, 16 Oct 2016 15:13:46 +0900</pubDate>
+    <pubDate>Fri, 30 Dec 2016 02:07:10 +0900</pubDate>
 
+    
+    <item>
+      <title>タイムフリー視聴</title>
+      <link>http://tayu.github.io/radiko/2016/12/29/radiko-timefree/</link>
+      <description>10/11 に始まった
+radikoの
+タイムフリー視聴
+なのだが、Linux で聴けるのだろうか
+
+
+  結論
+  現状
+  方法
+  スクリプト
+  取得されるデータ形式
+  余談
+
+
+結論
+聴ける。まぁ、やったのは録音のみだけど...</description>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>radiko の仕様変更</title>
@@ -145,22 +167,6 @@ Polipo の設定を見直した。
       .war を作成する
       .war を Tomca...</description>
       <pubDate>Tue, 05 Apr 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>HTML5 文法チェッカ</title>
-      <link>http://tayu.github.io/html5/validator/tomcat/java/install/2016/04/02/html5-validator/</link>
-      <description>
-  HTML5 の lint が欲しい
-  必要なもの
-  Tomcat のインストール
-  Java のインストール    
-      入手
-      展開
-      移動
-      リンクを張る
-      デフォルトの...</description>
-      <pubDate>Sat, 02 Apr 2016 00:00:00 +0900</pubDate>
     </item>
     
 

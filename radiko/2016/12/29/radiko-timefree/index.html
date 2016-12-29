@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>radiko の仕様変更</title>
+    <title>タイムフリー視聴</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./radiko/2016/10/15/radiko-change/">
+    <link rel="canonical" href="http://tayu.github.io./radiko/2016/12/29/radiko-timefree/">
     <!-- Custom CSS -->
     
 
@@ -95,71 +95,77 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>radiko の仕様変更</h1>
-    <p class="meta">Oct 15, 2016</p>
+    <h1>タイムフリー視聴</h1>
+    <p class="meta">Dec 29, 2016</p>
   </header>
 
   <article class="post-content">
   <p>10/11 に始まった
 <a href="http://radiko.jp/">radiko</a>の
-<a href="http://radiko.jp/rg/timefree/">タイムフリー</a>視聴の影響
-なのだろう、仕様変更があり、今までのスクリプトが使えなくなった。</p>
+<a href="http://radiko.jp/rg/timefree/">タイムフリー</a>視聴
+なのだが、Linux で聴けるのだろうか</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">現状</a></li>
-  <li><a href="#section-1">変更点</a></li>
-  <li><a href="#section-2">まとめ</a></li>
+  <li><a href="#section">結論</a></li>
+  <li><a href="#section-1">現状</a></li>
+  <li><a href="#section-2">方法</a></li>
+  <li><a href="#section-3">スクリプト</a></li>
+  <li><a href="#section-4">取得されるデータ形式</a></li>
+  <li><a href="#section-5">余談</a></li>
 </ul>
 
-<h1 id="section">現状</h1>
-<p>心配していた通り、10/11 に PC を立ち上げて放送を聴こうとしたら、
-聴けなくなっていた。</p>
+<h1 id="section">結論</h1>
+<p>聴ける。まぁ、やったのは録音のみだけど。
+録音というよりダウンロードと言うのが近い感じ。</p>
 
-<p>エラーを見ると、player.swf ファイルの取得ができない様だった。</p>
+<h1 id="section-1">現状</h1>
+<p>検索してもあまり情報がヒットしない。</p>
 
-<p>その後、ダメ元で試してみたのだが、以前のファイルを置いてみたら、
-聴けてしまった。？？？</p>
+<p>どうやら、radiko の注意を引く事を恐れて自重しているらしい。</p>
 
-<p>どうやら player.swf の url が変わったらしい。
-当初はそれ位の変更なのだと思っていた。</p>
+<p>まぁ、仕様変更されて聞けなくなるのもイヤだし、
+訴訟とか面倒なコトになるのもイヤだしね。</p>
 
-<h1 id="section-1">変更点</h1>
+<h1 id="section-2">方法</h1>
+<p>実は結構簡単。認証して、ffmpeg にパラメータを仕込んだ url を指定するだけ。</p>
 
-<p>検索して情報を探していたのだが、ようやく対応した人に行き当たった。</p>
+<p>まぁ、これ以上は、今は書かないでおく。</p>
 
-<p><a href="https://gist.github.com/booska/8861693">Radikoを録音するWSH</a></p>
+<h1 id="section-3">スクリプト</h1>
+<p>スクリプトは作成したけど、今、考えているのはコマンドラインの与え方
+だったりする。</p>
 
-<p>そのスクリプトを見てみたところ、もう少し、微妙に変わっていた。</p>
+<p>どうせ 1 週間以内しか有効でないので、日付はその範囲内でないと
+意味が無い。なら、曜日指定の方が使い易いし、間違いも無いのかなぁ、とか。</p>
 
-<p>変更点は以下らしい</p>
+<h1 id="section-4">取得されるデータ形式</h1>
+<p>通常の radiko では flv （内部に aac を持つコンテナ）となる。
+タイムフリーでは aac となる。</p>
 
-<ul>
-  <li>player.swf の url</li>
-  <li>認証画像の展開のパラメータ</li>
-  <li>認証で使用するバージョン番号</li>
-</ul>
+<p>ファイルサイズがタイムフリーだと 2 ～ 3 倍となる。
+ビットレートか何かが違うらしい。</p>
 
-<p>修正したスクリプトは
-<a href="https://github.com/tayu/linuxtools/tree/master/radio">ここ</a>
-に置いた。</p>
+<h1 id="section-5">余談</h1>
+<p>今日（12/29）、面白いと思ったこと。
+<a href="http://www.j-wave.co.jp/">J-WAVE</a> の
+<a href="http://www.j-wave.co.jp/original/grooveline/">GROOVE LINE</a> で、
+生放送中に自分の番組のタイムフリー視聴を聞いて確認に使うって
+事をしているらしかった。そんな使い方があるんだ。斬新。
+と、思った次第。</p>
 
-<p>差分は一寸ノイズもあるけど、<a href="https://github.com/tayu/linuxtools/commit/feef666a2b050637ae74f26d8a2439d88fb0e664#diff-a398fb77df76e6153df57cd65fd0a7c5">こんな感じ</a>
-。</p>
+<p>まぁ、これだけでは良く分からないので説明。</p>
 
-<h1 id="section-2">まとめ</h1>
+<p>番組内でリスナーと電話していて、電話を切る度に（除夜の）鐘を
+鳴らし、それを 108 になるまで、という事で、番組内でそれまでに
+何回鳴らしたかをカウントしていた。のだが、しょっちゅう、それが
+分からなくなるという事態になっていた。どうやらそのたびにスタッフが
+タイムフリーで視聴して、数え直しているらしかった。</p>
 
-<p>つまり、メジャーバージョン を 3 –&gt; 4 に上げ、
-以前の url でダウンロードできない様にした。
-だけど、認証で接続する場合には両方のバージョンを
-受け付けている。今はそういう事の様だ。</p>
+<p>この、「生放送」で、「自分の番組」を「タイムフリー視聴する」ってのが、
+新しい使い方だなぁと思った次第。</p>
 
-<p>自作のスクリプトではダウンロードしたファイルを /tmp に置いている。
-/tmp 配下はブート時に消えてしまうため、問題が早く出たとも言える。</p>
-
-<p>今後、バージョン 3 で聴いていた人が、player.swf を取り直そうとした時に
-聴けなくなる事になる。あるいはバージョン 3 での認証を radiko 側が
-何時まで継続してくれるかって不安要素にもなる。</p>
-
+<p>良く、ソフトウェアが作者の意図しない使い方をされるって
+話があるが、全く一緒。まぁ、そうなるなぁと納得したりもした。</p>
 
   </article>
 
