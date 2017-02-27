@@ -121,7 +121,7 @@
 
 <p>コマンドラインから取得されるオプションの解析。</p>
 
-<p>C 言語なら、<a href="http://linuxjm.osdn.jp/html/LDP_man-pages/man3/getopt.3.html">GETOPT</a>にある、getopt() や getopt_long() の例を使えば良い。</p>
+<p>C 言語なら、<a href="http://linuxjm.osdn.jp/html/LDP_man-pages/man3/getopt.3.html">getopt.3</a>にある、getopt() や getopt_long() の例を使えば良い。</p>
 
 <p>ところがシェルスクリプトだと、イマイチ定番の手法が確立されていない
 <a href="http://qiita.com/b4b4r07/items/dcd6be0bb9c9185475bb">模様</a>。</p>
@@ -137,8 +137,8 @@
 <p>手法としては 3 つある。</p>
 
 <ul>
-  <li><a href="http://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html">bash</a>の組み込みコマンドである getopts を使う</li>
-  <li>外部コマンドである <a href="http://linuxjm.osdn.jp/html/util-linux/man1/getopt.1.html">getopt</a> を使う</li>
+  <li><a href="http://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html">bash.1</a>の組み込みコマンドである getopts を使う</li>
+  <li>外部コマンドである <a href="http://linuxjm.osdn.jp/html/util-linux/man1/getopt.1.html">getopt.1</a> を使う</li>
   <li>自前のロジックを実装する</li>
 </ul>
 
@@ -206,10 +206,10 @@
 <span class="line-numbers"><a href="#n18" name="n18">18</a></span>            fi
 <span class="line-numbers"><a href="#n19" name="n19">19</a></span>            ;;
 <span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>        --option=* )                # &lt;-- (2)
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            arg_t=&quot;${1#--option=}&quot;
+<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            arg_o=&quot;${1#--option=}&quot;
 <span class="line-numbers"><a href="#n22" name="n22">22</a></span>            ;;
 <span class="line-numbers"><a href="#n23" name="n23">23</a></span>        -o* )                        # &lt;-- (2)
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>            arg_t=&quot;${1#-o}&quot;
+<span class="line-numbers"><a href="#n24" name="n24">24</a></span>            arg_o=&quot;${1#-o}&quot;
 <span class="line-numbers"><a href="#n25" name="n25">25</a></span>            ;;
 <span class="line-numbers"><a href="#n26" name="n26">26</a></span>        -* )
 <span class="line-numbers"><a href="#n27" name="n27">27</a></span>            if ! getopt &quot;:lnp&quot; &quot;$1&quot; 2&gt;&amp;1 &gt;/dev/null ; then        # &lt;-- (3)
@@ -242,7 +242,7 @@
 
 <ol>
   <li><code>--</code> や <code>-</code> でオプション解析を中断し、以後の引数をまとめる</li>
-  <li>-o XXX 、-oXXX 、–opton XXX 、–opton=XXX の解析</li>
+  <li>-o XXX 、-oXXX 、–opton XXX 、–opton=XXX の解析。くっついている場合先頭の <code>-o</code> や <code>--option</code> を削除して取り込む</li>
   <li>-l 、-n 、-p を -np などと指定しつつ、”:lnp” でそれ以外をエラーにする</li>
 </ol>
 
@@ -269,9 +269,10 @@ _isValue は後続の引数がオプション（’-‘ で始まる）である
 <h1 id="section-3">まとめ</h1>
 
 <p>一個のオプションである、-o XXX、-oXXX 、–option XXX 、–option=XXX を
-解析するのに 3 個も case のターゲットを記述するのは冗長な気もするし、
-全体が長くなるのは避けられない。が、それが割り切れれば、まぁまぁ
-使えると思う。</p>
+解析するのに 3 個も case のターゲットを記述するのは冗長にもなるし、
+同じ処理を複数の場所に書かなければならないのも悩ましい。また、
+全体が長くなるのも避けられない。が、それらを割り切れれば、まぁまぁ
+良いんじゃないかな、と思う。</p>
 
 <p>記述を少しでも短くし、読みやすくするために、共通処理は関数化するなどして、
 記述量を減らすのも大事。</p>
