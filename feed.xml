@@ -4,8 +4,57 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Fri, 30 Dec 2016 02:07:10 +0900</pubDate>
+    <pubDate>Mon, 27 Feb 2017 18:16:59 +0900</pubDate>
 
+    
+    <item>
+      <title>bash でオプション解析</title>
+      <link>http://tayu.github.io/bash/script/2017/02/27/bash-script/</link>
+      <description>シェルスクリプトでコマンドラインのオプションを解析するために、自分用の
+ロジックを実装してみた。
+
+いつもは Posix shell の範囲で作るのだが、今回は bash 用。
+配列が使えると何かと便利そうなので。
+
+まあ、脱 bas...</description>
+      <pubDate>Mon, 27 Feb 2017 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>設定ファイルの管理</title>
+      <link>http://tayu.github.io/conf/manage/2017/01/06/conf-manage/</link>
+      <description>VM で複数の Linux を動かしている。設定はほぼ同じなのだが、「ほぼ」が難しい
+
+この項は順次追記していく
+
+
+  環境
+  方針
+  分散管理
+  環境の識別
+  環境設定スクリプト
+
+
+環境
+VM で Linux が幾つかあ...</description>
+      <pubDate>Fri, 06 Jan 2017 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi の導入</title>
+      <link>http://tayu.github.io/raspberrypi/2016/12/30/raspberry-pi/</link>
+      <description>Raspberry Pi を買った。
+
+のだが、色々、進んでいない。
+
+まぁ、のんびりやるとするかな。なので、このページは随時更新していく。
+
+
+  ブツ
+  基礎知識    
+      購入前に知っておくと良いこと        ...</description>
+      <pubDate>Fri, 30 Dec 2016 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>タイムフリー視聴</title>
@@ -120,53 +169,6 @@ Polipo の設定を見直した。
 
   ...</description>
       <pubDate>Tue, 17 May 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>mp3 ファイルへの変換が 90 分で止まる</title>
-      <link>http://tayu.github.io/audio/convert/2016/04/12/audio-convert/</link>
-      <description>
-  現象
-  変換方法
-  原因
-  ストーリー
-  実際のところは
-  解決に向けて
-  要望    
-      wav 以外のフォーマットの採用
-      パイプ処理に適したフォーマットの提案
-      wav フォーマッ...</description>
-      <pubDate>Tue, 12 Apr 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Ruby リファレンスマニュアルをローカルで参照する</title>
-      <link>http://tayu.github.io/ruby/rubydoc/2016/04/11/rubydoc-local/</link>
-      <description>
-  Ruby のドキュメントを手元で参照する
-  概要
-  手順。    
-      概要
-      コマンドの準備
-      ソース取得
-      DB を作る（続けて更新する）
-      静的 html を生成する
- ...</description>
-      <pubDate>Mon, 11 Apr 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>CSS チェッカ</title>
-      <link>http://tayu.github.io/css/validator/tomcat/java/install/w3c/2016/04/05/css-validator/</link>
-      <description>
-  CSS のチェッカが欲しい
-  環境
-  インストール手順    
-      GitHub からソースを取得する
-      ライブラリへのパスを修正する
-      .war を作成する
-      .war を Tomca...</description>
-      <pubDate>Tue, 05 Apr 2016 00:00:00 +0900</pubDate>
     </item>
     
 

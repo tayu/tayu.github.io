@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>bash でオプション解析</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./bash/script/2017/02/27/bash-script/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>bash でオプション解析</h1>
+    <p class="meta">Feb 27, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <p>シェルスクリプトでコマンドラインのオプションを解析するために、自分用の
+ロジックを実装してみた。</p>
+
+<p>いつもは Posix shell の範囲で作るのだが、今回は bash 用。
+配列が使えると何かと便利そうなので。</p>
+
+<p>まあ、脱 bash も後でやるかも。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#section">問題は</a></li>
+  <li><a href="#section-1">検索してみる</a></li>
+  <li><a href="#section-2">改良してみる</a></li>
+  <li><a href="#section-3">まとめ</a></li>
+</ul>
+
+<h1 id="section">問題は</h1>
+
+<p>コマンドラインから取得されるオプションの解析。</p>
+
+<p>C 言語なら、<a href="http://linuxjm.osdn.jp/html/LDP_man-pages/man3/getopt.3.html">GETOPT</a>にある、getopt() や getopt_long() の例を使えば良い。</p>
+
+<p>ところがシェルスクリプトだと、イマイチ定番の手法が確立されていない
+<a href="http://qiita.com/b4b4r07/items/dcd6be0bb9c9185475bb">模様</a>。</p>
+
+<p>このページのスクリプトにちょっと追加して、まぁまぁ、使えるものが
+できたので、自分用のテンプレとする事にした。</p>
+
+<h1 id="section-1">検索してみる</h1>
+<p>前出の
+<a href="http://qiita.com/b4b4r07/items/dcd6be0bb9c9185475bb">bash によるオプション解析</a>
+ページが詳しい。</p>
+
+<p>手法としては 3 つある。</p>
+
+<ul>
+  <li><a href="http://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html">bash</a>の組み込みコマンドである getopts を使う</li>
+  <li>外部コマンドである <a href="http://linuxjm.osdn.jp/html/util-linux/man1/getopt.1.html">getopt</a> を使う</li>
+  <li>自前のロジックを実装する</li>
+</ul>
+
+<p>で、このページの一番下に出てくる以下を元にする事にした。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>declare -i argc=0
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>declare -a argv=()
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>while (( $# &gt; 0 ))
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>do
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>    case &quot;$1&quot; in
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>        -*)
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            if [[ &quot;$1&quot; =~ 'n' ]]; then
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>                nflag='-n'
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>            fi
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            if [[ &quot;$1&quot; =~ 'l' ]]; then
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>                lflag='-l'
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>            fi
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>            if [[ &quot;$1&quot; =~ 'p' ]]; then
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>                pflag='-p'
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>            fi
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>            shift
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span>            ;;
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span>        *)
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>            ((++argc))
+<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$1&quot;)
+<span class="line-numbers"><a href="#n22" name="n22">22</a></span>            shift
+<span class="line-numbers"><a href="#n23" name="n23">23</a></span>            ;;
+<span class="line-numbers"><a href="#n24" name="n24">24</a></span>    esac
+<span class="line-numbers"><a href="#n25" name="n25">25</a></span>done
+<span class="line-numbers"><a href="#n26" name="n26">26</a></span>
+</pre></div>
+</div>
+</div>
+
+<h1 id="section-2">改良してみる</h1>
+
+<p>上記で不満だったのは、-nl なんかが使える一方、-x とか、対象外のオプションを
+指定されたときに検出できないこと。</p>
+
+<p>また、オプションの形式も -o XXX、-oXXX 、–option XXX に加えて –option=XXX も
+欲しいなぁ、と思った。</p>
+
+<p>結果、以下の様になった。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>declare -i argc=0
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>declare -a argv=()
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>while (( $# &gt; 0 )); do
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>    case &quot;$1&quot; in
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>        '--' | '-' )                # &lt;-- (1)
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>            shift
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            ((argc+=$#))
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$@&quot;)
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>            break
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            ;;
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>        '-o' | '--option' )        # &lt;-- (2)
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>            if _isValue &quot;$2&quot; ; then
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>                arg_o=&quot;$2&quot;
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>                shift
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>            else
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>                _usage
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span>            fi
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span>            ;;
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>        --option=* )                # &lt;-- (2)
+<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            arg_t=&quot;${1#--option=}&quot;
+<span class="line-numbers"><a href="#n22" name="n22">22</a></span>            ;;
+<span class="line-numbers"><a href="#n23" name="n23">23</a></span>        -o* )                        # &lt;-- (2)
+<span class="line-numbers"><a href="#n24" name="n24">24</a></span>            arg_t=&quot;${1#-o}&quot;
+<span class="line-numbers"><a href="#n25" name="n25">25</a></span>            ;;
+<span class="line-numbers"><a href="#n26" name="n26">26</a></span>        -* )
+<span class="line-numbers"><a href="#n27" name="n27">27</a></span>            if ! getopt &quot;:lnp&quot; &quot;$1&quot; 2&gt;&amp;1 &gt;/dev/null ; then        # &lt;-- (3)
+<span class="line-numbers"><a href="#n28" name="n28">28</a></span>                _usage
+<span class="line-numbers"><a href="#n29" name="n29">29</a></span>            fi
+<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>            if [[ &quot;$1&quot; =~ 'l' ]]; then
+<span class="line-numbers"><a href="#n31" name="n31">31</a></span>                arg_l=&quot;true&quot;
+<span class="line-numbers"><a href="#n32" name="n32">32</a></span>            fi
+<span class="line-numbers"><a href="#n33" name="n33">33</a></span>            if [[ &quot;$1&quot; =~ 'n' ]]; then
+<span class="line-numbers"><a href="#n34" name="n34">34</a></span>                arg_n=&quot;true&quot;
+<span class="line-numbers"><a href="#n35" name="n35">35</a></span>            fi
+<span class="line-numbers"><a href="#n36" name="n36">36</a></span>            if [[ &quot;$1&quot; =~ 'p' ]]; then
+<span class="line-numbers"><a href="#n37" name="n37">37</a></span>                arg_p=&quot;true&quot;
+<span class="line-numbers"><a href="#n38" name="n38">38</a></span>            fi
+<span class="line-numbers"><a href="#n39" name="n39">39</a></span>            ;;
+<span class="line-numbers"><strong><a href="#n40" name="n40">40</a></strong></span>        * )
+<span class="line-numbers"><a href="#n41" name="n41">41</a></span>            ((++argc))
+<span class="line-numbers"><a href="#n42" name="n42">42</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$1&quot;)
+<span class="line-numbers"><a href="#n43" name="n43">43</a></span>            ;;
+<span class="line-numbers"><a href="#n44" name="n44">44</a></span>    esac
+<span class="line-numbers"><a href="#n45" name="n45">45</a></span>    shift
+<span class="line-numbers"><a href="#n46" name="n46">46</a></span>done
+</pre></div>
+</div>
+</div>
+
+<p>スクリプト中の # &lt;– (n) がポイント</p>
+
+<p>以下、ポイント毎に説明する</p>
+
+<ol>
+  <li><code>--</code> や <code>-</code> でオプション解析を中断し、以後の引数をまとめる</li>
+  <li>-o XXX 、-oXXX 、–opton XXX 、–opton=XXX の解析</li>
+  <li>-l 、-n 、-p を -np などと指定しつつ、”:lnp” でそれ以外をエラーにする</li>
+</ol>
+
+<p>解析終了後にはオプション（-で始まる引数）以外の引数が argv に入り、
+その個数が argc に入る。</p>
+
+<p>ちなみに _usage は使用法を表示して exit 1 する関数。
+_isValue は後続の引数がオプション（’-‘ で始まる）であるか
+調べる関数で、以下の様になる。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>function _isValue() {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>    local opt
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    opt=&quot;$1&quot;
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>    if [[ -z &quot;$opt&quot; ]] || [[ &quot;$opt&quot; =~ ^-+ ]]; then
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>        return 1
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>    fi
+<span class="line-numbers"><a href="#n7" name="n7">7</a></span>    return 0
+<span class="line-numbers"><a href="#n8" name="n8">8</a></span>}
+</pre></div>
+</div>
+</div>
+
+<h1 id="section-3">まとめ</h1>
+
+<p>一個のオプションである、-o XXX、-oXXX 、–option XXX 、–option=XXX を
+解析するのに 3 個も case のターゲットを記述するのは冗長な気もするし、
+全体が長くなるのは避けられない。が、それが割り切れれば、まぁまぁ
+使えると思う。</p>
+
+<p>記述を少しでも短くし、読みやすくするために、共通処理は関数化するなどして、
+記述量を減らすのも大事。</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#zsh">
+	zsh</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#radiko">
+	radiko</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

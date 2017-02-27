@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Raspberry Pi の導入</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./raspberrypi/2016/12/30/raspberry-pi/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Raspberry Pi の導入</h1>
+    <p class="meta">Dec 30, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <p><a href="https://www.raspberrypi.org/">Raspberry Pi</a> を買った。</p>
+
+<p>のだが、色々、進んでいない。</p>
+
+<p>まぁ、のんびりやるとするかな。なので、このページは随時更新していく。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#section">ブツ</a></li>
+  <li><a href="#section-1">基礎知識</a>    <ul>
+      <li><a href="#section-2">購入前に知っておくと良いこと</a>        <ul>
+          <li><a href="#section-3">全般</a></li>
+          <li><a href="#section-4">接続</a></li>
+          <li><a href="#usb-">USB シリアル接続</a></li>
+          <li><a href="#sd-">SD カード</a></li>
+        </ul>
+      </li>
+      <li><a href="#section-5">本体以外に必要なもの</a></li>
+      <li><a href="#section-6">ブートまでの手順</a>        <ul>
+          <li><a href="#section-7">ブートイメージの取得</a></li>
+          <li><a href="#section-8">ブートイメージの書き込み</a></li>
+          <li><a href="#section-9">起動</a></li>
+          <li><a href="#section-10">アップデート</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#section-11">設定変更</a>    <ul>
+      <li><a href="#pc-">PC に接続して書き込み</a></li>
+      <li><a href="#lan-nic-">有線 lan (NIC) への固定アドレスの設定</a></li>
+      <li><a href="#wlan--ssid-">wlan への SSID の設定</a></li>
+      <li><a href="#usb--1">USB シリアル用パラメータの設定</a></li>
+      <li><a href="#qemu-">qemu で動かす</a></li>
+      <li><a href="#section-12">クロスでビルドする</a></li>
+      <li><a href="#debian-">Debian をインストールする</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-13">その他の情報</a>    <ul>
+      <li><a href="#cpu-">CPU の温度を取得する</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="section">ブツ</h1>
+<p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi 3 Model B</a>
+ってやつ。</p>
+
+<p>Amazon を見ていたら、ケース付きで出ていた。
+今まで手を出していなかった理由の一つに基板なんかがむき出しのままだと
+使いにくそうってのがあった。それが解消され、値段もそこそこって事で
+ポチってしまった。</p>
+
+<h1 id="section-1">基礎知識</h1>
+
+<p>入手前に知っておいた方が良い知識。
+手に入れて、あれやこれややっていると当たり前になってしまうのだが。</p>
+
+<p>なので、検索すれば出てくる情報でもある</p>
+
+<h2 id="section-2">購入前に知っておくと良いこと</h2>
+
+<h3 id="section-3">全般</h3>
+
+<ul>
+  <li>単体で PC の様に使える。PC 用のモニタ、キーボード、マウスをつないで使える</li>
+  <li>OS はダウンロードしたものを（マイクロ）SD カードに書き込んで使える</li>
+  <li>OS は Linux （の独自カスタマイズ）になるので Limux の使用経験があると吉</li>
+  <li>OS は Window 環境もあるので、大抵はマウスで操作できる</li>
+  <li>有線の LAN アダプタがあり、DHCP でアドレスが取れると何もしなくても使える</li>
+  <li>無線の LAN アダプタがあり、アクセスポイントを設定すればすぐに使える</li>
+  <li>別売りの USB シリアルをつなぐとモニタ無しで使用できて便利。</li>
+  <li>OS の起動はマイクロ SD カードで行う</li>
+  <li>電源スイッチは無い。（マイクロ）USB をつなぐと起動する</li>
+</ul>
+
+<p>カジュアルに安い PC として使う事もできるって感じ。
+ノート PC 化するキットもあるし。</p>
+
+<h3 id="section-4">接続</h3>
+
+<p>簡単な順に挙げると</p>
+
+<ol>
+  <li>モニタ、他をつないで単体で使う</li>
+  <li>有線 LAN に（DHCP or 固定） でアドレスを振って TeraTerm 等で接続する</li>
+  <li>無線 LAN に SSID 等を設定して TeraTerm 等で接続する</li>
+  <li>USB シリアルをつないで、TeraTerm 等で接続する（要、起動パラメータ設定）</li>
+</ol>
+
+<p>となる。試すなら、この順で経験値を稼ぐのが良さそう。</p>
+
+<h3 id="usb-">USB シリアル接続</h3>
+
+<p>そうそう、USB シリアルについては以下も知っておくと良い。</p>
+
+<ul>
+  <li>Raspberry Pi 2 だとつないですぐに使えた模様。3 だと起動パラメータを仕込まないといけない</li>
+  <li>ケーブルが 4 本あるが、検索で見つかる画像だと 3 本しかつないでいない。もう 1 本は電源。つまり、USB から給電する以外にこっちからも給電できる。（両方つないで良いかは知らない。ショートしないのだろうか）</li>
+  <li>一部、使えないものがある。購入時は注意。Windows のバージョンとかでも異なる。</li>
+</ul>
+
+<h3 id="sd-">SD カード</h3>
+
+<ul>
+  <li>マイクロ SD カードを使う</li>
+  <li>Raspbian の full イメージは 4G 位あるので、カード容量はそれ以上欲しい</li>
+  <li>イメージファイルを書き込むとそのイメージファイルの容量しか有効にならないが、残り容量いっぱいにパーティションを拡張するツールがある。<a href="http://www.gnu.org/software/parted">GNU Parted</a> など</li>
+  <li>PC へは USB 接続のカードリーダを使う事が多いと思われる</li>
+  <li>PC 接続のカードリーダは マイクロ SD カード専用が小さくて扱いやすい。</li>
+</ul>
+
+<h2 id="section-5">本体以外に必要なもの</h2>
+
+<p>使用形態に応じて。前項を参照</p>
+
+<ul>
+  <li>給電するための USB ケーブル。一方の口がマイクロ USB であること。</li>
+  <li>ブート用のメディアとして、マイクロ SD カード</li>
+  <li>マイクロ SD カードを PC に接続するためのカードリーダ</li>
+</ul>
+
+<p>その他</p>
+
+<ul>
+  <li>有線 LAN を使うなら、ケーブル（100均でも買える。ストレートの直でも使える（事もある））</li>
+  <li>単体で使用するなら、モニタ(HDMI)、マウス、キーボード</li>
+  <li>USB 接続機器。Raspberry Pi にポートがあるので、いろいろつなげる。ただ、Windows じゃないので、大抵はドライバなど無い。最低でも Linux でサポートされているものが良いが、それでも動作する保証はない。検索して使用実績を探すのが無難。位のスタンスで。</li>
+</ul>
+
+<h2 id="section-6">ブートまでの手順</h2>
+
+<h3 id="section-7">ブートイメージの取得</h3>
+
+<p><a href="https://www.raspberrypi.org/downloads/">ダウンロードページ</a> から
+NOOBS か Raspbian のイメージファイルを取得できる。</p>
+
+<p>どちらも full と lite の 2 種類がある。lite の方は Window 環境が無い分、
+ダウンロードサイズが小さい。</p>
+
+<p>最初に使うなら、Raspbian の full イメージが良いと思う。</p>
+
+<h3 id="section-8">ブートイメージの書き込み</h3>
+
+<p>取得したファイルを展開し、ディスクイメージファイルを SD カードに書き込む。</p>
+
+<p>Linux なら dd コマンドで。バッファを大きめにすると、多少書き込み速度が上がる。</p>
+
+<p>Windows なら
+<a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> など
+が使える。</p>
+
+<h3 id="section-9">起動</h3>
+
+<p>SD カードを Raspberry Pi に装着し、USB 給電をつなぐ。</p>
+
+<p>起動すると、ログイン画面になる。ユーザ／パスワードは pi/raspberry 。</p>
+
+<p>ログイン後は普通の Linux 環境として使える。</p>
+
+<p>root 権限で何かするときは sudo する。また、この時要求されるパスワードは
+自分のもの、つまり “raspberry” である。この辺りは Ubuntu っぽい。</p>
+
+<p>注意。外部からのアクセスの可能性があるのなら、別ユーザを作るか、
+少なくともパスワードは変更しておく。</p>
+
+<h3 id="section-10">アップデート</h3>
+
+<p>Raspbian だと <a href="http://www.debian.org/">Debian</a> や
+<a href="http://www.ubuntu.com/">Ubuntu</a> と同様に、ネットワーク経由で
+アプリケーションの追加やアップデートができる。
+セキュリティ関連とかは対処しておきたいところ。</p>
+
+<pre><code>$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install someapp
+</code></pre>
+
+<p>あるいは aptitude コマンドで。この辺は Debian や Ubuntu のマニュアルを
+参照のこと。</p>
+
+<h1 id="section-11">設定変更</h1>
+
+<h2 id="pc-">PC に接続して書き込み</h2>
+
+<p>Windows でもできないことは無いかもだが、Linux のファイルシステムを
+使用していることもあるし、やはり Linux で扱うのが楽。</p>
+
+<p>常用が Windows なら、Linux を VM で動かすのが簡単。
+VMware や VirtualBox などが使える。SD カードを使うには、USB 接続の
+カードリーダを VM 側に横取りさせる。
+そうすると、カードリーダが Windows からは見えなくなり、VM 側（の Linux）で
+見える様になる。</p>
+
+<p>Linux からは（大抵は） /dev/sd* として認識されるので、
+適宜マウントして読み書きする。</p>
+
+<p>Linux 上なら、SD カードに書き込む前のファイルをマウントして読み書きする
+事も簡単にできる。ファイル中にパーティションが存在する場合は
+オフセットを指定すれば正しくマウントできる。
+この場合は、更新したイメージファイルを SD カードに書き込むことになる。</p>
+
+<h2 id="lan-nic-">有線 lan (NIC) への固定アドレスの設定</h2>
+
+<p>通常の設定先である /etc/network/interfaces の先頭を見ると</p>
+
+<pre><code># Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+</code></pre>
+
+<p>とある。なので /etc/dhcpcd.conf に以下を追加する</p>
+
+<pre><code>interface eth0
+static ip_address=192.168.1.2/24
+static routers=192.168.1.1
+static domain_name_servers=
+</code></pre>
+
+<p>routers へは、デフォルトゲートウェイがあればそれを、直結なら対向を設定。
+DNS の設定はとりあえず空にしておく。</p>
+
+<p>TeraTerm などで 192.168.1.2 に接続できる様になる。</p>
+
+<p>このやり方は Raspbian 独自なのだろうか。</p>
+
+<h2 id="wlan--ssid-">wlan への SSID の設定</h2>
+
+<p>ifconfig で見ると wlan0 が既に上がっている</p>
+
+<pre><code>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
+</code></pre>
+
+<p>wifi の設定を書き込む。SSID 、PASSPHRASE は AP の設定値。</p>
+
+<pre><code>$ sudo sh -c 'wpa_passphrase SSID PASSPHRASE &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf'
+</code></pre>
+
+<p>/etc/wpa_supplicant/wpa_supplicant.conf に以下が追加される</p>
+
+<pre><code>network={
+	ssid="SSID"
+	#psk="PASSPHRASE"
+	psk=vmlMzm8zhCGAu4dm0zpb6Q8AJVwDVn3uJjGvWZyWOwBA
+}
+</code></pre>
+
+<p>生パスワードが書いてある行は削除する。上記では ‘#’ でコメントアウトしている。</p>
+
+<p>設定を反映する</p>
+
+<pre><code>$ sudo /etc/init.d/networking restart
+</code></pre>
+
+<p>確認</p>
+
+<pre><code>$ ifconfig
+wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
+          inet addr:192.168.179.3  Bcast:192.168.179.255  Mask:255.255.255.0
+	  inet6 addr: fe80::XXXX:XXXX:XXXX:XXXX/64 Scope:Link
+	  UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+	  RX packets:422 errors:0 dropped:302 overruns:0 frame:0
+	  TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
+	  collisions:0 txqueuelen:1000
+	  RX bytes:93874 (91.6 KiB)  TX bytes:31328 (30.5 KiB)
+（wlan0 以外は省略）
+</code></pre>
+
+<p>AP から DHCP でアドレスを取得している。
+TeraTerm などで 192.168.179.3 に接続できる様になる。</p>
+
+<h2 id="usb--1">USB シリアル用パラメータの設定</h2>
+
+<p>ToDo 。後で</p>
+
+<h2 id="qemu-">qemu で動かす</h2>
+
+<p>デスクトップの CPU が早いので、エミュレーション環境でも実機より速い（かも）</p>
+
+<p>ToDo 。後で</p>
+
+<h2 id="section-12">クロスでビルドする</h2>
+
+<p>ToDo 。後で</p>
+
+<h2 id="debian-">Debian をインストールする</h2>
+
+<p>armhf が使えるらしい</p>
+
+<p>ToDo 。後で</p>
+
+<h1 id="section-13">その他の情報</h1>
+
+<h2 id="cpu-">CPU の温度を取得する</h2>
+
+<pre><code>$ cat /sys/class/thermal/thermal_zone0/temp
+40780
+</code></pre>
+
+<p>または</p>
+
+<pre><code>$ vcgencmd measure_temp
+temp=40.8'C
+</code></pre>
+
+<p>24 時間運用するなら、モニタしておいた方が安心。
+とは言え、何度までなら OK なのだろう。（今は冬なので、良いのだが）</p>
+
+<p>あと、<a href="http://wpitchoune.net/psensor/">psensor</a> は使えなかった。</p>
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#zsh">
+	zsh</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#radiko">
+	radiko</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>zsh で predict-on を使う</title>
+    <title>設定ファイルの管理</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./zsh/config/2016/06/02/zsi-config/">
+    <link rel="canonical" href="http://tayu.github.io./conf/manage/2017/01/06/conf-manage/">
     <!-- Custom CSS -->
     
 
@@ -97,137 +97,86 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>zsh で predict-on を使う</h1>
-    <p class="meta">Jun 2, 2016</p>
+    <h1>設定ファイルの管理</h1>
+    <p class="meta">Jan 6, 2017</p>
   </header>
 
   <article class="post-content">
-  <p>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
-ってやつ。ただ、先鋭過ぎてちょっと困っている。</p>
+  <p>VM で複数の Linux を動かしている。設定はほぼ同じなのだが、「ほぼ」が難しい</p>
+
+<p>この項は順次追記していく</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">先方予測機能とは</a></li>
-  <li><a href="#section-1">つ、使いにくい</a></li>
-  <li><a href="#section-2">調査</a></li>
-  <li><a href="#section-3">とりあえず回避</a></li>
-  <li><a href="#section-4">追記：数ヶ月使った結果</a></li>
+  <li><a href="#section">環境</a></li>
+  <li><a href="#section-1">方針</a></li>
+  <li><a href="#section-2">分散管理</a></li>
+  <li><a href="#section-3">環境の識別</a></li>
+  <li><a href="#section-4">環境設定スクリプト</a></li>
 </ul>
 
-<h1 id="section">先方予測機能とは</h1>
-<p>コマンドラインの編集（ZLE）で、キー入力毎にヒストリを参照して
-候補を表示してくれる機能。</p>
+<h1 id="section">環境</h1>
+<p>VM で Linux が幾つかある。もちろん同じ物では無い。ディストリビューションが
+違ったり、特定のアプリケーションを使うのが目的だったり。あるいは Linux 以外の
+OS を動かしたり。</p>
 
-<p>有効にするには</p>
+<p>ただ、通常使うアプリケーションは大体決まっている。シェルやエディタなんかは
+むしろ、環境が変わっても同じ設定にしておかないと使いにくい。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>autoload predict-on
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>predict-on
-</pre></div>
-</div>
-</div>
-<p>とする。</p>
+<h1 id="section-1">方針</h1>
 
-<p>web の解説を見ていると「鍛えれば非常に便利」とある。
-と言っても、自動的に鍛えられるので、やる事は単に使い続けるだけ。
-その一方、「合わなければ使わない方が良い」との記述もある。
-また、方々で公開されている .zshrc を見るとコメントアウト
-してある事が多い。</p>
+<ul>
+  <li>設定ファイルは分散管理を使う。</li>
+  <li>個々の環境の差異は環境を識別するスクリプトを作成する</li>
+  <li>リポジトリの同期と設定スクリプトで手間を最小にする</li>
+</ul>
 
-<p>つまり、非常にクセが強いって事なのだろう。
-特にある程度使い込むまでは。</p>
+<h1 id="section-2">分散管理</h1>
+<p>検討した結果、Mercurial を使う事にした。</p>
 
-<h1 id="section-1">つ、使いにくい</h1>
-<p>こなれてくるまで時間がかかる。それまではむしろ使いにくいって事は
-予想していた。</p>
+<p>分散管理としては git が有名だが、git は共用リポジトリは共用として
+作成する事になる様だった。</p>
 
-<p>でも、コマンドラインの編集モードが変わったと思える挙動が。</p>
+<p>Mercurial は単に作成したリポジトリを共用リポジトリとすることができた。</p>
 
-<p>編集業の途中にカーソルを持って行き、2 文字程度入力すると
-その位置から後ろが全部消されてしまう。</p>
+<p>手順は以下の様になる。</p>
 
-<p>例えば、</p>
+<p>hostA で以下を実行する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ls /some/path/some.file
-</pre></div>
-</div>
-</div>
-<p>として、先頭にカーソルを持っていって</p>
+<pre><code>$ cd conf_directory
+$ hg init
+$ hg add *
+$ hg commit -m "メッセージ"
+</code></pre>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /some/path/some.file
-</pre></div>
-</div>
-</div>
-<p>としようとすると</p>
+<p>他のホストで設定をコピーし、変更後、元ホストに反映する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ca
-</pre></div>
-</div>
-</div>
-<p>なんて事になるって事。</p>
+<pre><code>$ hg clone ssh://hostA:conf_directory
+$ cd conf_directory
+（作業～ファイル更新）
+$ hg commit -m "メッセージ"
+$ hg push
+</code></pre>
 
-<h1 id="section-2">調査</h1>
-<p>検索してみたけど、同様の現象に言及しているページが 1 件あっただけ
-だった。そのページでは単に使用をやめていただけなので、
-解決につながる情報は無かった。</p>
+<p>他の（同じ）ホストで変更を追加し、元ホストに反映する</p>
 
-<p>で、いろいろ検索しつつ考えた。</p>
+<pre><code>$ cd conf_directory
+$ hg pull
+（作業～ファイル更新）
+$ hg commit -m "メッセージ"
+$ hg push
+</code></pre>
 
-<p>これって「後半を消去している」んではなくて、
-「ヒストリでマッチしたものを表示」しているんではないだろうか。</p>
+<p>まぁ、作業手順は git でも変わらない</p>
 
-<p>と、いう事は「補完候補を見つけたら単にインサートする」って
-挙動にするオプションが有れば良いってことになるのか？</p>
+<h1 id="section-3">環境の識別</h1>
+<p>コマンド、設定ファイルで環境を識別する</p>
 
-<h1 id="section-3">とりあえず回避</h1>
-<p>当面、predict-on と predict-off を手動で切り替える事にした。
-検索すると、トグルするコマンドを作ったページも有ったが、
-そこまではせず、単純に短いエイリアスを定義した。</p>
+<h1 id="section-4">環境設定スクリプト</h1>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>alias pon='predict-on'
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>alias poff='predict-off'
-</pre></div>
-</div>
-</div>
-<p>こんな感じ。行の途中で編集する場合は、先に poff を実行する。
-その後、pon で戻すって形。</p>
+<p>基本的にリポジトリに対してシンボリックリンクを張る。</p>
 
-<p>predict-on を使い続けるかどうか、まだ考え中。</p>
+<p>共通の設定は共通設定へ。個別設定はリポジトリ中の個別設定へリンクを向ける。</p>
 
-<h1 id="section-4">追記：数ヶ月使った結果</h1>
-
-<p>なんとなく、挙動が分かってきた。</p>
-
-<p>結局 zsh がやっていることはキー入力に一致する候補をヒストリから探してきて
-コマンドラインに展開する事なんだ。まぁ、その他にもファイルとかコマンドの
-引数とか展開する候補が多いので最初は「賢い！？」とか思うのだが。</p>
-
-<p>入力位置を前に戻して入力すると後ろが消えるのも、単にヒストリから先方が一致する
-候補を見つけてきて展開しているだけなんだ。</p>
-
-<p>この、内部の動きがある程度読める様になってからは
-（こちらの理解が合ってるかどうかはともかく）
-ストレスが軽減され、そこそこうまく使える様になった気がする。
-それこそ、1 回か 2 回のキー入力でコマンド入力が済んでしまうような
-場面も増えた。</p>
-
-<p>キーを前に戻してコマンドライン編集する場合は poff （alias で predict-off）を
-実行して一時的にモードを変える様にしている。</p>
-
-<p>つまり、相手の挙動が読める様になったので、先回りしてストレスフルな動きを
-封じてしまえるようになったって事。</p>
-
-<p>結局、この、自分にとってストレスになる動きを封じる事が、少ない入力で
-できる様になったのが良かったのだと思う。そこから挙動をコントロール
-している感が広がり、predict-on を使うのに抵抗が無くなった。
-で、使っていると 1 ～ 2 回のキー入力でコマンド入力が済む場面も多くなり、
-満足度も上がった。</p>
-
-<p>まぁ、キー入力後に [CTRL+K] で以前の入力の不要部分を消すのは
-相変わらず多い。</p>
 
   </article>
 
