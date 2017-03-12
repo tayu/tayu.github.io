@@ -110,8 +110,19 @@
   <li><a href="#section">環境</a></li>
   <li><a href="#section-1">方針</a></li>
   <li><a href="#section-2">分散管理</a></li>
-  <li><a href="#section-3">環境の識別</a></li>
-  <li><a href="#section-4">環境設定スクリプト</a></li>
+  <li><a href="#section-3">手順（最初の作業）</a>    <ul>
+      <li><a href="#section-4">親ホストでリポジトリを作成する</a></li>
+      <li><a href="#section-5">子ホストで親ホストのリポジトリを複製する</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-6">手順（日常の作業）</a>    <ul>
+      <li><a href="#section-7">子ホストで親ホストの更新を取り込む</a></li>
+      <li><a href="#section-8">子ホストで作業ディレクトリを更新し親ホストに反映する</a></li>
+      <li><a href="#section-9">親ホストで子ホストの更新を取り込む</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-10">環境の識別</a></li>
+  <li><a href="#section-11">環境設定スクリプト</a></li>
 </ul>
 
 <h1 id="section">環境</h1>
@@ -122,60 +133,167 @@ OS を動かしたり。</p>
 <p>ただ、通常使うアプリケーションは大体決まっている。シェルやエディタなんかは
 むしろ、環境が変わっても同じ設定にしておかないと使いにくい。</p>
 
+<p>これらに関わる設定ファイルを集中管理することにした。
+そうすることで、個々のホストでの変更の取り込み、他のホストへの反映が
+簡単になる。</p>
+
 <h1 id="section-1">方針</h1>
 
 <ul>
-  <li>設定ファイルは分散管理を使う。</li>
-  <li>個々の環境の差異は環境を識別するスクリプトを作成する</li>
-  <li>リポジトリの同期と設定スクリプトで手間を最小にする</li>
+  <li>設定ファイルは分散管理を使う</li>
+  <li>分散管理を使うのだが、1 個を中央（親）とし、他（子）の変更をここに集約する</li>
+  <li>個々の環境の差異は、別途ホスト毎のファイルを作成し、シンボリックリンクで同じパス／ファイル名でアクセスできるようにする</li>
+  <li>環境の識別とインストールはスクリプトを作成し、手間を最小にする</li>
+  <li>ホスト間の通信は ssh で行う</li>
 </ul>
 
 <h1 id="section-2">分散管理</h1>
 <p>検討した結果、Mercurial を使う事にした。</p>
 
-<p>分散管理としては git が有名だが、git は共用リポジトリは共用として
-作成する事になる様だった。</p>
+<p>分散管理としては Git が有名であり、同じ事はできると思われるが、
+Mercurial の方に慣れている事と、検索で手順が見つかりやすかった
+ため。</p>
 
-<p>Mercurial は単に作成したリポジトリを共用リポジトリとすることができた。</p>
+<p>Git だと、単純に既存リポジトリを元にする方法（今回の方式）と最初から
+共用リポジトリとして作成して共有する方法（bareリポジトリ）がある。
+これはこれで使うべき場面がある。</p>
 
-<p>手順は以下の様になる。</p>
+<p>どちらにしろ、考え方は共通。作業ディレクトリとリポジトリを分けて考えると
+作業に迷わなくて済む。</p>
 
-<p>hostA で以下を実行する</p>
+<h1 id="section-3">手順（最初の作業）</h1>
 
-<pre><code>$ cd conf_directory
-$ hg init
-$ hg add *
-$ hg commit -m "メッセージ"
-</code></pre>
+<p>各ホストにリポジトリと作業ディレクトリを用意する。</p>
 
-<p>他のホストで設定をコピーし、変更後、元ホストに反映する</p>
+<p>親ホストを hostA とする。
+作業ディレクトリを conf_directory とする。</p>
 
-<pre><code>$ hg clone ssh://hostA:conf_directory
-$ cd conf_directory
-（作業～ファイル更新）
-$ hg commit -m "メッセージ"
-$ hg push
-</code></pre>
+<h2 id="section-4">親ホストでリポジトリを作成する</h2>
 
-<p>他の（同じ）ホストで変更を追加し、元ホストに反映する</p>
+<p>一通りのファイル群が作成済みとする。</p>
 
-<pre><code>$ cd conf_directory
-$ hg pull
-（作業～ファイル更新）
-$ hg commit -m "メッセージ"
-$ hg push
-</code></pre>
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cd conf_directory
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ hg init
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ hg add *
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>$ hg commit -m &quot;メッセージ&quot;
+</pre></div>
+</div>
+</div>
 
-<p>まぁ、作業手順は git でも変わらない</p>
+<p>ディレクトリ配下の全ファイルを親リポジトリに取り込む。</p>
 
-<h1 id="section-3">環境の識別</h1>
-<p>コマンド、設定ファイルで環境を識別する</p>
+<h2 id="section-5">子ホストで親ホストのリポジトリを複製する</h2>
 
-<h1 id="section-4">環境設定スクリプト</h1>
+<p>親リポジトリの複製を取得する</p>
 
-<p>基本的にリポジトリに対してシンボリックリンクを張る。</p>
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg clone ssh://hostA:conf_directory
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ cd conf_directory
+</pre></div>
+</div>
+</div>
 
-<p>共通の設定は共通設定へ。個別設定はリポジトリ中の個別設定へリンクを向ける。</p>
+<p>conf_directory ディレクトリが作成されるので、中に降りて作業する。</p>
+
+<h1 id="section-6">手順（日常の作業）</h1>
+
+<h2 id="section-7">子ホストで親ホストの更新を取り込む</h2>
+
+<p>他の子ホストでの変更が親ホストへ更新されていることも多くなるはず。
+なので、作業の最初に同期する必要が出てくる。</p>
+
+<p>子リポジトリを更新し、作業ディレクトリへ反映する</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg pull default
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ hg update
+</pre></div>
+</div>
+</div>
+
+<p>pull に -u オプションをつけると両方を一度に行える。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg pull -u default
+</pre></div>
+</div>
+</div>
+
+<h2 id="section-8">子ホストで作業ディレクトリを更新し親ホストに反映する</h2>
+
+<p>conf_directory ディレクトリ中で作業（ファイル更新）し、
+作業ディレクトリが更新された状態。</p>
+
+<p>作業ディレクトリを子リポジトリへ反映する</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg commit -m &quot;メッセージ&quot;
+</pre></div>
+</div>
+</div>
+
+<p>子リポジトリを親リポジトリへ反映する</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg push default
+</pre></div>
+</div>
+</div>
+
+<h2 id="section-9">親ホストで子ホストの更新を取り込む</h2>
+
+<p>子ホストから更新済みの差分をマージする。</p>
+
+<p>前項の作業で親リポジトリに差分は取り込まれたが作業ディレクトリは
+更新されていない。</p>
+
+<p>注：diff を取っても出てこない。作業ディレクトリの元となった履歴と
+他ホストから追加された履歴が別に（ブランチとして）区別されるためらしい。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg merge
+</pre></div>
+</div>
+</div>
+
+<p>衝突があると手作業が必要になったりする。</p>
+
+<p>内容を確認したら親リポジトリへ反映する</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg commit -m &quot;メッセージ&quot;
+</pre></div>
+</div>
+</div>
+
+<h1 id="section-10">環境の識別</h1>
+
+<p>コマンド、設定ファイルで環境を識別する。
+使える情報として以下（その他も）がある。
+これらを適宜、組み合わせて識別する。</p>
+
+<ul>
+  <li>/etc/machine-id ファイル</li>
+  <li>/etc/debian_version ファイル</li>
+  <li>uname コマンド</li>
+</ul>
+
+<p>OS 、ディストリビューション、さらにバージョンによって使えるものが違う。</p>
+
+<p>識別された環境の ID となる文字列を表示する。
+または終了コードを返す。</p>
+
+<h1 id="section-11">環境設定スクリプト</h1>
+
+<p>環境の個別の設定はホスト毎のディレクトリを作成し個々のファイルとして作成する。</p>
+
+<p>それに対してシンボリックリンクを張り、同一のパス／ファイル名でアクセス
+できる様にする。この部分をスクリプト化する。</p>
+
+<p>この時、環境の識別に前項のスクリプトを使う。</p>
+
+<p>共通の設定は適宜 conf_directory からコピーまたはシンボリックリンクする。</p>
 
 
   </article>

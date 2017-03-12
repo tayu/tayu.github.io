@@ -137,8 +137,8 @@
 <p>手法としては 3 つある。</p>
 
 <ul>
-  <li><a href="http://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html">bash.1</a>の組み込みコマンドである getopts を使う</li>
-  <li>外部コマンドである <a href="http://linuxjm.osdn.jp/html/util-linux/man1/getopt.1.html">getopt.1</a> を使う</li>
+  <li><a href="http://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html">bash</a>の組み込みコマンドである getopts を使う</li>
+  <li>外部コマンドである <a href="http://linuxjm.osdn.jp/html/util-linux/man1/getopt.1.html">getopt</a> を使う</li>
   <li>自前のロジックを実装する</li>
 </ul>
 
@@ -170,7 +170,6 @@
 <span class="line-numbers"><a href="#n23" name="n23">23</a></span>            ;;
 <span class="line-numbers"><a href="#n24" name="n24">24</a></span>    esac
 <span class="line-numbers"><a href="#n25" name="n25">25</a></span>done
-<span class="line-numbers"><a href="#n26" name="n26">26</a></span>
 </pre></div>
 </div>
 </div>
@@ -242,7 +241,7 @@
 
 <ol>
   <li><code>--</code> や <code>-</code> でオプション解析を中断し、以後の引数をまとめる</li>
-  <li>-o XXX 、-oXXX 、–opton XXX 、–opton=XXX の解析。くっついている場合先頭の <code>-o</code> や <code>--option</code> を削除して取り込む</li>
+  <li>-o XXX 、-oXXX 、–opton XXX 、–opton=XXX の解析。くっついている場合先頭の <code>-o</code> や <code>--option=</code> を削除して取り込む</li>
   <li>-l 、-n 、-p を -np などと指定しつつ、”:lnp” でそれ以外をエラーにする</li>
 </ol>
 
@@ -250,7 +249,7 @@
 その個数が argc に入る。</p>
 
 <p>ちなみに _usage は使用法を表示して exit 1 する関数。
-_isValue は後続の引数がオプション（’-‘ で始まる）であるか
+_isValue は後続の引数がオプション（<code>-</code> で始まる）であるか
 調べる関数で、以下の様になる。</p>
 
 <div><div class="CodeRay">

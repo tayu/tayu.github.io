@@ -4,7 +4,7 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Mon, 27 Feb 2017 18:36:49 +0900</pubDate>
+    <pubDate>Sun, 12 Mar 2017 11:49:19 +0900</pubDate>
 
     
     <item>
@@ -31,12 +31,9 @@
   環境
   方針
   分散管理
-  環境の識別
-  環境設定スクリプト
-
-
-環境
-VM で Linux が幾つかあ...</description>
+  手順（最初の作業）    
+      親ホストでリポジトリを作成する
+   ...</description>
       <pubDate>Fri, 06 Jan 2017 00:00:00 +0900</pubDate>
     </item>
     
@@ -50,9 +47,10 @@ VM で Linux が幾つかあ...</description>
 まぁ、のんびりやるとするかな。なので、このページは随時更新していく。
 
 
-  ブツ
-  基礎知識    
-      購入前に知っておくと良いこと        ...</description>
+  これは何？
+  何に使う？
+  基本情報    
+      購入前に知っておくと良...</description>
       <pubDate>Fri, 30 Dec 2016 00:00:00 +0900</pubDate>
     </item>
     
