@@ -100,9 +100,12 @@
   </header>
 
   <article class="post-content">
-  <p><a href="https://www.raspberrypi.org/">Raspberry Pi</a> を買った。</p>
+  <p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi</a> を買った。</p>
 
 <p>のだが、色々、進んでいない。</p>
+
+<p>何に使う？ Gateway とか radiko の録音サーバ位が現在の目標。
+つまり、普通の PC としての用途。</p>
 
 <p>まぁ、のんびりやるとするかな。なので、このページは随時更新していく。</p>
 
@@ -137,13 +140,14 @@
   <li><a href="#section-15">その他の情報</a>    <ul>
       <li><a href="#cpu-">CPU の温度を取得する</a></li>
       <li><a href="#usb--2">USB 機器の接続</a></li>
+      <li><a href="#usb--3">USB シリアルで接続</a></li>
     </ul>
   </li>
 </ul>
 
 <h1 id="section">これは何？</h1>
 <p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi 3 Model B</a>
-ってやつ。</p>
+ってやつ。（以下、RPi3 とも書く）</p>
 
 <p>Amazon を見ていたら、ケース付きで出ていた。
 今まで手を出していなかった理由の一つに基板なんかがむき出しのままだと
@@ -474,6 +478,164 @@ TeraTerm などで 192.168.179.3 に接続できる様になる。</p>
 
 <p>それでも動作する保証はない。
 検索して使用実績を探すのが確実。</p>
+
+<h2 id="usb--3">USB シリアルで接続</h2>
+
+<h3 id="raspbian-">Raspbian 上の設定ファイルの修正</h3>
+
+<p>どうやら RPi3 の中でも途中で方法が変わったらしい。
+web で検索してヒットする情報の半分は RPi2 か RPi3 の変更前なので、注意。</p>
+
+<p>結果、/boot/config.txt への追記で接続できた（<a href="http://qiita.com/yamamotomanabu/items/33b6cf0d450051d33d41">参考</a>）</p>
+
+<p>/boot/config.txt に以下を追加する</p>
+
+<pre><code>dtoverlay=pi3-miniuart-bt
+</code></pre>
+
+<p>web で検索すると /boot/cmdline.txt の修正がヒットする。
+手持ちの RPi3 ではどちらでも接続できた。</p>
+
+<p>つまり、修正前の</p>
+
+<pre><code>console=serial0,115200 console=tty1
+</code></pre>
+
+<p>でも、web でヒットする修正例の</p>
+
+<pre><code>console=ttyAMA0,115200 console=tty1
+</code></pre>
+
+<p>でも。</p>
+
+<p>/dev を見てみたら、以下の様になっていた。</p>
+
+<pre><code>$ ls -laF /dev/serial0 /dev/ttyAMA0
+lrwxrwxrwx 1 root root       7 May  1 14:00 /dev/serial0 -&gt; ttyAMA0
+crw------- 1 pi   tty  204, 64 May  1 14:23 /dev/ttyAMA0
+</code></pre>
+
+<h3 id="usb--4">USB シリアルケーブルの接続</h3>
+
+<p>USB シリアル変換ケーブルを接続する。</p>
+
+<p>購入時の注意。自分の使用する環境で使える事を確認する</p>
+
+<ul>
+  <li>OS はどうか</li>
+  <li>OS のバージョンはどうか</li>
+  <li>ドライバの導入は必要か</li>
+</ul>
+
+<p>できれば、USB コネクタに挿すだけで使えるものを選ぶ</p>
+
+<p>印象としては、Raspberry Pi が普及して、逆にシリアル変換アダプタは
+売れなくなってきている感じで、以前の製品ページが無くなったメーカーも
+見られる。困るのがドライバの供給が無くなる事。例えば win7/8 で使えた
+ものが win10 で使えなくなる、といった事が起こる。メーカーがドライバを
+開発しなくなったため。</p>
+
+<p>閑話休題</p>
+
+<p>Raspberry Pi 側の端子構成は<a href="https://mynotebook.h2np.net/post/618">ここ</a>の
+「Raspberry pi側情報」の項を参照</p>
+
+<p>使用するピンは 3 個。GND、TXD、RXD 。</p>
+
+<p>ケーブル側の配置はそのケーブルの諸元で確認するしかないが、
+大抵は以下の配置らしい。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>赤</td>
+      <td>+5V</td>
+    </tr>
+    <tr>
+      <td>黒</td>
+      <td>GND</td>
+    </tr>
+    <tr>
+      <td>白</td>
+      <td>RXD</td>
+    </tr>
+    <tr>
+      <td>緑</td>
+      <td>TXD</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>接続は以下</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>赤</td>
+      <td>+5V</td>
+      <td>接続しない</td>
+    </tr>
+    <tr>
+      <td>黒</td>
+      <td>GND</td>
+      <td>RPi3のGND</td>
+    </tr>
+    <tr>
+      <td>白</td>
+      <td>RXD</td>
+      <td>RPi3のTXD</td>
+    </tr>
+    <tr>
+      <td>緑</td>
+      <td>TXD</td>
+      <td>RPi3のRXD</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>TX（送信）とRX（受信）のクロス接続となる。</p>
+
+<h3 id="teraterm-">TeraTerm で接続</h3>
+
+<p>TeraTerm に限らず、シリアル接続できる端末ソフトなら OK 。</p>
+
+<p>設定する項目は 1 つ。速度を 115200 にすること。</p>
+
+<p>TeraTerm の接続マクロは以下の様になった
+COM ポートは 3 。ユーザ、パスワードはデフォルト。</p>
+
+<pre><code>comport = '3'
+baudrate = '115200'
+user = 'pi'
+pass = 'raspberry'
+UsernamePrompt = 'raspberrypi login: '
+PasswordPrompt = 'Password: '
+
+commandline = '/C='
+strconcat commandline comport
+strconcat commandline ' /BAUD='
+strconcat commandline baudrate
+
+connect commandline
+sendln
+wait   UsernamePrompt
+sendln user
+wait   PasswordPrompt
+sendln pass
+</code></pre>
+
+<p>接続後、一度改行を送ってログインプロンプトを出させている。
+（ログインプロンプトは出力済みのはずなので、いきなりユーザ名を送っても
+良いかもしれない。が、失敗したときのエラー処理とか書きたくないし、
+毎回リターンキーを押す位のオーバーヘッドなら十分じゃないかな）</p>
+
+<h3 id="section-16">接続テスト環境</h3>
+
+<p>接続が確実にできるまでは HDMI でモニタをつなぐなり、LAN 経由でつなぐなり、
+他の経路で接続できる状態で行った方が良さそう。少なくとも OS が正常に
+ブートしたかどうかの確認はできるし、ログインしてファイルを書き換えるのも
+容易だ。</p>
+
 
   </article>
 
