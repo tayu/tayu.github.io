@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Raspberry Pi の設定</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./raspberrypi/2017/05/11/raspberry-pi/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Raspberry Pi の設定</h1>
+    <p class="meta">May 11, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi</a>
+に
+<a href="http://www.debian.org/">Debian</a>
+を
+<a href="http://tokyodebian.alioth.debian.org/pdf/debianmeetingresume201503-presentation-iwamatsu.pdf">インストール</a>
+できたので、いろいろ設定していく。</p>
+
+<p>そのメモ。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#debian-">なぜ Debian か</a></li>
+  <li><a href="#debian--1">Debian サーバの指定</a></li>
+  <li><a href="#section">ホスト名の設定</a></li>
+  <li><a href="#section-1">スワップの追加</a></li>
+  <li><a href="#section-2">ロケールの設定</a></li>
+  <li><a href="#lan-">無線 LAN クライアント</a></li>
+  <li><a href="#section-3">関連コマンドのインストール</a></li>
+</ul>
+
+<h1 id="debian-">なぜ Debian か</h1>
+
+<p>普段使っている Linux が Debian である事が一番の理由。その他挙げると、</p>
+
+<ul>
+  <li>update 等は本家のサーバの方が良さそう</li>
+  <li>インストールパッケージ群はなるべく最小からスタートさせたい</li>
+  <li>環境設定の方法を Debian に合わせたい</li>
+</ul>
+
+<p>辺りがある。</p>
+
+<p>パッケージのアップデート時の動きを見ていると、Raspbian の場合は
+ダウンロードが遅い。これはいろいろ理由が考えらる。CPU パワー。
+サーバが遠い。サーバの回線が遅い。などなど。</p>
+
+<p>Debian のアップデートでアクセスするサーバは近く（国内）で
+負荷分散（CDN）されている。</p>
+
+<p>辺りを考えると、Debian のサーバを使う方が Raspbian のサーバの負荷も減って
+良いのではないかと考えた。</p>
+
+<p>インストールパッケージに関しては完全に個人の趣味なのだが、
+できる限り把握しておきたい。その一環として、一度は最小構成にして
+不要なパッケージを削除する事にしている。</p>
+
+<p>とは言ってもどれが不要かはわからないものもあるし、削除し過ぎて
+ブートしなくなってしまってはいけないので、それだけは注意している。
+作業は deborphan で「依存されていない」パッケージを表示させ、
+その中で不要そうなものを削除。再度 deborphan で表示、の繰り返し。</p>
+
+<p>パッケージが相互依存なんかしていると表示に出てこないので、
+完全な方法ではないが、効率的に進める事ができて、ある程度の
+成果があるので、よくやる。</p>
+
+<p>最後に設定ファイル回り。Raspbian で固定アドレスを振る為に dhcpcd.conf を
+編集した事がある。これ、目的とファイル名が一致していない。
+この気持ち悪さがどうにも引っかかってしまった。</p>
+
+<p>今後いろいろ設定していく中で、このような Raspbian 独自の方法が
+出てくる可能性があると考えた。大抵は Linux の設定なので、
+検索して上位に出てくるような一般的な方法が適用できてほしい。
+そういう意味でも一般的なディストリビューションにしておく方が
+迷わなくて良さそうである。</p>
+
+<h1 id="debian--1">Debian サーバの指定</h1>
+
+<p>インストール直後のスクリプトで /etc/apt/sources.list が作成されている。
+セキュリティ関係を追加。あと、なんとなく LTS にする</p>
+
+<pre><code>deb http://httpredir.debian.org/debian/ jessie main
+deb-src http://httpredir.debian.org/debian/ jessie main
+deb http://httpredir.debian.org/debian/ jessie-updates main
+deb-src http://httpredir.debian.org/debian/ jessie-updates main
+deb http://security.debian.org/ jessie/updates main
+deb-src http://security.debian.org/ jessie/updates main
+</code></pre>
+
+<p>通常は cdn.debian.or.jp を使う。</p>
+
+<h1 id="section">ホスト名の設定</h1>
+
+<p>/etc/hostname に記述する。まだ FQDN は無い。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /etc/hostname
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>xxx
+</pre></div>
+</div>
+</div>
+
+<p>例なので伏字っぽく</p>
+
+<h1 id="section-1">スワップの追加</h1>
+
+<p>メモリは 1G 程度あるので、まぁ使われることは無いと思われるが、
+用意するだけはしておく。</p>
+
+<p>空きパーティションは無いのでファイルで作成する。ファイル名は /swap とする。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># dd if=/dev/zero of=/swap bs=512M count=2
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># mkswap /swap
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span># swapon /swap
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span># swapon
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>NAME  TYPE  SIZE USED PRIO
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>/swap file 1024M   0B   -1
+</pre></div>
+</div>
+</div>
+<p>dd で bs=1G とするとメモリが足りないってエラーになるので、2 回に分ける。</p>
+
+<p>ブート後に有効になる様に /etc/fstab を修正する。</p>
+
+<pre><code>/swap swap swap defaults    0    0
+</code></pre>
+
+<p>修正した /etc/fstab をテストする</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># swapoff -a
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># swapon
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span># swapon -a
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span># swapon
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>NAME  TYPE  SIZE USED PRIO
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>/swap file 1024M   0B   -1
+</pre></div>
+</div>
+</div>
+
+<p>前項で実施したコマンドラインからのスワップの有効化を無効にするために、
+一度 swapoff -a して全てのスワップを off にする。
+その後、swapon -a する。</p>
+
+<p>最終的にはリブート後に確認する。</p>
+
+<h1 id="section-2">ロケールの設定</h1>
+
+<p>各コマンドの日本語表示がちゃんと表示される様に locales をインストールする。</p>
+
+<pre><code># apt-get install locales
+# dpkg-reconfigure locales
+</code></pre>
+
+<p>ja_JP.UTF-8 を導入し、システムデフォルトを C (C.UTF-8) にする。</p>
+
+<p>個人環境は .zshrc で ja_JP.UTF-8 に設定済み。
+（だから化けてたんだけどね）</p>
+
+<h1 id="lan-">無線 LAN クライアント</h1>
+
+<p>とりあえず AP につなげるための設定</p>
+
+<h1 id="section-3">関連コマンドのインストール</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>コマンド</th>
+      <th>パッケージ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+    <tr>
+      <td>iwconfig</td>
+      <td>wireless-tools</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>設定ファイル
+確認</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#zsh">
+	zsh</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#radiko">
+	radiko</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-May">
+	2017 May</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

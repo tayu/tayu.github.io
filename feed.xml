@@ -4,8 +4,29 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Mon, 01 May 2017 23:28:13 +0900</pubDate>
+    <pubDate>Sat, 13 May 2017 06:28:25 +0900</pubDate>
 
+    
+    <item>
+      <title>Raspberry Pi の設定</title>
+      <link>http://tayu.github.io/raspberrypi/2017/05/11/raspberry-pi/</link>
+      <description>Raspberry Pi
+に
+Debian
+を
+インストール
+できたので、いろいろ設定していく。
+
+そのメモ。
+
+
+  なぜ Debian か
+  Debian サーバの指定
+  ホスト名の設定
+  スワップの追加
+  ロケールの設定...</description>
+      <pubDate>Thu, 11 May 2017 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>bash でオプション解析</title>
@@ -150,20 +171,6 @@ Polipo の設定を見直した。
 
   ...</description>
       <pubDate>Wed, 18 May 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>JM の日本語マニュアルをローカルで参照する</title>
-      <link>http://tayu.github.io/jm/man/local/2016/05/17/jm-local/</link>
-      <description>何かとローカルに置きたがるので、JM も。
-
-実は前々からやりたかったのだが、html 化の為のスクリプトとかが
-無かったので止まっていた。で、改めてディレクトリ配下を眺めていて、
-最低限の、読める程度のものを生成してみた。
-
-
-  ...</description>
-      <pubDate>Tue, 17 May 2016 00:00:00 +0900</pubDate>
     </item>
     
 
