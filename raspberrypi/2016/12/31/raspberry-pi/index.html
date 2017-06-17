@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Raspberry Pi のいろいろ</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./raspberrypi/2016/12/31/raspberry-pi/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Raspberry Pi のいろいろ</h1>
+    <p class="meta">Dec 31, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi</a> を買った。いろいろ、細かい設定をしたので備忘録としてめも。</p>
+
+<p>OS は Raspbian 。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#raspberry-pi-">Raspberry Pi 本体</a>    <ul>
+      <li><a href="#lan-nic-">有線 LAN (NIC) への固定アドレスの設定</a></li>
+      <li><a href="#lan-">無線 LAN のアクセスポイントへ接続する</a></li>
+      <li><a href="#usb-">USB シリアルで接続</a></li>
+      <li><a href="#cpu-">CPU の温度を取得する</a></li>
+      <li><a href="#usb--1">USB 機器の接続</a></li>
+    </ul>
+  </li>
+  <li><a href="#sd-">マイクロ SD カード</a>    <ul>
+      <li><a href="#windows-">Windows 上で扱う</a></li>
+      <li><a href="#linux-">Linux 上で扱う</a></li>
+      <li><a href="#windows--linux-">Windows 上の Linux で扱う</a></li>
+      <li><a href="#section-5">構成</a></li>
+      <li><a href="#section-6">マウントする</a></li>
+      <li><a href="#sd--1">イメージファイルのマイクロ SD カードへの読み書き</a></li>
+      <li><a href="#tips">読み書きの TIPS</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-7">その他の話題</a></li>
+</ul>
+
+<h1 id="raspberry-pi-">Raspberry Pi 本体</h1>
+
+<h2 id="lan-nic-">有線 LAN (NIC) への固定アドレスの設定</h2>
+
+<p>DHCP が無い場合やケーブル直結などの場合、双方の PC （の NIC）に
+手動でアドレスを振ることで通信できる。</p>
+
+<p>通常の設定先である <code>/etc/network/interfaces</code> の先頭を見ると</p>
+
+<pre><code># Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+</code></pre>
+
+<p>「注意。このファイルは dhcpcd が使用する。静的アドレスは
+<code>/etc/dhcpcd.conf</code> を参照。あるいは <code>man dhcpcd.conf</code> すること」</p>
+
+<p>とある。（あまり見たことが無い。どこの流儀なのだろう）
+なので <code>/etc/dhcpcd.conf</code> に追加する。内容は以下。</p>
+
+<pre><code>interface eth0
+static ip_address=192.168.1.7/24
+static routers=192.168.1.1
+static domain_name_servers=
+</code></pre>
+
+<p>routers へは、デフォルトゲートウェイがあればそれを、直結なら対向を設定。
+DNS の設定はとりあえず無しでも OK。</p>
+
+<p>設定を反映するには network の起動スクリプトを実行するか、リブートする。</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>sudo /etc/init.d/networking reload
+</pre></div>
+</div>
+</div>
+
+<p>あるいは</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>sudo /etc/init.d/networking restart
+</pre></div>
+</div>
+</div>
+
+<p>直結先が Windows で、Windows 側のアドレスを変更する場合は、
+「アダプターの設定の変更」でネットワークデバイスを無効化～有効化する。</p>
+
+<h2 id="lan-">無線 LAN のアクセスポイントへ接続する</h2>
+
+<p>以下、接続パラメータを SSID 、PASSPHRASE とする
+暗号化は WPA2 。ステルスも OK 。</p>
+
+<p>ifconfig で見ると wlan0 が既に上がっている</p>
+
+<pre><code>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
+</code></pre>
+
+<h3 id="wifi-">wifi のアクセス情報を設定ファイルにを書き込む。</h3>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo sh -c 'wpa_passphrase SSID PASSPHRASE &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf'
+</pre></div>
+</div>
+</div>
+
+<p><code>/etc/wpa_supplicant/wpa_supplicant.conf</code> に以下が追加される</p>
+
+<pre><code>network={
+	ssid="SSID"
+	#psk="PASSPHRASE"
+	psk=vmlMzm8zhCGAu4dm0zpb6Q8AJVwDVn3uJjGvWZyWOwBA
+}
+</code></pre>
+
+<p>生パスワードが書いてある行は削除する。
+あるいは上記の様に ‘#’ でコメントアウトする。</p>
+
+<h3 id="section">設定を反映する</h3>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo /etc/init.d/networking restart
+</pre></div>
+</div>
+</div>
+
+<h3 id="section-1">確認する</h3>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>$ ifconfig
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>          inet addr:192.168.200.5  Bcast:192.168.200.255  Mask:255.255.255.0
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>          inet6 addr: fe80::XXXX:XXXX:XXXX:XXXX/64 Scope:Link
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>          RX packets:422 errors:0 dropped:302 overruns:0 frame:0
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>          TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>          collisions:0 txqueuelen:1000
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>          RX bytes:93874 (91.6 KiB)  TX bytes:31328 (30.5 KiB)
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>（wlan0 以外は省略）
+</pre></div>
+</div>
+</div>
+
+<p>AP から DHCP でアドレス（192.168.200.5）を取得している。</p>
+
+<h2 id="usb-">USB シリアルで接続</h2>
+
+<h3 id="bootconfigtxt-">/boot/config.txt の修正</h3>
+
+<p>/boot/config.txt に以下を追加する</p>
+
+<pre><code>dtoverlay=pi3-miniuart-bt
+</code></pre>
+
+<p>どうやら RPi3 の中でも途中で方法が変わったらしい。
+web で検索してヒットする情報の半分は RPi2 か RPi3 の変更前なので、要注意。
+その頃はこの作業は不要だったらしい。</p>
+
+<p>（<a href="http://qiita.com/yamamotomanabu/items/33b6cf0d450051d33d41">参考</a>）</p>
+
+<h3 id="bootcmdlinetxt-">/boot/cmdline.txt の修正</h3>
+
+<p>修正と言うか、確認。
+デバイスの指定は以下の様になっている。</p>
+
+<pre><code>console=serial0,115200 console=tty1
+</code></pre>
+
+<p>でも、web で検索すると以下が多い</p>
+
+<pre><code>console=ttyAMA0,115200 console=tty1
+</code></pre>
+
+<p>結果、どちらでも接続できた。</p>
+
+<p>/dev を見てみたら、以下の様になっていた。</p>
+
+<pre><code>$ ls -laF /dev/serial0 /dev/ttyAMA0
+lrwxrwxrwx 1 root root       7 May  1 14:00 /dev/serial0 -&gt; ttyAMA0
+crw------- 1 pi   tty  204, 64 May  1 14:23 /dev/ttyAMA0
+</code></pre>
+
+<p>つまり、ttyAMA0 というデバイスにアクセスする為に serial0 という
+エイリアスを作った、と。なので、どちらでも OK 。</p>
+
+<h3 id="section-2">結線</h3>
+
+<p>Raspberry Pi 側の端子構成は<a href="https://mynotebook.h2np.net/post/618">ここ</a>の
+「Raspberry pi側情報」の項を参照</p>
+
+<p>使用するピンは 3 個。GND、TXD、RXD 。</p>
+
+<p>ケーブル側の配置はそのケーブルの諸元で確認するしかないが、
+大抵は以下の配置らしい。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>赤</td>
+      <td>+5V</td>
+    </tr>
+    <tr>
+      <td>黒</td>
+      <td>GND</td>
+    </tr>
+    <tr>
+      <td>白</td>
+      <td>RXD</td>
+    </tr>
+    <tr>
+      <td>緑</td>
+      <td>TXD</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>接続は以下</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>赤</td>
+      <td>+5V</td>
+      <td>接続しない</td>
+    </tr>
+    <tr>
+      <td>黒</td>
+      <td>GND</td>
+      <td>RPi3のGNDへ接続する</td>
+    </tr>
+    <tr>
+      <td>白</td>
+      <td>RXD</td>
+      <td>RPi3のTXDへ接続する</td>
+    </tr>
+    <tr>
+      <td>緑</td>
+      <td>TXD</td>
+      <td>RPi3のRXDへ接続する</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>TX（送信）とRX（受信）のクロス接続となる。</p>
+
+<p>シリアル接続としては単純な形なので、フロー制御などはない。
+その為、接続速度が合っていないと文字化けしたり、接続できなかったりする。</p>
+
+<h3 id="teraterm-">TeraTerm で接続</h3>
+
+<p>TeraTerm に限らず、シリアル接続できる端末ソフトなら OK 。</p>
+
+<p>設定する項目は 1 つだけ。速度を 115200 にすること。</p>
+
+<h4 id="section-3">メニューから接続</h4>
+
+<ol>
+  <li>メニューの Setup-Serial port で速度を設定する</li>
+  <li>メニューの File-NewConnection でSerial を選択して接続する</li>
+</ol>
+
+<h4 id="section-4">接続マクロ</h4>
+
+<p>TeraTerm の接続マクロは以下の様になった</p>
+
+<p>下記を拡張子が .ttl のファイルとしてとして保存し、
+TeraTerm でマクロとして実行する。（関連付け、またはメニューから）</p>
+
+<p>COM ポートは 3 。ユーザ、パスワードはデフォルト。</p>
+
+<pre><code>comport = '3'
+baudrate = '115200'
+user = 'pi'
+pass = 'raspberry'
+UsernamePrompt = 'raspberrypi login: '
+PasswordPrompt = 'Password: '
+
+commandline = '/C='
+strconcat commandline comport
+strconcat commandline ' /BAUD='
+strconcat commandline baudrate
+
+connect commandline
+sendln
+wait   UsernamePrompt
+sendln user
+wait   PasswordPrompt
+sendln pass
+</code></pre>
+
+<p>ちょっと説明すると、接続後、一度改行を送ってログインプロンプトを
+再出力させている。
+（接続しただけだと何も表示されない為。
+スクリプトの動作トリガとして、ログインプロンプトを取得する）</p>
+
+<h2 id="cpu-">CPU の温度を取得する</h2>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /sys/class/thermal/thermal_zone0/temp
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>40780
+</pre></div>
+</div>
+</div>
+
+<p>または</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ vcgencmd measure_temp
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>temp=40.8'C
+</pre></div>
+</div>
+</div>
+
+<p>24 時間運用するなら、モニタしておいた方が安心。
+とは言え、何度までなら OK なのだろう。（今は冬なので、良いのだが）</p>
+
+<p>あと、<a href="http://wpitchoune.net/psensor/">psensor</a> は使えなかった。</p>
+
+<h2 id="usb--1">USB 機器の接続</h2>
+
+<p>Raspberry Pi に USB ポートがあるので、いろいろつなげる。
+ただ、Windows じゃないので、大抵はドライバなど無い。</p>
+
+<p>Linux カーネルでサポートされているものが良い。
+最近はメーカーがドライバを提供している場合もある。</p>
+
+<p>それでも動作する保証はない。
+検索して使用実績を探すのが確実。</p>
+
+<h1 id="sd-">マイクロ SD カード</h1>
+
+<h2 id="windows-">Windows 上で扱う</h2>
+
+<p>イメージファイルをマイクロ SD カードに書き出すには
+<a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> を
+使う</p>
+
+<p>マイクロ SD カードを Windows 上で認識させても、最初のパーティション
+（/boot 配下）しか見えない。これは Linux のディスクフォーマット（file system）
+に対応していないため。</p>
+
+<p>第 2 パーティションにアクセスするには、別途 ext2 を扱うツールが
+必要になる。</p>
+
+<h2 id="linux-">Linux 上で扱う</h2>
+
+<p>dd コマンドで読み書きできる。また、マイクロ SD カードや
+ディスクイメージをマウントして中のファイルを読み書きすることも可能。</p>
+
+<h2 id="windows--linux-">Windows 上の Linux で扱う</h2>
+
+<p>VMware や VirtualBox などを使って Linux 環境をつくる。</p>
+
+<p>メインの環境が Windows の場合、一番使い易い。</p>
+
+<ol>
+  <li>VM の機能で USB デバイスを横取りし、Windwos でなく Linux 側に認識させることができる</li>
+  <li>VM の機能でディレクトリ共有すると、Windwos 上のファイルを直接読み書きできる。（もちろん SCP や FTP で接続しても良い。Windwos にドライブとして見せるツールもある）</li>
+</ol>
+
+<h2 id="section-5">構成</h2>
+
+<p>マイクロ SD カード（＝イメージファイル）中にはパーティションが 2 つある。
+それぞれ、起動後は /boot 、 / （ルート）となる。</p>
+
+<p>フォーマットは DOS 形式と ext4 。Windws は ext4 を認識しない。</p>
+
+<h2 id="section-6">マウントする</h2>
+
+<p>USB メモリとして認識した場合、各パーティションは
+sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識されたかは
+/var/log/syslog に出力されるので、</p>
+
+<pre><code>$ sudo tail -f /var/log/syslog
+</code></pre>
+
+<p>と、した状態で USB に挿す。</p>
+
+<p>例えば sdb1 、sdb2 として認識されていたなら、</p>
+
+<pre><code>$ sudo mount /dev/sdb2 /mnt
+</code></pre>
+
+<p>などとしてマウントして、読み書きできる。</p>
+
+<p>イメージファイルをマウントするには -o loop をつけ、ループパックマウントする。
+更に、パーティションを指定するために offset を指定する。</p>
+
+<pre><code>$ sudo mount -o loop,offset=xxxx Raspbian.img /mnt
+</code></pre>
+
+<p>offset オプションの xxxx は 512 * 開始セクタ番号となる
+（fdisk -l で確認できる）。</p>
+
+<h2 id="sd--1">イメージファイルのマイクロ SD カードへの読み書き</h2>
+
+<p>対象はあくまでデバイス（ディスク）であり、パーティションではない。
+以下のように /dev/sdb と指定する。sdb1 とはならない。</p>
+
+<pre><code>$ sudo dd if=Raspbian.img of=/dev/sdb bs=512M
+</code></pre>
+
+<h2 id="tips">読み書きの TIPS</h2>
+
+<ul>
+  <li>dd コマンドで。bs の値（バッファサイズ）を大きめにすると、多少書き込み速度が上がる。</li>
+</ul>
+
+<h1 id="section-7">その他の話題</h1>
+
+<ul>
+  <li>ブートイメージを VM で動かす。qemu で可能。遅い。</li>
+  <li>Debian をインストールする。armhf が動く。カーネルは別。</li>
+  <li>クロスでビルドする。カーネル、ドライバを別環境でコンパイルする。PC 上でコンパイルする方が Raspberry Pi 上でするよりも速い。</li>
+</ul>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#audio">
+	audio</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#convert">
+	convert</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#zsh">
+	zsh</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#radiko">
+	radiko</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-May">
+	2017 May</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

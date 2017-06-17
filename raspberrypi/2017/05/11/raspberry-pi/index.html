@@ -115,8 +115,13 @@
   <li><a href="#section">ホスト名の設定</a></li>
   <li><a href="#section-1">スワップの追加</a></li>
   <li><a href="#section-2">ロケールの設定</a></li>
-  <li><a href="#lan-">無線 LAN クライアント</a></li>
-  <li><a href="#section-3">関連コマンドのインストール</a></li>
+  <li><a href="#lan-">無線 LAN クライアント</a>    <ul>
+      <li><a href="#section-3">関連コマンドのインストール</a></li>
+      <li><a href="#section-4">デバイスの認識</a></li>
+      <li><a href="#section-5">パーティションのリサイズ</a></li>
+    </ul>
+  </li>
+  <li><a href="#resize2fs-devsdc2">resize2fs /dev/sdc2</a></li>
 </ul>
 
 <h1 id="debian-">なぜ Debian か</h1>
@@ -167,17 +172,29 @@
 <h1 id="debian--1">Debian サーバの指定</h1>
 
 <p>インストール直後のスクリプトで /etc/apt/sources.list が作成されている。
-セキュリティ関係を追加。あと、なんとなく LTS にする</p>
+サーバを CDN に向け、セキュリティ関係を追加。</p>
 
-<pre><code>deb http://httpredir.debian.org/debian/ jessie main
-deb-src http://httpredir.debian.org/debian/ jessie main
-deb http://httpredir.debian.org/debian/ jessie-updates main
-deb-src http://httpredir.debian.org/debian/ jessie-updates main
+<pre><code>deb http://cdn.debian.or.jp/debian/ jessie main
+deb-src http://cdn.debian.or.jp/debian/ jessie main
+
 deb http://security.debian.org/ jessie/updates main
 deb-src http://security.debian.org/ jessie/updates main
+
+deb http://cdn.debian.or.jp/debian/ jessie-updates main
+deb-src http://cdn.debian.or.jp/debian/ jessie-updates main
+
 </code></pre>
 
-<p>通常は cdn.debian.or.jp を使う。</p>
+<p>その後、システムをアップデートしておく</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get update
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># apt-get upgrade
+</pre></div>
+</div>
+</div>
+
+<p>まぁ、古いやり方。</p>
 
 <h1 id="section">ホスト名の設定</h1>
 
@@ -246,13 +263,15 @@ deb-src http://security.debian.org/ jessie/updates main
 <p>ja_JP.UTF-8 を導入し、システムデフォルトを C (C.UTF-8) にする。</p>
 
 <p>個人環境は .zshrc で ja_JP.UTF-8 に設定済み。
-（だから化けてたんだけどね）</p>
+（だから化けてたんだけどね）
+root で作業する時は ascii で表示されるよう、C か none 、
+最悪 en にする。</p>
 
 <h1 id="lan-">無線 LAN クライアント</h1>
 
-<p>とりあえず AP につなげるための設定</p>
+<p>とりあえず内蔵の NIC で AP につなげるための設定</p>
 
-<h1 id="section-3">関連コマンドのインストール</h1>
+<h2 id="section-3">関連コマンドのインストール</h2>
 
 <table>
   <thead>
@@ -267,30 +286,57 @@ deb-src http://security.debian.org/ jessie/updates main
       <td>wireless-tools</td>
     </tr>
     <tr>
-      <td>iwconfig</td>
-      <td>wireless-tools</td>
+      <td>lspci</td>
+      <td>pciutils</td>
     </tr>
     <tr>
-      <td>iwconfig</td>
-      <td>wireless-tools</td>
-    </tr>
-    <tr>
-      <td>iwconfig</td>
-      <td>wireless-tools</td>
-    </tr>
-    <tr>
-      <td>iwconfig</td>
-      <td>wireless-tools</td>
-    </tr>
-    <tr>
-      <td>iwconfig</td>
-      <td>wireless-tools</td>
+      <td>lsusb</td>
+      <td>usbutils</td>
     </tr>
   </tbody>
 </table>
 
+<h2 id="section-4">デバイスの認識</h2>
+
+<p>おおっと！！！！！！</p>
+
+<p>内蔵 NIC を認識してない！！！！！！！</p>
+
+<p>rpi-update スクリプト or non-free+contrib でどうだろう</p>
+
+<p>pci 接続を確認する</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># lspci
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>pcilib: Cannot open /proc/bus/pci
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>lspci: Cannot find any working access method.
+</pre></div>
+</div>
+</div>
+
+<p>usb 接続を確認する</p>
+
 <p>設定ファイル
 確認</p>
+
+<h2 id="section-5">パーティションのリサイズ</h2>
+
+<p><code>sh
+# parted /dev/sdc
+</code>s</p>
+
+<p>対話モードになる。タブによるコマンド補完やカーソルキーや ^P、^Nに
+よるヒストリが使えるので便利</p>
+
+<p>fdisk のような書き込みコマンドが無い。終了するとディスクが更新されている。
+つまり、キャンセルできないので注意。</p>
+
+<p>これだけだと mount 時に旧サイズで認識されるので resize2fs を
+実行する。</p>
+
+<h1 id="resize2fs-devsdc2">resize2fs /dev/sdc2</h1>
+
+<p>先に fs をチェックする必要があると言われたら、そっちを先に実行する。</p>
 
 
   </article>
@@ -437,7 +483,7 @@ deb-src http://security.debian.org/ jessie/updates main
     <li>
       <a href="./../../../../../categories/#raspberrypi">
 	raspberrypi</a>
-      (2)</li>
+      (3)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -502,6 +548,9 @@ deb-src http://security.debian.org/ jessie/updates main
     <li>
       <a href="./../../../../../date/#2016-Dec">
 	2016 Dec</a></li>
+    
+    
+    
     
     
     

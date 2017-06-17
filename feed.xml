@@ -4,7 +4,7 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Sat, 13 May 2017 06:28:25 +0900</pubDate>
+    <pubDate>Sat, 17 Jun 2017 11:32:07 +0900</pubDate>
 
     
     <item>
@@ -59,6 +59,20 @@ Debian
     </item>
     
     <item>
+      <title>Raspberry Pi のいろいろ</title>
+      <link>http://tayu.github.io/raspberrypi/2016/12/31/raspberry-pi/</link>
+      <description>Raspberry Pi を買った。いろいろ、細かい設定をしたので備忘録としてめも。
+
+OS は Raspbian 。
+
+
+  Raspberry Pi 本体    
+      有線 LAN (NIC) への固定アドレスの設定
+  ...</description>
+      <pubDate>Sat, 31 Dec 2016 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
       <title>Raspberry Pi の導入</title>
       <link>http://tayu.github.io/raspberrypi/2016/12/30/raspberry-pi/</link>
       <description>Raspberry Pi を買った。
@@ -68,7 +82,10 @@ Debian
 何に使う？ Gateway とか radiko の録音サーバ位が現在の目標。
 つまり、普通の PC としての用途。
 
-まぁ、のんびりやるとするかな。なので、このペ...</description>
+まぁ、のんびりやるとするかな。
+
+
+  これ...</description>
       <pubDate>Fri, 30 Dec 2016 00:00:00 +0900</pubDate>
     </item>
     
@@ -156,21 +173,6 @@ Polipo の設定を見直した。
   キャッシュさせないための設定
  ...</description>
       <pubDate>Thu, 19 May 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>cron でメールを送るためのスクリプト</title>
-      <link>http://tayu.github.io/mail/msmtp/local/2016/05/18/send-mail/</link>
-      <description>自分への通知用に指定時刻にメールを送る。
-
-自分（の携帯など）に指定時刻にメールを送る様にしておくと便利な事がある。
-例えば特定の曜日の決まった時刻にやる事がある場合なんかに。
-
-5 分前にメールを受け取る様にしておくとか。
-
-
-  ...</description>
-      <pubDate>Wed, 18 May 2016 00:00:00 +0900</pubDate>
     </item>
     
 

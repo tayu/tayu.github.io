@@ -107,7 +107,7 @@
 <p>何に使う？ Gateway とか radiko の録音サーバ位が現在の目標。
 つまり、普通の PC としての用途。</p>
 
-<p>まぁ、のんびりやるとするかな。なので、このページは随時更新していく。</p>
+<p>まぁ、のんびりやるとするかな。</p>
 
 <ul id="markdown-toc">
   <li><a href="#section">これは何？</a></li>
@@ -122,25 +122,8 @@
       <li><a href="#section-9">ブートイメージの書き込み</a></li>
       <li><a href="#section-10">起動</a></li>
       <li><a href="#section-11">アプリケーションの追加とアップデート</a></li>
-    </ul>
-  </li>
-  <li><a href="#section-12">設定変更</a>    <ul>
-      <li><a href="#pc-">準備。PC（母艦） に接続して書き込み</a></li>
-      <li><a href="#lan-nic-">有線 LAN (NIC) への固定アドレスの設定</a></li>
-      <li><a href="#wlan--ssid-">wlan への SSID の設定</a></li>
-      <li><a href="#usb--1">USB シリアル用パラメータの設定</a></li>
-    </ul>
-  </li>
-  <li><a href="#section-13">ブートイメージの操作</a>    <ul>
-      <li><a href="#qemu-">qemu で動かす</a></li>
-      <li><a href="#section-14">クロスでビルドする</a></li>
-      <li><a href="#debian-">Debian をインストールする</a></li>
-    </ul>
-  </li>
-  <li><a href="#section-15">その他の情報</a>    <ul>
-      <li><a href="#cpu-">CPU の温度を取得する</a></li>
-      <li><a href="#usb--2">USB 機器の接続</a></li>
-      <li><a href="#usb--3">USB シリアルで接続</a></li>
+      <li><a href="#section-12">カーネル、ファームウェアのアップデート</a></li>
+      <li><a href="#section-13">この先へ</a></li>
     </ul>
   </li>
 </ul>
@@ -159,15 +142,15 @@
 <p>しばらく前にちょっとしたブームになっていて、いろいろ書籍なども出ていた。
 いわゆる「組み込み」用途の例が多数あり、詳しくでている。</p>
 
-<p>或いは、ただ、
-一方、基本的に小さくて安い PC なので、そう使う事もできる。
-まぁ、Windows や MacOS は乗らないけど。</p>
+<p>或いは、単に安価で小さな PC なので、そう使う事もできる。</p>
+
+<p>まぁ、Windows や MacOS は乗らないけど。</p>
 
 <h1 id="section-2">基本情報</h1>
 
 <h2 id="section-3">購入前に知っておくと良いこと</h2>
 
-<p>とりあえず、どう使うかイメージしてみる。</p>
+<p>とりあえず、どう使うかイメージしてみる手助けに。</p>
 
 <h3 id="section-4">全般</h3>
 
@@ -179,9 +162,10 @@
   <li>OS には Window 環境があるので、Windwos などの様にマウスで操作できる。</li>
   <li>有線の LAN アダプタがある。DHCP でアドレスが取れるとそのまま使える。</li>
   <li>無線の LAN アダプタがある。アクセスポイントを設定すればすぐに使える。</li>
-  <li>別売りの USB シリアルをつなぐとモニタ無しで使用できて便利。</li>
-  <li>マイクロ SD カードへの書き込みなどに別の環境（母艦）があると便利。</li>
-  <li>マイクロ SD カードへの書き込みなどには Linux が便利。仮想環境でも可。</li>
+  <li>別売りの USB シリアルモジュールをつなぐとモニタ無しで使用できて便利。</li>
+  <li>マイクロ SD カードへの書き込みなどに別の環境（デスクトップ PC）があると便利。</li>
+  <li>マイクロ SD カードへの書き込みは、Windows なら <a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> などのツールで、Linux なら dd
+コマンドで実行できる。Linux は Windows 上の仮想環境でも可。</li>
 </ul>
 
 <p>単体で PC として使う為のノート PC 化キットもある。</p>
@@ -199,16 +183,6 @@
 
 <p>となる。試すなら、この順で経験値を稼ぐのが良さそう。</p>
 
-<h3 id="usb-">USB シリアル接続</h3>
-
-<p>そうそう、USB シリアルについては以下も知っておくと良い。</p>
-
-<ul>
-  <li>Raspberry Pi 2 だとつないですぐに使えた模様。3 だと起動パラメータを仕込まないといけない</li>
-  <li>ケーブルが 4 本あるが、検索で見つかる画像だと 3 本しかつないでいない。もう 1 本は電源。つまり、USB から給電する以外にこっちからも給電できる。（両方つないで良いかは知らない。ショートしないのだろうか）</li>
-  <li>一部、使えないものがある。購入時は注意。Windows のバージョンとかでも異なる。</li>
-</ul>
-
 <h3 id="sd-">SD カード</h3>
 
 <ul>
@@ -219,39 +193,17 @@
   <li>PC 接続のカードリーダは マイクロ SD カード専用が小さくて扱いやすい。</li>
 </ul>
 
-<p>SD カード（と、言うか、USB Mass Storage Class）の扱いは Linux 上がやり易い。</p>
-
-<p>イメージファイルの書き込みは Linux 上では dd コマンドを使う。Windows 上なら
-<a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> など、
-別途ツールを使う。</p>
-
-<p>SD カード上のファイルを書き変えるにはマウントする必要がある。
-ただ、中にパーティションが 2 つあり、対象は 2 つ目となる。</p>
-
-<p>Windows だと最初のパーティションしか見えない。あるいは Linux の
-ファイルシステム（ext3 、ext4 、btrxf 、xfs などなど）を認識しない。
-やはり外部ツールが必要になる。</p>
-
-<p>Linux だと sdX1 、sdX2 の様に指定してマウントできる。</p>
-
-<p>Linux だとイメージファイルをマウントすることもできる。その中にパーティションが
-あっても OK 。マウントの offset オプションで指定できる。</p>
-
 <h2 id="section-6">本体以外に必要なもの</h2>
 
 <p>使用形態に応じて。前項を参照</p>
 
 <ul>
-  <li>給電するための USB ケーブル。一方の口がマイクロ USB であること。</li>
-  <li>ブート用のメディアとして、マイクロ SD カード</li>
-  <li>マイクロ SD カードを PC （母艦） に接続するためのカードリーダ</li>
-</ul>
-
-<p>その他</p>
-
-<ul>
-  <li>有線 LAN を使うなら、ケーブル（100均でも買える。ストレートの直挿しでも使える（事もある。必要なら HUB を用意））</li>
+  <li>給電するための USB ケーブル。RPi3 に接続する口がマイクロ USB であること。</li>
+  <li>
+    <p>ブート用のメディアとして、マイクロ SD カード</p>
+  </li>
   <li>単体で使用するなら、モニタ(HDMI)、マウス、キーボード（USB）</li>
+  <li>有線 LAN を使うなら、ケーブル（と、LAN 環境）</li>
 </ul>
 
 <h1 id="section-7">ブートまでの手順</h1>
@@ -268,15 +220,15 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
 
 <h2 id="section-9">ブートイメージの書き込み</h2>
 
-<p>取得したファイルを展開し、ディスクイメージファイルを SD カードに書き込む。</p>
-
-<p>Linux なら dd コマンドで。バッファを大きめにすると、多少書き込み速度が上がる。</p>
-
-<p>Windows なら
-<a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> など
-が使える。</p>
+<p>取得したファイルを展開し、ディスクイメージファイルを取り出す。
+取り出したファイルを SD カードに書き込む。</p>
 
 <h2 id="section-10">起動</h2>
+
+<p>最初の最初は、モニタ、キーボードをつないでの起動がおススメ。
+起動時のメッセージなども見れるので、ちゃんと起動したことが見て取れる。
+正常な起動が確認できたらその後はモニタ無しでも自信を持って作業できる。
+逆（最初の起動でモニタ無し）にすると、起動がうまく行ったかすら不明となる。</p>
 
 <p>SD カードを Raspberry Pi に装着し、USB 給電をつなぐ。</p>
 
@@ -285,18 +237,18 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
 <p>ログイン後は普通の Linux 環境として使える。</p>
 
 <p>root 権限で何かするときは sudo する。また、この時要求されるパスワードは
-自分のもの、つまり “raspberry” である。この辺りは Ubuntu っぽい。</p>
+自分のもの、つまり “raspberry” である。この辺りは Ubuntu と同じ。</p>
 
 <p>注意。無線 LAN など、外部からのアクセスの可能性があるのなら、
 パスワードは変更しておく。（と、ssh でログインしたときに表示される）
-或いは別ユーザを作る。</p>
+或いは別ユーザを作り、pi ユーザは消してしまう。</p>
 
 <h2 id="section-11">アプリケーションの追加とアップデート</h2>
 
 <p>Raspbian だと <a href="http://www.debian.org/">Debian</a> や
 <a href="http://www.ubuntu.com/">Ubuntu</a> と同様に、ネットワーク経由で
 アプリケーションの追加やアップデートができる。
-セキュリティ関連の更新もあるので、なるべくなら最新にしておく。</p>
+セキュリティ関連の更新もあるので、定期的に更新する。</p>
 
 <div><div class="CodeRay">
   <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo apt-get update
@@ -314,327 +266,13 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
 <p>あるいは aptitude コマンドで。この辺は Debian や Ubuntu のマニュアルを
 参照のこと。</p>
 
-<h1 id="section-12">設定変更</h1>
+<h2 id="section-12">カーネル、ファームウェアのアップデート</h2>
 
-<p>以下は Raspbian の場合</p>
+<p>rpi-update コマンドを使う</p>
 
-<h2 id="pc-">準備。PC（母艦） に接続して書き込み</h2>
+<h2 id="section-13">この先へ</h2>
 
-<p>Windows でもできないことは無いかもだが、Linux のファイルシステムを
-使用していることもあるし、やはり Linux で扱うのが楽。</p>
-
-<p>母艦が Windows なら、Linux を VM で動かすのが簡単。
-VMware や VirtualBox などが使える。SD カードを使うには、VM の設定で
-USB 接続のカードリーダを VM 側に横取りさせる。
-そうすると、カードリーダが Windows からは見えなくなり、VM 側（の Linux）で
-認識される様になる。</p>
-
-<p>Linux からは（大抵は） /dev/sd* として認識されるので、
-適宜マウントして読み書きする。</p>
-
-<p>また、イメージファイルをマウントして読み書きする
-事も簡単にできる。ファイル中にパーティションが存在する場合は
-offset を指定すれば正しくマウントできる。
-この場合は、更新したイメージファイルを SD カードに書き込むことになる。</p>
-
-<h2 id="lan-nic-">有線 LAN (NIC) への固定アドレスの設定</h2>
-
-<p>DHCP が無い場合。ケーブル直結などの場合。双方の PC に手動でアドレスを振る
-ことで通信できる。</p>
-
-<p>通常の設定先である <code>/etc/network/interfaces</code> の先頭を見ると</p>
-
-<pre><code># Please note that this file is written to be used with dhcpcd
-# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
-</code></pre>
-
-<p>「注意。このファイルは dhcpcd が使用する。静的アドレスは
-<code>/etc/dhcpcd.conf</code> を参照。あるいは <code>man dhcpcd.conf</code> すること」</p>
-
-<p>とある。（あまり見たことが無い。どこの流儀なのだろう）
-なので <code>/etc/dhcpcd.conf</code> に以下を追加する</p>
-
-<pre><code>interface eth0
-static ip_address=192.168.1.2/24
-static routers=192.168.1.1
-static domain_name_servers=
-</code></pre>
-
-<p>routers へは、デフォルトゲートウェイがあればそれを、直結なら対向を設定。
-DNS の設定はとりあえず空にしておく。</p>
-
-<p>母艦の NIC へは <code>192.168.1.1/24</code> を割り当てておく。
-うまくつながらない場合はリブートする（とうまくいく事もある）。</p>
-
-<h2 id="wlan--ssid-">wlan への SSID の設定</h2>
-
-<p>ifconfig で見ると wlan0 が既に上がっている</p>
-
-<pre><code>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
-</code></pre>
-
-<p>wifi のアクセス情報を設定ファイルにを書き込む。
-以下、<code>SSID</code> 、<code>PASSPHRASE</code> は AP の設定値。</p>
-
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo sh -c 'wpa_passphrase SSID PASSPHRASE &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf'
-</pre></div>
-</div>
-</div>
-
-<p><code>/etc/wpa_supplicant/wpa_supplicant.conf</code> に以下が追加される</p>
-
-<pre><code>network={
-	ssid="SSID"
-	#psk="PASSPHRASE"
-	psk=vmlMzm8zhCGAu4dm0zpb6Q8AJVwDVn3uJjGvWZyWOwBA
-}
-</code></pre>
-
-<p>生パスワードが書いてある行は削除する。上記では ‘#’ でコメントアウトしている。</p>
-
-<p>設定を反映する</p>
-
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo /etc/init.d/networking restart
-</pre></div>
-</div>
-</div>
-
-<p>確認</p>
-
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>$ ifconfig
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>          inet addr:192.168.179.3  Bcast:192.168.179.255  Mask:255.255.255.0
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>          inet6 addr: fe80::XXXX:XXXX:XXXX:XXXX/64 Scope:Link
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>          RX packets:422 errors:0 dropped:302 overruns:0 frame:0
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>          TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>          collisions:0 txqueuelen:1000
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>          RX bytes:93874 (91.6 KiB)  TX bytes:31328 (30.5 KiB)
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>（wlan0 以外は省略）
-</pre></div>
-</div>
-</div>
-
-<p>AP から DHCP でアドレスを取得している。
-TeraTerm などで 192.168.179.3 に接続できる様になる。</p>
-
-<h2 id="usb--1">USB シリアル用パラメータの設定</h2>
-
-<p>ToDo 。後で</p>
-
-<h1 id="section-13">ブートイメージの操作</h1>
-
-<h2 id="qemu-">qemu で動かす</h2>
-
-<p>デスクトップの CPU が早いので、エミュレーション環境でも実機より速い（かも）</p>
-
-<p>ToDo 。後で</p>
-
-<h2 id="section-14">クロスでビルドする</h2>
-
-<p>ToDo 。後で</p>
-
-<h2 id="debian-">Debian をインストールする</h2>
-
-<p>armhf が使えるらしい</p>
-
-<p>ToDo 。後で</p>
-
-<h1 id="section-15">その他の情報</h1>
-
-<h2 id="cpu-">CPU の温度を取得する</h2>
-
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /sys/class/thermal/thermal_zone0/temp
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>40780
-</pre></div>
-</div>
-</div>
-
-<p>または</p>
-
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ vcgencmd measure_temp
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>temp=40.8'C
-</pre></div>
-</div>
-</div>
-
-<p>24 時間運用するなら、モニタしておいた方が安心。
-とは言え、何度までなら OK なのだろう。（今は冬なので、良いのだが）</p>
-
-<p>あと、<a href="http://wpitchoune.net/psensor/">psensor</a> は使えなかった。</p>
-
-<h2 id="usb--2">USB 機器の接続</h2>
-
-<p>Raspberry Pi に USB ポートがあるので、いろいろつなげる。
-ただ、Windows じゃないので、大抵はドライバなど無い。</p>
-
-<p>Linux カーネルでサポートされているものが良い。
-最近はメーカーがドライバを提供している場合もある。</p>
-
-<p>それでも動作する保証はない。
-検索して使用実績を探すのが確実。</p>
-
-<h2 id="usb--3">USB シリアルで接続</h2>
-
-<h3 id="raspbian-">Raspbian 上の設定ファイルの修正</h3>
-
-<p>どうやら RPi3 の中でも途中で方法が変わったらしい。
-web で検索してヒットする情報の半分は RPi2 か RPi3 の変更前なので、注意。</p>
-
-<p>結果、/boot/config.txt への追記で接続できた（<a href="http://qiita.com/yamamotomanabu/items/33b6cf0d450051d33d41">参考</a>）</p>
-
-<p>/boot/config.txt に以下を追加する</p>
-
-<pre><code>dtoverlay=pi3-miniuart-bt
-</code></pre>
-
-<p>web で検索すると /boot/cmdline.txt の修正がヒットする。
-手持ちの RPi3 ではどちらでも接続できた。</p>
-
-<p>つまり、修正前の</p>
-
-<pre><code>console=serial0,115200 console=tty1
-</code></pre>
-
-<p>でも、web でヒットする修正例の</p>
-
-<pre><code>console=ttyAMA0,115200 console=tty1
-</code></pre>
-
-<p>でも。</p>
-
-<p>/dev を見てみたら、以下の様になっていた。</p>
-
-<pre><code>$ ls -laF /dev/serial0 /dev/ttyAMA0
-lrwxrwxrwx 1 root root       7 May  1 14:00 /dev/serial0 -&gt; ttyAMA0
-crw------- 1 pi   tty  204, 64 May  1 14:23 /dev/ttyAMA0
-</code></pre>
-
-<h3 id="usb--4">USB シリアルケーブルの接続</h3>
-
-<p>USB シリアル変換ケーブルを接続する。</p>
-
-<p>購入時の注意。自分の使用する環境で使える事を確認する</p>
-
-<ul>
-  <li>OS はどうか</li>
-  <li>OS のバージョンはどうか</li>
-  <li>ドライバの導入は必要か</li>
-</ul>
-
-<p>できれば、USB コネクタに挿すだけで使えるものを選ぶ</p>
-
-<p>印象としては、Raspberry Pi が普及して、逆にシリアル変換アダプタは
-売れなくなってきている感じで、以前の製品ページが無くなったメーカーも
-見られる。困るのがドライバの供給が無くなる事。例えば win7/8 で使えた
-ものが win10 で使えなくなる、といった事が起こる。メーカーがドライバを
-開発しなくなったため。</p>
-
-<p>閑話休題</p>
-
-<p>Raspberry Pi 側の端子構成は<a href="https://mynotebook.h2np.net/post/618">ここ</a>の
-「Raspberry pi側情報」の項を参照</p>
-
-<p>使用するピンは 3 個。GND、TXD、RXD 。</p>
-
-<p>ケーブル側の配置はそのケーブルの諸元で確認するしかないが、
-大抵は以下の配置らしい。</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>赤</td>
-      <td>+5V</td>
-    </tr>
-    <tr>
-      <td>黒</td>
-      <td>GND</td>
-    </tr>
-    <tr>
-      <td>白</td>
-      <td>RXD</td>
-    </tr>
-    <tr>
-      <td>緑</td>
-      <td>TXD</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>接続は以下</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>赤</td>
-      <td>+5V</td>
-      <td>接続しない</td>
-    </tr>
-    <tr>
-      <td>黒</td>
-      <td>GND</td>
-      <td>RPi3のGND</td>
-    </tr>
-    <tr>
-      <td>白</td>
-      <td>RXD</td>
-      <td>RPi3のTXD</td>
-    </tr>
-    <tr>
-      <td>緑</td>
-      <td>TXD</td>
-      <td>RPi3のRXD</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>TX（送信）とRX（受信）のクロス接続となる。</p>
-
-<h3 id="teraterm-">TeraTerm で接続</h3>
-
-<p>TeraTerm に限らず、シリアル接続できる端末ソフトなら OK 。</p>
-
-<p>設定する項目は 1 つ。速度を 115200 にすること。</p>
-
-<p>TeraTerm の接続マクロは以下の様になった
-COM ポートは 3 。ユーザ、パスワードはデフォルト。</p>
-
-<pre><code>comport = '3'
-baudrate = '115200'
-user = 'pi'
-pass = 'raspberry'
-UsernamePrompt = 'raspberrypi login: '
-PasswordPrompt = 'Password: '
-
-commandline = '/C='
-strconcat commandline comport
-strconcat commandline ' /BAUD='
-strconcat commandline baudrate
-
-connect commandline
-sendln
-wait   UsernamePrompt
-sendln user
-wait   PasswordPrompt
-sendln pass
-</code></pre>
-
-<p>接続後、一度改行を送ってログインプロンプトを出させている。
-（ログインプロンプトは出力済みのはずなので、いきなりユーザ名を送っても
-良いかもしれない。が、失敗したときのエラー処理とか書きたくないし、
-毎回リターンキーを押す位のオーバーヘッドなら十分じゃないかな）</p>
-
-<h3 id="section-16">接続テスト環境</h3>
-
-<p>接続が確実にできるまでは HDMI でモニタをつなぐなり、LAN 経由でつなぐなり、
-他の経路で接続できる状態で行った方が良さそう。少なくとも OS が正常に
-ブートしたかどうかの確認はできるし、ログインしてファイルを書き換えるのも
-容易だ。</p>
+<p>Have Fun !</p>
 
 
   </article>
@@ -781,7 +419,7 @@ sendln pass
     <li>
       <a href="./../../../../../categories/#raspberrypi">
 	raspberrypi</a>
-      (2)</li>
+      (3)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -846,6 +484,9 @@ sendln pass
     <li>
       <a href="./../../../../../date/#2016-Dec">
 	2016 Dec</a></li>
+    
+    
+    
     
     
     
