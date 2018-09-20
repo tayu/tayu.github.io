@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Raspberry Pi のいろいろ</title>
+    <title>Raspberry Pi 雑記</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
     <link rel="canonical" href="http://tayu.github.io./raspberrypi/2016/12/31/raspberry-pi/">
@@ -95,7 +95,7 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Raspberry Pi のいろいろ</h1>
+    <h1>Raspberry Pi 雑記</h1>
     <p class="meta">Dec 31, 2016</p>
   </header>
 
@@ -106,7 +106,7 @@
 
 <ul id="markdown-toc">
   <li><a href="#raspberry-pi-">Raspberry Pi 本体</a>    <ul>
-      <li><a href="#lan-nic-">有線 LAN (NIC) への固定アドレスの設定</a></li>
+      <li><a href="#lan-nic-">有線 LAN (NIC) へ固定アドレスを設定する</a></li>
       <li><a href="#lan-">無線 LAN のアクセスポイントへ接続する</a></li>
       <li><a href="#usb-">USB シリアルで接続</a></li>
       <li><a href="#cpu-">CPU の温度を取得する</a></li>
@@ -128,10 +128,10 @@
 
 <h1 id="raspberry-pi-">Raspberry Pi 本体</h1>
 
-<h2 id="lan-nic-">有線 LAN (NIC) への固定アドレスの設定</h2>
+<h2 id="lan-nic-">有線 LAN (NIC) へ固定アドレスを設定する</h2>
 
 <p>DHCP が無い場合やケーブル直結などの場合、双方の PC （の NIC）に
-手動でアドレスを振ることで通信できる。</p>
+手動で固定アドレスを振ることになる。</p>
 
 <p>通常の設定先である <code>/etc/network/interfaces</code> の先頭を見ると</p>
 
@@ -440,10 +440,10 @@ sendln pass
 
 <p>メインの環境が Windows の場合、一番使い易い。</p>
 
-<ol>
+<ul>
   <li>VM の機能で USB デバイスを横取りし、Windwos でなく Linux 側に認識させることができる</li>
   <li>VM の機能でディレクトリ共有すると、Windwos 上のファイルを直接読み書きできる。（もちろん SCP や FTP で接続しても良い。Windwos にドライブとして見せるツールもある）</li>
-</ol>
+</ul>
 
 <h2 id="section-5">構成</h2>
 
@@ -586,12 +586,12 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     <li>
       <a href="./../../../../../categories/#audio">
 	audio</a>
-      (1)</li>
+      (2)</li>
     
     <li>
       <a href="./../../../../../categories/#convert">
 	convert</a>
-      (1)</li>
+      (2)</li>
     
     <li>
       <a href="./../../../../../categories/#jm">
@@ -626,7 +626,7 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     <li>
       <a href="./../../../../../categories/#zsh">
 	zsh</a>
-      (1)</li>
+      (2)</li>
     
     <li>
       <a href="./../../../../../categories/#xming">
@@ -646,7 +646,7 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     <li>
       <a href="./../../../../../categories/#raspberrypi">
 	raspberrypi</a>
-      (3)</li>
+      (4)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -668,6 +668,11 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
 	script</a>
       (1)</li>
     
+    <li>
+      <a href="./../../../../../categories/#sudo">
+	sudo</a>
+      (1)</li>
+    
   </ul>
   <hr/>
   日付
@@ -676,6 +681,33 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2018-Sep">
+	2018 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Sep">
+	2017 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2017-Jun">
+	2017 Jun</a></li>
+    
     
     
     

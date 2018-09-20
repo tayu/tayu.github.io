@@ -4,8 +4,59 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Sat, 17 Jun 2017 11:32:07 +0900</pubDate>
+    <pubDate>Fri, 21 Sep 2018 07:22:10 +0900</pubDate>
 
+    
+    <item>
+      <title>mp3 ファイルへの変換が 90 分で止まる（解決？編）</title>
+      <link>http://tayu.github.io/audio/convert/2018/09/20/audio-convert/</link>
+      <description>前回の続き
+
+
+  簡単なまとめ
+  その後の進展    
+      同じ問題を扱っているサイトを見つけた
+      変換できないファイルが（むしろ）多い
+      で、考えた
+    
+  
+  ソースの修正
+  その他
+
+
+...</description>
+      <pubDate>Thu, 20 Sep 2018 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi のカーネル構築</title>
+      <link>http://tayu.github.io/raspberrypi/2017/09/13/raspberry-pi/</link>
+      <description>Raspberry Pi
+でなんだかんだしていて、カーネルをコンパイルする事にした。
+大きな理由は 2 つ。NIC のドライバのコンパイルにカーネルのヘッダ類が必要なこと。
+もう一つは、nftables をパッケージから入れてみたら不...</description>
+      <pubDate>Wed, 13 Sep 2017 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>sudo を使う</title>
+      <link>http://tayu.github.io/sudo/zsh/2017/06/22/sudo-zsh/</link>
+      <description>sudo って便利。今更ながら気づいて、転向した。
+
+と、言っても sudo 単体ではそれ程便利な訳じゃない。
+
+
+  実例
+  環境
+  設定
+  感想、または言い訳
+
+
+実例
+
+何が便利なのか。キーストローク量を減らす。これに尽き...</description>
+      <pubDate>Thu, 22 Jun 2017 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>Raspberry Pi の設定</title>
@@ -59,7 +110,7 @@ Debian
     </item>
     
     <item>
-      <title>Raspberry Pi のいろいろ</title>
+      <title>Raspberry Pi 雑記</title>
       <link>http://tayu.github.io/raspberrypi/2016/12/31/raspberry-pi/</link>
       <description>Raspberry Pi を買った。いろいろ、細かい設定をしたので備忘録としてめも。
 
@@ -67,8 +118,8 @@ OS は Raspbian 。
 
 
   Raspberry Pi 本体    
-      有線 LAN (NIC) への固定アドレスの設定
-  ...</description>
+      有線 LAN (NIC) へ固定アドレスを設定する
+ ...</description>
       <pubDate>Sat, 31 Dec 2016 00:00:00 +0900</pubDate>
     </item>
     
@@ -128,51 +179,6 @@ radikoの
 現状
 心配していた通り、10/11 に PC を立ち上げて放送...</description>
       <pubDate>Sat, 15 Oct 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Xming の接続エラー</title>
-      <link>http://tayu.github.io/xming/pklink/2016/07/27/Xming-error/</link>
-      <description>VM 上の X11(Debian) への接続に
-Xming を使っている。
-jessie(stable) への接続は問題なかったのだが、
-stretch(testing) への接続でエラーになっていた。
-結論として Xming のバー...</description>
-      <pubDate>Wed, 27 Jul 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>zsh で predict-on を使う</title>
-      <link>http://tayu.github.io/zsh/config/2016/06/02/zsi-config/</link>
-      <description>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
-ってやつ。ただ、先鋭過ぎてちょっと困っている。
-
-
-  先方予測機能とは
-  つ、使いにくい
-  調査
-  とりあえず回避
-  追記：数ヶ月使った結果
-
-
-先方予...</description>
-      <pubDate>Thu, 02 Jun 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Polipo の設定</title>
-      <link>http://tayu.github.io/proxy/config/2016/05/19/polipo-config/</link>
-      <description>vm 上の Debian で proxy として使用していた
-Polipo の設定を見直した。
-いやぁ、ちょっとあせった。
-
-
-  ディスクがフルに
-  犯人は・・・
-  とりあえず、空きをつくる
-  キャッシュさせないための設定
- ...</description>
-      <pubDate>Thu, 19 May 2016 00:00:00 +0900</pubDate>
     </item>
     
 

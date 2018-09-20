@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>mp3 ファイルへの変換が 90 分で止まる（解決？編）</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./audio/convert/2018/09/20/audio-convert/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>mp3 ファイルへの変換が 90 分で止まる（解決？編）</h1>
+    <p class="meta">Sep 20, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <p><a href="/audio/convert/2018/09/20/audio-convert/">前回</a>の続き</p>
+
+<ul id="markdown-toc">
+  <li><a href="#section">簡単なまとめ</a></li>
+  <li><a href="#section-1">その後の進展</a>    <ul>
+      <li><a href="#section-2">同じ問題を扱っているサイトを見つけた</a></li>
+      <li><a href="#section-3">変換できないファイルが（むしろ）多い</a></li>
+      <li><a href="#section-4">で、考えた</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-5">ソースの修正</a></li>
+  <li><a href="#section-6">その他</a></li>
+</ul>
+
+<h1 id="section">簡単なまとめ</h1>
+
+<p>mp3 に変換すると 90 分までしか変換してくれない</p>
+
+<p>いろいろ調べてみて、pipe で渡している wav ファイルのヘッダ情報の中の
+サイズ情報が不正なのだろうと見当をつけた。</p>
+
+<p>が、対処方法まで辿り着けず、wav をファイルとして書き出す方法で逃げた</p>
+
+<h1 id="section-1">その後の進展</h1>
+
+<h2 id="section-2">同じ問題を扱っているサイトを見つけた</h2>
+
+<p>別件で検索中に<a href="http://gcg00467.xii.jp/wp/archives/461">見つけた</a>。</p>
+
+<p>同様の問題に当たり、同様の結論に至った。ただ、こちらは解答を持っていた。</p>
+
+<p>解答は以下</p>
+
+<ol>
+  <li>mplayer に ヘッダを付けさせない</li>
+  <li>lame に ヘッダを無視させる</li>
+</ol>
+
+<p>つまり、</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:nowaveheader:file=/dev/stdout infle | lame -r - outfile
+</pre></div>
+</div>
+</div>
+<p>の様にする。</p>
+
+<p>これは効いた。一応は。</p>
+
+<h2 id="section-3">変換できないファイルが（むしろ）多い</h2>
+<p>試したところ、mp3 から mp3 への変換はできた。でも、flv や wma からの
+変換はうまくいかなかった。</p>
+
+<p>上記サイトにもあるが、man ページをみると、-r を使う時は同時に <code>Sampling rate</code><code> と </code><code>mono/stereo/jstereo</code>` の別も指定する必要がある、とのこと。</p>
+
+<p>いろいろな値を試したが、うまく変換が成功する値を見つけることができなかった。</p>
+
+<p>まぁ、見つかったとしてもそれが別のファイルに適用できるとは限らない。</p>
+
+<p>ここに至って、こっちのルートは遠いと判断した。</p>
+
+<h2 id="section-4">で、考えた</h2>
+
+<p>たまたま mp3 から mp3 変換できたのはヘッダの値が同じだったからなのではないだろうか。いや、ヘッダから値を読んではいない。と、なると、おそらくデフォルト値。</p>
+
+<p>と、なると、サイズ以外のパラメータはヘッダから読み込ませた方が無難と言うか、
+それ以外無い。</p>
+
+<p>つまり、サイズ情報だけを無視すれば良い。</p>
+
+<h1 id="section-5">ソースの修正</h1>
+
+<p>ここに至って、やっとソースを読むことにした。<a href="http://lame.sourceforge.net/">本家</a>からソースを取ってくる。現在の最新の<a href="https://sourceforge.net/projects/lame/files/lame/3.100/">tar ボール</a>をダウンロードした。</p>
+
+<p>frontend/lame_main.c の lame_main() から読み進む</p>
+
+<p>結果、以下の様になった</p>
+
+<p>get_audio.c の get_audio_common() 関数</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (global.count_samples_carefully) {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>        <span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span>
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    }
+</pre></div>
+</div>
+</div>
+<p>これを以下の様に修正する```</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#00D">0</span> &amp;&amp; global.count_samples_carefully) {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>        <span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span>
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    }
+</pre></div>
+</div>
+</div>
+<p>このブロックを丸ごと無効にするだけ。#if 0 ～ #endif でも良いのだが、
+記述量を最小にしたかった。</p>
+
+<p>この if ブロックの中で、何をしているかというと、
+読み込み時に、最後の半端なサイズの残りを読み込む際、そのバイト数を
+読み込むべきサイズとして上書きしている。</p>
+
+<p>remaining や samples_to_read という変数名にもそれが出ている</p>
+
+<p>if ブロックの全体は以下</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#00D">0</span> &amp;&amp; global.count_samples_carefully) {
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> tmp_num_samples;
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>        <span style="color:#777">/* get num_samples */</span>
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>        <span style="color:#080;font-weight:bold">if</span> (is_mpeg_file_format(global_reader.input_format)) {
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>            tmp_num_samples = global_decoder.mp3input_data.nsamp;
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>        }
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>        <span style="color:#080;font-weight:bold">else</span> {
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            tmp_num_samples = lame_get_num_samples(gfp);
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>        }
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>        <span style="color:#080;font-weight:bold">if</span> (global.num_samples_read &lt; tmp_num_samples) {
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            remaining = tmp_num_samples - global.num_samples_read;
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>        }
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>        <span style="color:#080;font-weight:bold">else</span> {
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>            remaining = <span style="color:#00D">0</span>;
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>        }
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>        <span style="color:#080;font-weight:bold">if</span> (remaining &lt; (<span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>) framesize &amp;&amp; <span style="color:#00D">0</span> != tmp_num_samples)
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>            <span style="color:#777">/* in case the input is a FIFO (at least it's reproducible with</span>
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span><span style="color:#777">               a FIFO) tmp_num_samples may be 0 and therefore remaining</span>
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span><span style="color:#777">               would be 0, but we need to read some samples, so don't</span>
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span><span style="color:#777">               change samples_to_read to the wrong value in this case */</span>
+<span class="line-numbers"><a href="#n21" name="n21">21</a></span>          samples_to_read = remaining;
+<span class="line-numbers"><a href="#n22" name="n22">22</a></span>    }
+</pre></div>
+</div>
+</div>
+
+<p>ちなみに diff は以下</p>
+
+<div><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>$ diff -u -r lame-3.100.orig lame-3.100
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>diff -u -r lame-3.100.orig/frontend/get_audio.c lame-3.100/frontend/get_audio.c
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>--- lame-3.100.orig/frontend/get_audio.c        2017-09-07 04:33:35.000000000 +0900
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>+++ lame-3.100/frontend/get_audio.c        2018-09-21 06:44:26.864000000 +0900
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>@@ -771,7 +771,7 @@
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>      * files which have id3 or other tags at the end.  Note that if you
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>      * are using LIBSNDFILE, this is not necessary 
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>      */
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>-    if (global.count_samples_carefully) {
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>+    if (0 &amp;&amp; global.count_samples_carefully) {
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>         unsigned int tmp_num_samples;
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>         /* get num_samples */
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>         if (is_mpeg_file_format(global_reader.input_format)) {
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>lame-3.100.orig のみに存在: lame.spec
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>lame-3.100/libmp3lame のみに存在: .deps
+</pre></div>
+</div>
+</div>
+<p>コンパイルした残滓のlame.spec や .deps があるが、ソースはこの 1 点の変更だけ。</p>
+
+<p>プログラムの動きは以下の様に変わる</p>
+
+<ul>
+  <li>remaining の計算がされなくなり、毎回 samples_to_read 分の読み取りをトライする</li>
+  <li>結果、ファイル終端で読み込みバイト数が 0 になるまで読み込み続ける</li>
+</ul>
+
+<p>ちなみに、この処理は読み込みループで毎回実行されるワケだから、
+全体をコメントアウトして、処理自体を無くした方が処理が減り、
+プログラムが速くなることが期待できる。</p>
+
+<h1 id="section-6">その他</h1>
+
+<p>これはパイプ経由で読み込む前提の汚いハックであり、upstream に投げるなら
+もっとちゃんとしないといけない。例えば以下の様にする。</p>
+
+<ul>
+  <li>コマンドラインオプションでヘッダのサイズ情報を無視するフラグを追加する</li>
+  <li>コマンドライン解析で stdin からの入力が指定されたことを識別できているので、その場合だけ、などに条件を絞る</li>
+</ul>
+
+<p>つまり、入力が stdin の場合にサイズ情報を無視するオプションの新設。</p>
+
+<p>ただ、stdin に限るのか、など、議論して決めるべき点もありそう。</p>
+
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#audio">
+	audio</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#convert">
+	convert</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#zsh">
+	zsh</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xming">
+	xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#radiko">
+	radiko</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (4)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#sudo">
+	sudo</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2018-Sep">
+	2018 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Sep">
+	2017 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Jun">
+	2017 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-May">
+	2017 May</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

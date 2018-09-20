@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ブログ再開 by Jekyll</title>
+    <title>Raspberry Pi のカーネル構築</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./jekyll/2016/03/17/welcome-to-jekyll/">
+    <link rel="canonical" href="http://tayu.github.io./raspberrypi/2017/09/13/raspberry-pi/">
     <!-- Custom CSS -->
     
 
@@ -95,65 +95,45 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>ブログ再開 by Jekyll</h1>
-    <p class="meta">Mar 17, 2016</p>
+    <h1>Raspberry Pi のカーネル構築</h1>
+    <p class="meta">Sep 13, 2017</p>
   </header>
 
   <article class="post-content">
-  <h1 id="section">ブログ、再開する。</h1>
-<p>一時は別手段に逃げたものの、やっぱりマークダウンで書けると
-良さそうとの思いがずっとあった。</p>
+  <p><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi</a>
+でなんだかんだしていて、カーネルをコンパイルする事にした。
+大きな理由は 2 つ。NIC のドライバのコンパイルにカーネルのヘッダ類が必要なこと。
+もう一つは、nftables をパッケージから入れてみたら不安定になったため、
+カーネルのパラメータを確認するため。</p>
 
-<p>時間ができたので調べ直していたら、さすがに最近はツールもいろいろ
-増えている様だった。</p>
+<ul id="markdown-toc">
+  <li><a href="#section">信頼できる手順の確認</a></li>
+  <li><a href="#section-1">工夫</a></li>
+</ul>
 
-<p>で、その途中、<a href="https://twitter.com/satoh_fumiyasu">とある人</a>
-が GitHub Pages でブログをしていて、
-その生成環境も公開している事が分かった。それを見てみたら、
-どうやら Jekyll ってのを使っている様だった。</p>
+<h1 id="section">信頼できる手順の確認</h1>
 
-<p>そこから Jekyll を調べてみたら、GFM もシンタックスハイライトも
-サポートしている事が分かった。更に、GitHub Pages で使用されて
-いるとの事だった。</p>
+<p>Raspberry Pi 自身の歴史も長くなり、web で検索すると前モデルの情報もいろいろ
+ヒットする。また、同じモデルの中でも微妙にバージョンアップしてたりして、
+欲しい情報ではない事も多い。</p>
 
-<p>※ 「GitHub Pages で使われている」とはどういう事か。デフォルトの README.md 等
-の展開に使われているって事らしい。と、いう事は README.md 中に
-<code>{{ site.title. }}</code>
-なんて書けるって事になる。
-ただ、それはローカルで見れないよなぁ。
-やはり、ローカルで静的な html を生成して確認したい。</p>
+<p>カーネルコンパイルがそんな状況で、ここで長くハマってしまった。</p>
 
-<h1 id="jekyll-">Jekyll について</h1>
-<p>いろいろ特徴はあるが、一番良かったのはプログラムできるって
-点だったと思う。</p>
+<p>結局、たどり着いたのは
+<a href="https://www.raspberrypi.org/documentation/linux/kernel/building.md">公式 blog</a>
+だった。</p>
 
-<p>記事をカテゴリ毎に分けたり、月毎に分けたりなども、プログラムを
-ちょっとすることで実現できた。
-<a href="http://jekyllrb-ja.github.io/docs/sites/">Jekyllを使ったサイト</a> なんかを
-見てもそういう例が見当たらないので、最初はできないのかとも思ったけど。</p>
+<p>ここでは RPi2 と RPi3 に分けて書いてあるので、RPi3 用の手順がはっきりと
+確認できる。</p>
 
-<p>まぁ、一般的な導入記事は多いので、始めるのは簡単。
-その先、拡張とか考え始めると結構掘れるって感じ。</p>
+<h1 id="section-1">工夫</h1>
 
-<h1 id="section-1">カテゴリページについて</h1>
-<p>素の状態だと全記事を並べたページ位しか無い。
-でも一般のブログのようなタグクラウドとか日付の選択とかも
-欲しい。</p>
+<p>繰り返し実行するので、手順をスクリプト化し、.tar ファイルを生成するようにした。
+それを SD カードの root で展開する。</p>
 
-<p>とりあえず少々のプログラムで実現できる範囲で作ってみた。</p>
+<p>昔の NetBSD あたりはこうしていたらしいから、ある意味、由緒正しい方法とも
+言える（かも）。</p>
 
-<p>ページに分割するとか、新規にページを作るとかはやっていない。
-カテゴリページの html を 1 枚作り、内部の <code>a</code> タグに id を設定して
-飛ばしている。ただ、全体の見た目が悪い（同じ記事が複数表示されたり）ので、
-CSS でなんとかできないか、考え中。</p>
-
-<p>Jekyll はプラグインによる拡張ができて、中にはカテゴリ毎にページを
-生成できるものもある模様。</p>
-
-<p>既存のプラグインを導入しても良いが、どうせなら自分で作ってみたいかな。
-ドキュメントを見ると、Ruby のコードを所定の場所に置けば、
-実行できるとの事。大抵は動かすまでに苦労するものだが、その部分は
-むしろ簡単らしい。</p>
 
   </article>
 

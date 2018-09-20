@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>zsh で predict-on を使う</title>
+    <title>sudo を使う</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./zsh/config/2016/06/02/zsi-config/">
+    <link rel="canonical" href="http://tayu.github.io./sudo/zsh/2017/06/22/sudo-zsh/">
     <!-- Custom CSS -->
     
 
@@ -97,137 +97,125 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>zsh で predict-on を使う</h1>
-    <p class="meta">Jun 2, 2016</p>
+    <h1>sudo を使う</h1>
+    <p class="meta">Jun 22, 2017</p>
   </header>
 
   <article class="post-content">
-  <p>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
-ってやつ。ただ、先鋭過ぎてちょっと困っている。</p>
+  <p>sudo って便利。今更ながら気づいて、転向した。</p>
+
+<p>と、言っても sudo 単体ではそれ程便利な訳じゃない。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">先方予測機能とは</a></li>
-  <li><a href="#section-1">つ、使いにくい</a></li>
-  <li><a href="#section-2">調査</a></li>
-  <li><a href="#section-3">とりあえず回避</a></li>
-  <li><a href="#section-4">追記：数ヶ月使った結果</a></li>
+  <li><a href="#section">実例</a></li>
+  <li><a href="#section-1">環境</a></li>
+  <li><a href="#section-2">設定</a></li>
+  <li><a href="#section-3">感想、または言い訳</a></li>
 </ul>
 
-<h1 id="section">先方予測機能とは</h1>
-<p>コマンドラインの編集（ZLE）で、キー入力毎にヒストリを参照して
-候補を表示してくれる機能。</p>
+<h1 id="section">実例</h1>
 
-<p>有効にするには</p>
+<p>何が便利なのか。キーストローク量を減らす。これに尽きる。</p>
+
+<p>でも、単純に sudo すると便利って事ではない。zsh などシェルの環境とセットと
+なった時の話となる。</p>
+
+<p>具体的には zsh の predict-on を有効にした環境で使う。これ。</p>
+
+<p>どう便利なのか。2 つの面がある。1 つは同様の作業を繰り返す場合、
+ヒストリから素早く補完されること。例えば、システムの更新作業。</p>
+
+<p>su で root になり、以下を実行するとする。</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>autoload predict-on
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>predict-on
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get update
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span># apt-get upgrade
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span># apt-get clean
 </pre></div>
 </div>
 </div>
-<p>とする。</p>
 
-<p>web の解説を見ていると「鍛えれば非常に便利」とある。
-と言っても、自動的に鍛えられるので、やる事は単に使い続けるだけ。
-その一方、「合わなければ使わない方が良い」との記述もある。
-また、方々で公開されている .zshrc を見るとコメントアウト
-してある事が多い。</p>
+<p>最初に前回の履歴まで延々戻るか、前半を手入力して、後半のみ編集するかになる。</p>
 
-<p>つまり、非常にクセが強いって事なのだろう。
-特にある程度使い込むまでは。</p>
-
-<h1 id="section-1">つ、使いにくい</h1>
-<p>こなれてくるまで時間がかかる。それまではむしろ使いにくいって事は
-予想していた。</p>
-
-<p>でも、コマンドラインの編集モードが変わったと思える挙動が。</p>
-
-<p>編集業の途中にカーソルを持って行き、2 文字程度入力すると
-その位置から後ろが全部消されてしまう。</p>
-
-<p>例えば、</p>
+<p>でも、sudo を使うと</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ls /some/path/some.file
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo apt-get update
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ sudo apt-get upgrade
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ sudo apt-get clean
 </pre></div>
 </div>
 </div>
-<p>として、先頭にカーソルを持っていって</p>
+
+<ol>
+  <li>s までの入力で sudo で始まる履歴でコマンドライン全体を補完してくれる。</li>
+  <li>ヒットしない場合、ap~p として ap で始まる行を履歴からさがせる。</li>
+  <li>sudo apt-get まで確定後に u と入れると update か upgrade が補完される</li>
+  <li>続けて d か g を入力すると update か upgrade が確定する</li>
+</ol>
+
+<p>それぞれの段階で意図する行になっていたら、それ以上の入力は不要。
+2 ～ 3 文字の入力。最大でも 6 文字程度の入力で実行したいコマンド行が
+実行できる。</p>
+
+<h1 id="section-1">環境</h1>
+
+<p>前述のとおり、 zsh で predict-on を有効にしている。
+ちょっとクセがあって、慣れるまで時間がかかるが、その価値はある。</p>
+
+<p>また、root の環境はなるべくいじりたくないってのもある。
+何かの時に使えなくなると困るから。
+その点でも、一般ユーザのままでいることは目的に合っている。</p>
+
+<p>root のシェルである bash もいろいろ機能強化がされているが、
+まだ zsh が便利。</p>
+
+<p>また、ヒストリを一般ユーザ側で持っているので、過去に実行した
+コマンドを探すのに root にならずに済むってのも、使う場面があるかもしれない。</p>
+
+<h1 id="section-2">設定</h1>
+
+<p>Debian の標準ではインストールされていない。まず、sudo パッケージを
+インストールする。</p>
+
+<p>設定は visudo コマンドで行う。</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /some/path/some.file
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># visudo
 </pre></div>
 </div>
 </div>
-<p>としようとすると</p>
+
+<p>sudo の設定ファイルが開かれる。デフォルトの状態では sudo グループに
+権限が設定されている。</p>
+
+<pre><code># Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+</code></pre>
+
+<p>取り合えず、何も書き換えずに終了する。</p>
+
+<p>一般ユーザのうち、root 権限を持たせたいユーザを sudo グループに加える。</p>
 
 <div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ca
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># gpasswd -a USER sudo
 </pre></div>
 </div>
 </div>
-<p>なんて事になるって事。</p>
 
-<h1 id="section-2">調査</h1>
-<p>検索してみたけど、同様の現象に言及しているページが 1 件あっただけ
-だった。そのページでは単に使用をやめていただけなので、
-解決につながる情報は無かった。</p>
+<p>これで USER ユーザが sudo で root 権限で実行できるようになる。</p>
 
-<p>で、いろいろ検索しつつ考えた。</p>
+<h1 id="section-3">感想、または言い訳</h1>
 
-<p>これって「後半を消去している」んではなくて、
-「ヒストリでマッチしたものを表示」しているんではないだろうか。</p>
+<p>sudo なんて wheel グループみたいな物だよなぁ。
+wheel グループも結局 Linux では否定されてるし。</p>
 
-<p>と、いう事は「補完候補を見つけたら単にインサートする」って
-挙動にするオプションが有れば良いってことになるのか？</p>
+<p>そう、思っていた。いままでは。</p>
 
-<h1 id="section-3">とりあえず回避</h1>
-<p>当面、predict-on と predict-off を手動で切り替える事にした。
-検索すると、トグルするコマンドを作ったページも有ったが、
-そこまではせず、単純に短いエイリアスを定義した。</p>
+<p>でも、単純に便利なので使う事にした。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>alias pon='predict-on'
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>alias poff='predict-off'
-</pre></div>
-</div>
-</div>
-<p>こんな感じ。行の途中で編集する場合は、先に poff を実行する。
-その後、pon で戻すって形。</p>
+<p>前述したとおり、zsh あってこそなのだが。</p>
 
-<p>predict-on を使い続けるかどうか、まだ考え中。</p>
-
-<h1 id="section-4">追記：数ヶ月使った結果</h1>
-
-<p>なんとなく、挙動が分かってきた。</p>
-
-<p>結局 zsh がやっていることはキー入力に一致する候補をヒストリから探してきて
-コマンドラインに展開する事なんだ。まぁ、その他にもファイルとかコマンドの
-引数とか展開する候補が多いので最初は「賢い！？」とか思うのだが。</p>
-
-<p>入力位置を前に戻して入力すると後ろが消えるのも、単にヒストリから先方が一致する
-候補を見つけてきて展開しているだけなんだ。</p>
-
-<p>この、内部の動きがある程度読める様になってからは
-（こちらの理解が合ってるかどうかはともかく）
-ストレスが軽減され、そこそこうまく使える様になった気がする。
-それこそ、1 回か 2 回のキー入力でコマンド入力が済んでしまうような
-場面も増えた。</p>
-
-<p>キーを前に戻してコマンドライン編集する場合は poff （alias で predict-off）を
-実行して一時的にモードを変える様にしている。</p>
-
-<p>つまり、相手の挙動が読める様になったので、先回りしてストレスフルな動きを
-封じてしまえるようになったって事。</p>
-
-<p>結局、この、自分にとってストレスになる動きを封じる事が、少ない入力で
-できる様になったのが良かったのだと思う。そこから挙動をコントロール
-している感が広がり、predict-on を使うのに抵抗が無くなった。
-で、使っていると 1 ～ 2 回のキー入力でコマンド入力が済む場面も多くなり、
-満足度も上がった。</p>
-
-<p>まぁ、キー入力後に [CTRL+K] で以前の入力の不要部分を消すのは
-相変わらず多い。</p>
 
   </article>
 
