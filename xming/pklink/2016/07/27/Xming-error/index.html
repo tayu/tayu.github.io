@@ -119,6 +119,7 @@ stretch(testing) への接続でエラーになっていた。
   </li>
   <li><a href="#section-5">対症療法</a></li>
   <li><a href="#section-6">結論</a></li>
+  <li><a href="#section-7">補足：新規接続先につながらない</a></li>
 </ul>
 
 <h1 id="section">エラーの内容</h1>
@@ -206,7 +207,8 @@ stretch(testing) への接続でエラーになっていた。
 ssh サーバ側はそれらを全て廃止したために、双方で使用する方式の
 ネゴが失敗しているのではないか。そんな予想が立った。</p>
 
-<p>そうなら、対策は plink.exe を新しくすること、となる。</p>
+<p>そうなら、対策は plink.exe を新しくすること、となる。
+暗号の鍵も方式も実行ファイルの中に持っているのだから。</p>
 
 <h1 id="section-5">対症療法</h1>
 
@@ -251,7 +253,7 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
 <span class="line-numbers"><a href="#n29" name="n29">29</a></span>Initialised AES-256 SDCTR server-&gt;client encryption
 <span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>Initialised HMAC-SHA-256 server-&gt;client MAC algorithm
 <span class="line-numbers"><a href="#n31" name="n31">31</a></span>Using username &quot;user&quot;.
-<span class="line-numbers"><a href="#n32" name="n32">32</a></span>mon@127.0.0.1's password:
+<span class="line-numbers"><a href="#n32" name="n32">32</a></span>user@127.0.0.1's password:
 <span class="line-numbers"><a href="#n33" name="n33">33</a></span>Sent password
 </pre></div>
 </div>
@@ -261,6 +263,9 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
 
 <p>と、言うか。この、キャッシュ情報の更新を行わないと Xming の接続処理が
 途中で止まる。</p>
+
+<p>ちなみに接続先が 127.0.0.1 なのは <a href="https://www.virtualbox.org/">VirtualBox</a> で
+立ち上げた VM だから。</p>
 
 <h1 id="section-6">結論</h1>
 
@@ -273,6 +278,37 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
 
 <p>ただ、まぁ、流れとして plink.exe を入れ替えて正しく動く事を
 確認したかったので、良し。</p>
+
+<h1 id="section-7">補足：新規接続先につながらない</h1>
+
+<p>マヌケな事に最近判明した。</p>
+
+<p>新規に作成した VM になぜかつながらなかったが、1 度、手動で接続したら
+その後はつながる様になった。</p>
+
+<p>どうやら、Update cached key? (y/n) の辺りで
+入力待ちになっていたらしい。元々の添付のものは、
+そこは自動で入力される様になっていたのだろう。</p>
+
+<p>VM 側は OS のバージョンが上がってたりしたので、そっちで何か変わったの
+だろうと思っていた。ただ、ssh（Tera Term） の接続で間に合っていたので
+深く追求しなかった。</p>
+
+<p>でも、接続先で X を使用する必要が出て、調査を開始することに。
+ログを見ても sshd の設定を変えても変わらない。しかもエラーはどこにも
+出ていない。単にいつまでもつながらない。タイムアウトにもならない。
+そんな状態だった。</p>
+
+<p>どうにも分からなくなり、基本から動作確認してみようとして、前項の手動接続
+を試した。つながる。Xming を起動する。つながる。あれって流れ。</p>
+
+<p>おそらく known_hosts の情報をレジストリに保存しているのだろう。
+で、その確認で Y/N の入力を求めていた、と。</p>
+
+<p>この確認の入力は初回接続時にだけあるので 1 度接続してしまえば
+次からは出ない。</p>
+
+<p>逆に言うと、新規の接続先へは 1 度手動での接続が必要ということ。</p>
 
 
   </article>
