@@ -4,8 +4,19 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Mon, 30 Dec 2019 02:53:38 +0900</pubDate>
+    <pubDate>Fri, 03 Jan 2020 04:42:18 +0900</pubDate>
 
+    
+    <item>
+      <title>Raspberry Pi のバックアップ</title>
+      <link>http://tayu.github.io/raspberrypi/backup/2020/01/03/raspberrypi-backup/</link>
+      <description>Raspberry Pi を常時稼働させている。これのバックアップか取りずらい。
+
+Debian なので時々アップデートするし、なんならカーネルの入れ替えもする。
+つまり、結構頻繁に書き込みが発生している。
+なので、定期気にバックアッ...</description>
+      <pubDate>Fri, 03 Jan 2020 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>mp3 ファイルへの変換が 90 分で止まる（解決？編）</title>
@@ -158,25 +169,6 @@ radikoの
 結論
 聴ける。まぁ、やったのは録音のみだけど...</description>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>radiko の仕様変更</title>
-      <link>http://tayu.github.io/radiko/2016/10/15/radiko-change/</link>
-      <description>10/11 に始まった
-radikoの
-タイムフリー視聴の影響
-なのだろう、仕様変更があり、今までのスクリプトが使えなくなった。
-
-
-  現状
-  変更点
-  まとめ
-
-
-現状
-心配していた通り、10/11 に PC を立ち上げて放送...</description>
-      <pubDate>Sat, 15 Oct 2016 00:00:00 +0900</pubDate>
     </item>
     
 
