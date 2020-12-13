@@ -14,16 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../css/main.css">
 </head>
@@ -110,20 +100,20 @@
 <p>まぁ、のんびりやるとするかな。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">これは何？</a></li>
-  <li><a href="#section-1">何に使う？</a></li>
-  <li><a href="#section-2">基本情報</a>    <ul>
-      <li><a href="#section-3">購入前に知っておくと良いこと</a></li>
-      <li><a href="#section-6">本体以外に必要なもの</a></li>
+  <li><a href="#section" id="markdown-toc-section">これは何？</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">何に使う？</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">基本情報</a>    <ul>
+      <li><a href="#section-3" id="markdown-toc-section-3">購入前に知っておくと良いこと</a></li>
+      <li><a href="#section-6" id="markdown-toc-section-6">本体以外に必要なもの</a></li>
     </ul>
   </li>
-  <li><a href="#section-7">ブートまでの手順</a>    <ul>
-      <li><a href="#section-8">ブートイメージの取得</a></li>
-      <li><a href="#section-9">ブートイメージの書き込み</a></li>
-      <li><a href="#section-10">起動</a></li>
-      <li><a href="#section-11">アプリケーションの追加とアップデート</a></li>
-      <li><a href="#section-12">カーネル、ファームウェアのアップデート</a></li>
-      <li><a href="#section-13">この先へ</a></li>
+  <li><a href="#section-7" id="markdown-toc-section-7">ブートまでの手順</a>    <ul>
+      <li><a href="#section-8" id="markdown-toc-section-8">ブートイメージの取得</a></li>
+      <li><a href="#section-9" id="markdown-toc-section-9">ブートイメージの書き込み</a></li>
+      <li><a href="#section-10" id="markdown-toc-section-10">起動</a></li>
+      <li><a href="#section-11" id="markdown-toc-section-11">アプリケーションの追加とアップデート</a></li>
+      <li><a href="#section-12" id="markdown-toc-section-12">カーネル、ファームウェアのアップデート</a></li>
+      <li><a href="#section-13" id="markdown-toc-section-13">この先へ</a></li>
     </ul>
   </li>
 </ul>
@@ -250,18 +240,12 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
 アプリケーションの追加やアップデートができる。
 セキュリティ関連の更新もあるので、定期的に更新する。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo apt-get update
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ sudo apt-get upgrade
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo apt-get update
+$ sudo apt-get upgrade
+</code></pre>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo apt-get install someapp
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo apt-get install someapp
+</code></pre>
 
 <p>あるいは aptitude コマンドで。この辺は Debian や Ubuntu のマニュアルを
 参照のこと。</p>
@@ -402,8 +386,8 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
       (2)</li>
     
     <li>
-      <a href="./../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -414,12 +398,12 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
     <li>
       <a href="./../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -447,8 +431,38 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
       (1)</li>
     
     <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -459,6 +473,27 @@ NOOBS か Raspbian のイメージファイルを取得できる。</p>
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -103,11 +91,11 @@
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#section">目次を生成する</a></li>
-  <li><a href="#section-1">相対パスを使用する</a></li>
-  <li><a href="#section-2">ページ内で使用する変数を先頭で宣言する</a></li>
-  <li><a href="#section-3">配列を使う</a></li>
-  <li><a href="#section-4">ハッシュを使う</a></li>
+  <li><a href="#section" id="markdown-toc-section">目次を生成する</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">相対パスを使用する</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">ページ内で使用する変数を先頭で宣言する</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">配列を使う</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">ハッシュを使う</a></li>
 </ul>
 
 <h1 id="section">目次を生成する</h1>
@@ -132,19 +120,16 @@
 <p><code>_includes/head.html</code> にコードを仕込み、各ページ生成時に
 上位ディレクトリを参照する様にする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>{% assign urlpaths = page.url | split: '/' %}
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>{% assign csspath = &quot;/&quot; %}
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>{% assign limit = urlpaths.size | minus: 1 %}
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>{% for i in (1..limit) %}
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>  {% assign csspath = csspath | append: &quot;../&quot; %}
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>{% endfor %}
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>{% assign css = csspath | append: &quot;css/main.css&quot; %}
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>    <span style="color:#777">&lt;!-- Custom CSS --&gt;</span>
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>    <span style="color:#070;font-weight:bold">&lt;link</span> <span style="color:#b48">rel</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">stylesheet</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">{{ css | prepend: site.baseurl }}</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
-</pre></div>
-</div>
-</div>
+<pre><code class="language-html">{% assign urlpaths = page.url | split: '/' %}
+{% assign csspath = "/" %}
+{% assign limit = urlpaths.size | minus: 1 %}
+{% for i in (1..limit) %}
+  {% assign csspath = csspath | append: "../" %}
+{% endfor %}
+{% assign css = csspath | append: "css/main.css" %}
+    &lt;!-- Custom CSS --&gt;
+    &lt;link rel="stylesheet" href="{{ css | prepend: site.baseurl }}"&gt;
+</code></pre>
 
 <p>つまり、url のハスを分解してカウントし、その分上位に上る。
 <code>minus: 1</code> 辺りは完全に現物合わせ。</p>
@@ -156,41 +141,29 @@
 <p>ファイル先頭の <a href="http://jekyllrb-ja.github.io/docs/frontmatter/">Front-matter</a>
 で、任意の変数と値を設定できる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>var1: value1
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">---
+var1: value1
+---
+</code></pre>
 
 <p>参照は以下の様になる</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.var1 }}
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">{{ page.var1 }}
+</code></pre>
 <p>html 生成時に <code>value1</code> と展開される</p>
 
 <h1 id="section-3">配列を使う</h1>
 <p>ファイル先頭の <code>Front-matter</code> で以下の様に書く</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>array1: [ e1, e2, e2 ]
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">---
+array1: [ e1, e2, e2 ]
+---
+</code></pre>
 
 <p>参照は</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.array1[1] }}
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">{{ page.array1[1] }}
+</code></pre>
 <p>の様になる。この時 <code>[ 1 ]</code> の様に括弧の前後にスペースを入れてはいけない。</p>
 
 <p>もちろん <code>for ～ in</code> 構文でアクセスできる。
@@ -199,23 +172,17 @@
 <h1 id="section-4">ハッシュを使う</h1>
 <p>ファイル先頭の <code>Front-matter</code> で以下の様に書く</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>---
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>hash1: { k1: v1, k2: v2, k3: v3 }
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>---
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">---
+hash1: { k1: v1, k2: v2, k3: v3 }
+---
+</code></pre>
 
 <p><code>':'</code>(コロン) ＋ <code>' '</code>(スペース) でキーと値をペアにする。</p>
 
 <p>参照は</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>{{ page.hash1['k1'] }}
-</pre></div>
-</div>
-</div>
+<pre><code class="language-liquid">{{ page.hash1['k1'] }}
+</code></pre>
 <p>の様になる。
 配列と同様、括弧の前後にスペースを入れてはいけない。</p>
 
@@ -349,8 +316,8 @@
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -361,12 +328,12 @@
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -394,8 +361,38 @@
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -406,6 +403,27 @@
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

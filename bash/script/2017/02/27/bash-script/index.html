@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -111,10 +99,10 @@
 <p>まあ、脱 bash も後でやるかも。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">問題は</a></li>
-  <li><a href="#section-1">検索してみる</a></li>
-  <li><a href="#section-2">改良してみる</a></li>
-  <li><a href="#section-3">まとめ</a></li>
+  <li><a href="#section" id="markdown-toc-section">問題は</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">検索してみる</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">改良してみる</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">まとめ</a></li>
 </ul>
 
 <h1 id="section">問題は</h1>
@@ -144,35 +132,32 @@
 
 <p>で、このページの一番下に出てくる以下を元にする事にした。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>declare -i argc=0
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>declare -a argv=()
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>while (( $# &gt; 0 ))
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>do
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>    case &quot;$1&quot; in
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>        -*)
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            if [[ &quot;$1&quot; =~ 'n' ]]; then
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>                nflag='-n'
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>            fi
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            if [[ &quot;$1&quot; =~ 'l' ]]; then
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>                lflag='-l'
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>            fi
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>            if [[ &quot;$1&quot; =~ 'p' ]]; then
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>                pflag='-p'
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>            fi
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>            shift
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span>            ;;
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span>        *)
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>            ((++argc))
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$1&quot;)
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>            shift
-<span class="line-numbers"><a href="#n23" name="n23">23</a></span>            ;;
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>    esac
-<span class="line-numbers"><a href="#n25" name="n25">25</a></span>done
-</pre></div>
-</div>
-</div>
+<pre><code class="language-bash">declare -i argc=0
+declare -a argv=()
+
+while (( $# &gt; 0 ))
+do
+    case "$1" in
+	-*)
+	    if [[ "$1" =~ 'n' ]]; then
+		nflag='-n'
+	    fi
+	    if [[ "$1" =~ 'l' ]]; then
+		lflag='-l'
+	    fi
+	    if [[ "$1" =~ 'p' ]]; then
+		pflag='-p'
+	    fi
+	    shift
+	    ;;
+	*)
+	    ((++argc))
+	    argv=("${argv[@]}" "$1")
+	    shift
+	    ;;
+    esac
+done
+</code></pre>
 
 <h1 id="section-2">改良してみる</h1>
 
@@ -184,56 +169,53 @@
 
 <p>結果、以下の様になった。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>declare -i argc=0
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>declare -a argv=()
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>while (( $# &gt; 0 )); do
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>    case &quot;$1&quot; in
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>        '--' | '-' )                # &lt;-- (1)
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>            shift
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            ((argc+=$#))
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$@&quot;)
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>            break
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            ;;
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>        '-o' | '--option' )        # &lt;-- (2)
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>            if _isValue &quot;$2&quot; ; then
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>                arg_o=&quot;$2&quot;
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>                shift
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>            else
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>                _usage
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span>            fi
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span>            ;;
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>        --option=* )                # &lt;-- (2)
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>            arg_o=&quot;${1#--option=}&quot;
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>            ;;
-<span class="line-numbers"><a href="#n23" name="n23">23</a></span>        -o* )                        # &lt;-- (2)
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>            arg_o=&quot;${1#-o}&quot;
-<span class="line-numbers"><a href="#n25" name="n25">25</a></span>            ;;
-<span class="line-numbers"><a href="#n26" name="n26">26</a></span>        -* )
-<span class="line-numbers"><a href="#n27" name="n27">27</a></span>            if ! getopt &quot;:lnp&quot; &quot;$1&quot; 2&gt;&amp;1 &gt;/dev/null ; then        # &lt;-- (3)
-<span class="line-numbers"><a href="#n28" name="n28">28</a></span>                _usage
-<span class="line-numbers"><a href="#n29" name="n29">29</a></span>            fi
-<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>            if [[ &quot;$1&quot; =~ 'l' ]]; then
-<span class="line-numbers"><a href="#n31" name="n31">31</a></span>                arg_l=&quot;true&quot;
-<span class="line-numbers"><a href="#n32" name="n32">32</a></span>            fi
-<span class="line-numbers"><a href="#n33" name="n33">33</a></span>            if [[ &quot;$1&quot; =~ 'n' ]]; then
-<span class="line-numbers"><a href="#n34" name="n34">34</a></span>                arg_n=&quot;true&quot;
-<span class="line-numbers"><a href="#n35" name="n35">35</a></span>            fi
-<span class="line-numbers"><a href="#n36" name="n36">36</a></span>            if [[ &quot;$1&quot; =~ 'p' ]]; then
-<span class="line-numbers"><a href="#n37" name="n37">37</a></span>                arg_p=&quot;true&quot;
-<span class="line-numbers"><a href="#n38" name="n38">38</a></span>            fi
-<span class="line-numbers"><a href="#n39" name="n39">39</a></span>            ;;
-<span class="line-numbers"><strong><a href="#n40" name="n40">40</a></strong></span>        * )
-<span class="line-numbers"><a href="#n41" name="n41">41</a></span>            ((++argc))
-<span class="line-numbers"><a href="#n42" name="n42">42</a></span>            argv=(&quot;${argv[@]}&quot; &quot;$1&quot;)
-<span class="line-numbers"><a href="#n43" name="n43">43</a></span>            ;;
-<span class="line-numbers"><a href="#n44" name="n44">44</a></span>    esac
-<span class="line-numbers"><a href="#n45" name="n45">45</a></span>    shift
-<span class="line-numbers"><a href="#n46" name="n46">46</a></span>done
-</pre></div>
-</div>
-</div>
+<pre><code class="language-bash">declare -i argc=0
+declare -a argv=()
+
+while (( $# &gt; 0 )); do
+    case "$1" in
+	'--' | '-' )		# &lt;-- (1)
+	    shift
+	    ((argc+=$#))
+	    argv=("${argv[@]}" "$@")
+	    break
+	    ;;
+	'-o' | '--option' )	# &lt;-- (2)
+	    if _isValue "$2" ; then
+		arg_o="$2"
+		shift
+	    else
+		_usage
+	    fi
+	    ;;
+	--option=* )		# &lt;-- (2)
+	    arg_o="${1#--option=}"
+	    ;;
+	-o* )			# &lt;-- (2)
+	    arg_o="${1#-o}"
+	    ;;
+	-* )
+	    if ! getopt ":lnp" "$1" 2&gt;&amp;1 &gt;/dev/null ; then	# &lt;-- (3)
+		_usage
+	    fi
+	    if [[ "$1" =~ 'l' ]]; then
+		arg_l="true"
+	    fi
+	    if [[ "$1" =~ 'n' ]]; then
+		arg_n="true"
+	    fi
+	    if [[ "$1" =~ 'p' ]]; then
+		arg_p="true"
+	    fi
+	    ;;
+	* )
+	    ((++argc))
+	    argv=("${argv[@]}" "$1")
+	    ;;
+    esac
+    shift
+done
+</code></pre>
 
 <p>スクリプト中の # &lt;– (n) がポイント</p>
 
@@ -252,18 +234,15 @@
 _isValue は後続の引数がオプション（<code>-</code> で始まる）であるか
 調べる関数で、以下の様になる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>function _isValue() {
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>    local opt
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    opt=&quot;$1&quot;
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>    if [[ -z &quot;$opt&quot; ]] || [[ &quot;$opt&quot; =~ ^-+ ]]; then
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>        return 1
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span>    fi
-<span class="line-numbers"><a href="#n7" name="n7">7</a></span>    return 0
-<span class="line-numbers"><a href="#n8" name="n8">8</a></span>}
-</pre></div>
-</div>
-</div>
+<pre><code class="language-bash">function _isValue() {
+    local opt
+    opt="$1"
+    if [[ -z "$opt" ]] || [[ "$opt" =~ ^-+ ]]; then
+	return 1
+    fi
+    return 0
+}
+</code></pre>
 
 <h1 id="section-3">まとめ</h1>
 
@@ -404,8 +383,8 @@ _isValue は後続の引数がオプション（<code>-</code> で始まる）�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -416,12 +395,12 @@ _isValue は後続の引数がオプション（<code>-</code> で始まる）�
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -449,8 +428,38 @@ _isValue は後続の引数がオプション（<code>-</code> で始まる）�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -461,6 +470,27 @@ _isValue は後続の引数がオプション（<code>-</code> で始まる）�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

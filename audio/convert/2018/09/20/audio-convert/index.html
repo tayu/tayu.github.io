@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -102,24 +90,24 @@
   </header>
 
   <article class="post-content">
-  <p><a href="/audio/convert/2018/09/20/audio-convert/">前回</a>の続き</p>
+  <p><a href="/audio/convert/2018/09/20/audio-convert/">前回</a>の続き。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">簡単なまとめ</a></li>
-  <li><a href="#section-1">その後の進展</a>    <ul>
-      <li><a href="#section-2">同じ問題を扱っているサイトを見つけた</a></li>
-      <li><a href="#section-3">変換できないファイルが（むしろ）多い</a></li>
-      <li><a href="#section-4">で、考えた</a></li>
+  <li><a href="#section" id="markdown-toc-section">簡単なまとめ</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">その後の進展</a>    <ul>
+      <li><a href="#section-2" id="markdown-toc-section-2">同じ問題を扱っているサイトを見つけた</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">変換できないファイルが（むしろ）多い</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">で、考えた</a></li>
     </ul>
   </li>
-  <li><a href="#section-5">ソースの修正</a></li>
-  <li><a href="#section-6">その他</a></li>
-  <li><a href="#todo-">ToDo: あれ、オプションがある？</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">ソースの修正</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">その他</a></li>
+  <li><a href="#todo-" id="markdown-toc-todo-">ToDo: あれ、オプションがある？</a></li>
 </ul>
 
 <h1 id="section">簡単なまとめ</h1>
 
-<p>mp3 に変換すると 90 分までしか変換してくれない</p>
+<p>mp3 に変換すると 90 分までしか変換してくれない。</p>
 
 <p>いろいろ調べてみて、pipe で渡している wav ファイルのヘッダ情報の中の
 サイズ情報が不正なのだろうと見当をつけた。</p>
@@ -143,11 +131,8 @@
 
 <p>つまり、</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:nowaveheader:file=/dev/stdout infle | lame -r - outfile
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ mplayer -really-quiet -ao pcm:nowaveheader:file=/dev/stdout infle | lame -r - outfile
+</code></pre>
 <p>の様にする。</p>
 
 <p>これは効いた。一応は。</p>
@@ -185,22 +170,16 @@
 
 <p>get_audio.c の get_audio_common() 関数</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (global.count_samples_carefully) {
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>        <span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span>
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    }
-</pre></div>
-</div>
-</div>
+<pre><code class="language-c">    if (global.count_samples_carefully) {
+        ・・・
+    }
+</code></pre>
 <p>これを以下の様に修正する```</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#00D">0</span> &amp;&amp; global.count_samples_carefully) {
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>        <span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span><span style="color:#F00;background-color:#FAA">・</span>
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    }
-</pre></div>
-</div>
-</div>
+<pre><code class="language-c">    if (0 &amp;&amp; global.count_samples_carefully) {
+        ・・・
+    }
+</code></pre>
 <p>このブロックを丸ごと無効にするだけ。#if 0 ～ #endif でも良いのだが、
 記述量を最小にしたかった。</p>
 
@@ -212,54 +191,48 @@
 
 <p>if ブロックの全体は以下</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#00D">0</span> &amp;&amp; global.count_samples_carefully) {
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> tmp_num_samples;
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>        <span style="color:#777">/* get num_samples */</span>
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>        <span style="color:#080;font-weight:bold">if</span> (is_mpeg_file_format(global_reader.input_format)) {
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>            tmp_num_samples = global_decoder.mp3input_data.nsamp;
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>        }
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>        <span style="color:#080;font-weight:bold">else</span> {
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>            tmp_num_samples = lame_get_num_samples(gfp);
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>        }
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>        <span style="color:#080;font-weight:bold">if</span> (global.num_samples_read &lt; tmp_num_samples) {
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>            remaining = tmp_num_samples - global.num_samples_read;
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>        }
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>        <span style="color:#080;font-weight:bold">else</span> {
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>            remaining = <span style="color:#00D">0</span>;
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>        }
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>        <span style="color:#080;font-weight:bold">if</span> (remaining &lt; (<span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>) framesize &amp;&amp; <span style="color:#00D">0</span> != tmp_num_samples)
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>            <span style="color:#777">/* in case the input is a FIFO (at least it's reproducible with</span>
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span><span style="color:#777">               a FIFO) tmp_num_samples may be 0 and therefore remaining</span>
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span><span style="color:#777">               would be 0, but we need to read some samples, so don't</span>
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span><span style="color:#777">               change samples_to_read to the wrong value in this case */</span>
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>          samples_to_read = remaining;
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>    }
-</pre></div>
-</div>
-</div>
+<pre><code class="language-c">    if (0 &amp;&amp; global.count_samples_carefully) {
+        unsigned int tmp_num_samples;
+        /* get num_samples */
+        if (is_mpeg_file_format(global_reader.input_format)) {
+            tmp_num_samples = global_decoder.mp3input_data.nsamp;
+        }
+        else {
+            tmp_num_samples = lame_get_num_samples(gfp);
+        }
+        if (global.num_samples_read &lt; tmp_num_samples) {
+            remaining = tmp_num_samples - global.num_samples_read;
+        }
+        else {
+            remaining = 0;
+        }
+        if (remaining &lt; (unsigned int) framesize &amp;&amp; 0 != tmp_num_samples)
+            /* in case the input is a FIFO (at least it's reproducible with
+               a FIFO) tmp_num_samples may be 0 and therefore remaining
+               would be 0, but we need to read some samples, so don't
+               change samples_to_read to the wrong value in this case */
+	  samples_to_read = remaining;
+    }
+</code></pre>
 
 <p>ちなみに diff は以下</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>$ diff -u -r lame-3.100.orig lame-3.100
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>diff -u -r lame-3.100.orig/frontend/get_audio.c lame-3.100/frontend/get_audio.c
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>--- lame-3.100.orig/frontend/get_audio.c        2017-09-07 04:33:35.000000000 +0900
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>+++ lame-3.100/frontend/get_audio.c        2018-09-21 06:44:26.864000000 +0900
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>@@ -771,7 +771,7 @@
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>      * files which have id3 or other tags at the end.  Note that if you
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>      * are using LIBSNDFILE, this is not necessary 
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>      */
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>-    if (global.count_samples_carefully) {
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>+    if (0 &amp;&amp; global.count_samples_carefully) {
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>         unsigned int tmp_num_samples;
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>         /* get num_samples */
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>         if (is_mpeg_file_format(global_reader.input_format)) {
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>lame-3.100.orig のみに存在: lame.spec
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>lame-3.100/libmp3lame のみに存在: .deps
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ diff -u -r lame-3.100.orig lame-3.100
+diff -u -r lame-3.100.orig/frontend/get_audio.c lame-3.100/frontend/get_audio.c
+--- lame-3.100.orig/frontend/get_audio.c	2017-09-07 04:33:35.000000000 +0900
++++ lame-3.100/frontend/get_audio.c	2018-09-21 06:44:26.864000000 +0900
+@@ -771,7 +771,7 @@
+      * files which have id3 or other tags at the end.  Note that if you
+      * are using LIBSNDFILE, this is not necessary 
+      */
+-    if (global.count_samples_carefully) {
++    if (0 &amp;&amp; global.count_samples_carefully) {
+         unsigned int tmp_num_samples;
+         /* get num_samples */
+         if (is_mpeg_file_format(global_reader.input_format)) {
+lame-3.100.orig のみに存在: lame.spec
+lame-3.100/libmp3lame のみに存在: .deps
+</code></pre>
 <p>コンパイルした残滓のlame.spec や .deps があるが、ソースはこの 1 点の変更だけ。</p>
 
 <p>プログラムの動きは以下の様に変わる</p>
@@ -426,8 +399,8 @@
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -438,12 +411,12 @@
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -471,8 +444,38 @@
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -483,6 +486,27 @@
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

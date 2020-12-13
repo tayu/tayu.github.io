@@ -14,26 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../../../../../css/main.css">
 </head>
@@ -111,17 +91,17 @@
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#css-">CSS のチェッカが欲しい</a></li>
-  <li><a href="#section">環境</a></li>
-  <li><a href="#section-1">インストール手順</a>    <ul>
-      <li><a href="#github-">GitHub からソースを取得する</a></li>
-      <li><a href="#section-2">ライブラリへのパスを修正する</a></li>
-      <li><a href="#war-">.war を作成する</a></li>
-      <li><a href="#war--tomcat-">.war を Tomcat の所定ディレクトリにコピーする</a></li>
-      <li><a href="#section-3">アクセスする</a></li>
+  <li><a href="#css-" id="markdown-toc-css-">CSS のチェッカが欲しい</a></li>
+  <li><a href="#section" id="markdown-toc-section">環境</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">インストール手順</a>    <ul>
+      <li><a href="#github-" id="markdown-toc-github-">GitHub からソースを取得する</a></li>
+      <li><a href="#section-2" id="markdown-toc-section-2">ライブラリへのパスを修正する</a></li>
+      <li><a href="#war-" id="markdown-toc-war-">.war を作成する</a></li>
+      <li><a href="#war--tomcat-" id="markdown-toc-war--tomcat-">.war を Tomcat の所定ディレクトリにコピーする</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">アクセスする</a></li>
     </ul>
   </li>
-  <li><a href="#section-4">ドキュメントについて</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">ドキュメントについて</a></li>
 </ul>
 
 <h1 id="css-">CSS のチェッカが欲しい</h1>
@@ -156,11 +136,8 @@
 <p>Ant 以外は前回の html5 Validator のインストールで入れてある。
 Ant は ant パッケージになっているのでそれをインストールするだけ。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get install ant
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># apt-get install ant
+</code></pre>
 
 <h1 id="section-1">インストール手順</h1>
 
@@ -176,37 +153,25 @@ Ant は ant パッケージになっているのでそれをインストール�
 <h2 id="github-">GitHub からソースを取得する</h2>
 <p>適当なディレクトリで</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ git clone https://github.com/w3c/css-validator
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ git clone https://github.com/w3c/css-validator
+</code></pre>
 
 <h2 id="section-2">ライブラリへのパスを修正する</h2>
 <p>build.xml を編集し、servlet.lib の項を自環境の servlet.ライブラリを
 指すようにする。Tomcat8 のものを指定する。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#070;font-weight:bold">&lt;property</span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">servlet.lib</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/usr/share/tomcat8/lib/servlet-api.jar</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">/&gt;</span>
-</pre></div>
-</div>
-</div>
+<pre><code class="language-xml">&lt;property name="servlet.lib" value="/usr/share/tomcat8/lib/servlet-api.jar"/&gt;
+</code></pre>
 
 <h2 id="war-">.war を作成する</h2>
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ant war
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ ant war
+</code></pre>
 <p>ワーニングがでつつもcss-validator.war が作成される</p>
 
 <h2 id="war--tomcat-">.war を Tomcat の所定ディレクトリにコピーする</h2>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># cp css-validator.war  /var/lib/tomcat8/webapps/
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># cp css-validator.war  /var/lib/tomcat8/webapps/
+</code></pre>
 <p>Tomcat が自動で展開し、<code>css-validator/</code> ディレクトリが作成される。</p>
 
 <h2 id="section-3">アクセスする</h2>
@@ -363,8 +328,8 @@ Ant は ant パッケージになっているのでそれをインストール�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -375,12 +340,12 @@ Ant は ant パッケージになっているのでそれをインストール�
     <li>
       <a href="./../../../../../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../../../../../categories/#conf">
@@ -408,8 +373,38 @@ Ant は ant パッケージになっているのでそれをインストール�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -420,6 +415,27 @@ Ant は ant パッケージになっているのでそれをインストール�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

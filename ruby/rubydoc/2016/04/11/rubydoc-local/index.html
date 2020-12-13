@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -103,15 +91,15 @@
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#ruby-">Ruby のドキュメントを手元で参照する</a></li>
-  <li><a href="#section">概要</a></li>
-  <li><a href="#section-1">手順。</a>    <ul>
-      <li><a href="#section-2">概要</a></li>
-      <li><a href="#section-3">コマンドの準備</a></li>
-      <li><a href="#section-4">ソース取得</a></li>
-      <li><a href="#db-">DB を作る（続けて更新する）</a></li>
-      <li><a href="#html-">静的 html を生成する</a></li>
-      <li><a href="#section-5">後始末</a></li>
+  <li><a href="#ruby-" id="markdown-toc-ruby-">Ruby のドキュメントを手元で参照する</a></li>
+  <li><a href="#section" id="markdown-toc-section">概要</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">手順。</a>    <ul>
+      <li><a href="#section-2" id="markdown-toc-section-2">概要</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">コマンドの準備</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">ソース取得</a></li>
+      <li><a href="#db-" id="markdown-toc-db-">DB を作る（続けて更新する）</a></li>
+      <li><a href="#html-" id="markdown-toc-html-">静的 html を生成する</a></li>
+      <li><a href="#section-5" id="markdown-toc-section-5">後始末</a></li>
     </ul>
   </li>
 </ul>
@@ -155,43 +143,31 @@ Ruby の gem としてインストールする。</p>
 <p>※ root 権限が不要な、ユーザのホーム配下にインストールする方法もある様だが、
 ここでは標準的な方法</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ su -c 'gem install bitclust-core'
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ su -c 'gem install bitclust-core'
+</code></pre>
 
 <p>/usr/local/bin/bitclust がインストールされた。</p>
 
 <h2 id="section-4">ソース取得</h2>
 <p>github から clone する。適当なディレクトリで以下を実行する。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ git clone git://github.com/rurema/doctree.git
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ git clone git://github.com/rurema/doctree.git
+</code></pre>
 
 <h2 id="db-">DB を作る（続けて更新する）</h2>
 
 <p>作業ディレクトリで <code>bitclust</code> を実行する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cd doctree/refm/api
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ bitclust -d ./db-2.0.0 init version=2.0.0 encoding=UTF-8
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ bitclust -d ./db-2.0.0 update --stdlibtree=src
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ cd doctree/refm/api
+$ bitclust -d ./db-2.0.0 init version=2.0.0 encoding=UTF-8
+$ bitclust -d ./db-2.0.0 update --stdlibtree=src
+</code></pre>
 
 <h2 id="html-">静的 html を生成する</h2>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mkdir -p ../../../html/function
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ bitclust -d ./db-2.0.0 statichtml -o ../../../html
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ mkdir -p ../../../html/function
+$ bitclust -d ./db-2.0.0 statichtml -o ../../../html
+</code></pre>
 <p>リポジトリと別のディレクトリ（<code>html</code>）に出力する。</p>
 
 <p>最初、エラーが出て終了したが、html/function/ ディレクトリを
@@ -331,8 +307,8 @@ Ruby の gem としてインストールする。</p>
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -343,12 +319,12 @@ Ruby の gem としてインストールする。</p>
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -376,8 +352,38 @@ Ruby の gem としてインストールする。</p>
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -388,6 +394,27 @@ Ruby の gem としてインストールする。</p>
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

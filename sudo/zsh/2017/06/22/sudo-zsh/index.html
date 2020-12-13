@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -107,10 +95,10 @@
 <p>と、言っても sudo 単体ではそれ程便利な訳じゃない。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">実例</a></li>
-  <li><a href="#section-1">環境</a></li>
-  <li><a href="#section-2">設定</a></li>
-  <li><a href="#section-3">感想、または言い訳</a></li>
+  <li><a href="#section" id="markdown-toc-section">実例</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">環境</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">設定</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">感想、または言い訳</a></li>
 </ul>
 
 <h1 id="section">実例</h1>
@@ -127,25 +115,19 @@
 
 <p>su で root になり、以下を実行するとする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get update
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># apt-get upgrade
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span># apt-get clean
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># apt-get update
+# apt-get upgrade
+# apt-get clean
+</code></pre>
 
 <p>最初に前回の履歴まで延々戻るか、前半を手入力して、後半のみ編集するかになる。</p>
 
 <p>でも、sudo を使うと</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo apt-get update
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ sudo apt-get upgrade
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ sudo apt-get clean
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get clean
+</code></pre>
 
 <ol>
   <li>s までの入力で sudo で始まる履歴でコマンドライン全体を補完してくれる。</li>
@@ -180,11 +162,8 @@
 
 <p>設定は visudo コマンドで行う。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># visudo
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># visudo
+</code></pre>
 
 <p>sudo の設定ファイルが開かれる。デフォルトの状態では sudo グループに
 権限が設定されている。</p>
@@ -197,11 +176,8 @@
 
 <p>一般ユーザのうち、root 権限を持たせたいユーザを sudo グループに加える。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># gpasswd -a USER sudo
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># gpasswd -a USER sudo
+</code></pre>
 
 <p>これで USER ユーザが sudo で root 権限で実行できるようになる。</p>
 
@@ -344,8 +320,8 @@ wheel グループも結局 Linux では否定されてるし。</p>
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -356,12 +332,12 @@ wheel グループも結局 Linux では否定されてるし。</p>
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -389,8 +365,38 @@ wheel グループも結局 Linux では否定されてるし。</p>
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -401,6 +407,27 @@ wheel グループも結局 Linux では否定されてるし。</p>
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

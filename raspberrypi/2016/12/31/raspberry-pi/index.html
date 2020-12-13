@@ -14,16 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../css/main.css">
 </head>
@@ -105,25 +95,25 @@
 <p>OS は Raspbian 。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#raspberry-pi-">Raspberry Pi 本体</a>    <ul>
-      <li><a href="#lan-nic-">有線 LAN (NIC) へ固定アドレスを設定する</a></li>
-      <li><a href="#lan-">無線 LAN のアクセスポイントへ接続する</a></li>
-      <li><a href="#usb-">USB シリアルで接続</a></li>
-      <li><a href="#cpu-">CPU の温度を取得する</a></li>
-      <li><a href="#usb--1">USB 機器の接続</a></li>
+  <li><a href="#raspberry-pi-" id="markdown-toc-raspberry-pi-">Raspberry Pi 本体</a>    <ul>
+      <li><a href="#lan-nic-" id="markdown-toc-lan-nic-">有線 LAN (NIC) へ固定アドレスを設定する</a></li>
+      <li><a href="#lan-" id="markdown-toc-lan-">無線 LAN のアクセスポイントへ接続する</a></li>
+      <li><a href="#usb-" id="markdown-toc-usb-">USB シリアルで接続</a></li>
+      <li><a href="#cpu-" id="markdown-toc-cpu-">CPU の温度を取得する</a></li>
+      <li><a href="#usb--1" id="markdown-toc-usb--1">USB 機器の接続</a></li>
     </ul>
   </li>
-  <li><a href="#sd-">マイクロ SD カード</a>    <ul>
-      <li><a href="#windows-">Windows 上で扱う</a></li>
-      <li><a href="#linux-">Linux 上で扱う</a></li>
-      <li><a href="#windows--linux-">Windows 上の Linux で扱う</a></li>
-      <li><a href="#section-5">構成</a></li>
-      <li><a href="#section-6">マウントする</a></li>
-      <li><a href="#sd--1">イメージファイルのマイクロ SD カードへの読み書き</a></li>
-      <li><a href="#tips">読み書きの TIPS</a></li>
+  <li><a href="#sd-" id="markdown-toc-sd-">マイクロ SD カード</a>    <ul>
+      <li><a href="#windows-" id="markdown-toc-windows-">Windows 上で扱う</a></li>
+      <li><a href="#linux-" id="markdown-toc-linux-">Linux 上で扱う</a></li>
+      <li><a href="#windows--linux-" id="markdown-toc-windows--linux-">Windows 上の Linux で扱う</a></li>
+      <li><a href="#section-5" id="markdown-toc-section-5">構成</a></li>
+      <li><a href="#section-6" id="markdown-toc-section-6">マウントする</a></li>
+      <li><a href="#sd--1" id="markdown-toc-sd--1">イメージファイルのマイクロ SD カードへの読み書き</a></li>
+      <li><a href="#tips" id="markdown-toc-tips">読み書きの TIPS</a></li>
     </ul>
   </li>
-  <li><a href="#section-7">その他の話題</a></li>
+  <li><a href="#section-7" id="markdown-toc-section-7">その他の話題</a></li>
 </ul>
 
 <h1 id="raspberry-pi-">Raspberry Pi 本体</h1>
@@ -156,19 +146,13 @@ DNS の設定はとりあえず無しでも OK。</p>
 
 <p>設定を反映するには network の起動スクリプトを実行するか、リブートする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>sudo /etc/init.d/networking reload
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">sudo /etc/init.d/networking reload
+</code></pre>
 
 <p>あるいは</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>sudo /etc/init.d/networking restart
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">sudo /etc/init.d/networking restart
+</code></pre>
 
 <p>直結先が Windows で、Windows 側のアドレスを変更する場合は、
 「アダプターの設定の変更」でネットワークデバイスを無効化～有効化する。</p>
@@ -185,11 +169,8 @@ DNS の設定はとりあえず無しでも OK。</p>
 
 <h3 id="wifi-">wifi のアクセス情報を設定ファイルにを書き込む。</h3>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo sh -c 'wpa_passphrase SSID PASSPHRASE &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf'
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo sh -c 'wpa_passphrase SSID PASSPHRASE &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf'
+</code></pre>
 
 <p><code>/etc/wpa_supplicant/wpa_supplicant.conf</code> に以下が追加される</p>
 
@@ -205,28 +186,22 @@ DNS の設定はとりあえず無しでも OK。</p>
 
 <h3 id="section">設定を反映する</h3>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo /etc/init.d/networking restart
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo /etc/init.d/networking restart
+</code></pre>
 
 <h3 id="section-1">確認する</h3>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>$ ifconfig
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>          inet addr:192.168.200.5  Bcast:192.168.200.255  Mask:255.255.255.0
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>          inet6 addr: fe80::XXXX:XXXX:XXXX:XXXX/64 Scope:Link
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>          RX packets:422 errors:0 dropped:302 overruns:0 frame:0
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>          TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>          collisions:0 txqueuelen:1000
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>          RX bytes:93874 (91.6 KiB)  TX bytes:31328 (30.5 KiB)
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>（wlan0 以外は省略）
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ ifconfig
+wlan0     Link encap:Ethernet  HWaddr b8:27:eb:XX:XX:XX
+          inet addr:192.168.200.5  Bcast:192.168.200.255  Mask:255.255.255.0
+	  inet6 addr: fe80::XXXX:XXXX:XXXX:XXXX/64 Scope:Link
+	  UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+	  RX packets:422 errors:0 dropped:302 overruns:0 frame:0
+	  TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
+	  collisions:0 txqueuelen:1000
+	  RX bytes:93874 (91.6 KiB)  TX bytes:31328 (30.5 KiB)
+（wlan0 以外は省略）
+</code></pre>
 
 <p>AP から DHCP でアドレス（192.168.200.5）を取得している。</p>
 
@@ -382,21 +357,15 @@ sendln pass
 
 <h2 id="cpu-">CPU の温度を取得する</h2>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /sys/class/thermal/thermal_zone0/temp
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>40780
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ cat /sys/class/thermal/thermal_zone0/temp
+40780
+</code></pre>
 
 <p>または</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ vcgencmd measure_temp
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>temp=40.8'C
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ vcgencmd measure_temp
+temp=40.8'C
+</code></pre>
 
 <p>24 時間運用するなら、モニタしておいた方が安心。
 とは言え、何度までなら OK なのだろう。（今は冬なので、良いのだが）</p>
@@ -629,8 +598,8 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
       (2)</li>
     
     <li>
-      <a href="./../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -641,12 +610,12 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     <li>
       <a href="./../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -674,8 +643,38 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
       (1)</li>
     
     <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -686,6 +685,27 @@ sdX1 、sdX2 （X は a,b,c など）として認識される。どう認識さ�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

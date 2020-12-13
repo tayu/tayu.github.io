@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -107,22 +95,22 @@
 <p>この項は順次追記していく</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">環境</a></li>
-  <li><a href="#section-1">方針</a></li>
-  <li><a href="#section-2">分散管理</a></li>
-  <li><a href="#section-3">手順（最初の作業）</a>    <ul>
-      <li><a href="#section-4">親ホストでリポジトリを作成する</a></li>
-      <li><a href="#section-5">子ホストで親ホストのリポジトリを複製する</a></li>
+  <li><a href="#section" id="markdown-toc-section">環境</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">方針</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">分散管理</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">手順（最初の作業）</a>    <ul>
+      <li><a href="#section-4" id="markdown-toc-section-4">親ホストでリポジトリを作成する</a></li>
+      <li><a href="#section-5" id="markdown-toc-section-5">子ホストで親ホストのリポジトリを複製する</a></li>
     </ul>
   </li>
-  <li><a href="#section-6">手順（日常の作業）</a>    <ul>
-      <li><a href="#section-7">子ホストで親ホストの更新を取り込む</a></li>
-      <li><a href="#section-8">子ホストで作業ディレクトリを更新し親ホストに反映する</a></li>
-      <li><a href="#section-9">親ホストで子ホストの更新を取り込む</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">手順（日常の作業）</a>    <ul>
+      <li><a href="#section-7" id="markdown-toc-section-7">子ホストで親ホストの更新を取り込む</a></li>
+      <li><a href="#section-8" id="markdown-toc-section-8">子ホストで作業ディレクトリを更新し親ホストに反映する</a></li>
+      <li><a href="#section-9" id="markdown-toc-section-9">親ホストで子ホストの更新を取り込む</a></li>
     </ul>
   </li>
-  <li><a href="#section-10">環境の識別</a></li>
-  <li><a href="#section-11">環境設定スクリプト</a></li>
+  <li><a href="#section-10" id="markdown-toc-section-10">環境の識別</a></li>
+  <li><a href="#section-11" id="markdown-toc-section-11">環境設定スクリプト</a></li>
 </ul>
 
 <h1 id="section">環境</h1>
@@ -173,14 +161,11 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
 
 <p>一通りのファイル群が作成済みとする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cd conf_directory
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ hg init
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ hg add *
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>$ hg commit -m &quot;メッセージ&quot;
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ cd conf_directory
+$ hg init
+$ hg add *
+$ hg commit -m "メッセージ"
+</code></pre>
 
 <p>ディレクトリ配下の全ファイルを親リポジトリに取り込む。</p>
 
@@ -188,22 +173,16 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
 
 <p>親リポジトリの複製を取得する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg clone ssh://hostA/conf_directory
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ cd conf_directory
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg clone ssh://hostA/conf_directory
+$ cd conf_directory
+</code></pre>
 
 <p>conf_directory ディレクトリが作成されるので、中に降りて作業する。</p>
 
 <p>必要ならユーザ名、ssh ポートを指定する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg clone ssh://user@hostA:port/conf_directory
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg clone ssh://user@hostA:port/conf_directory
+</code></pre>
 
 <h1 id="section-6">手順（日常の作業）</h1>
 
@@ -214,20 +193,14 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
 
 <p>子リポジトリを更新し、作業ディレクトリへ反映する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg pull default
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ hg update
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg pull default
+$ hg update
+</code></pre>
 
 <p>pull に -u オプションをつけると両方を一度に行える。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg pull -u default
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg pull -u default
+</code></pre>
 
 <h2 id="section-8">子ホストで作業ディレクトリを更新し親ホストに反映する</h2>
 
@@ -236,19 +209,13 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
 
 <p>作業ディレクトリを子リポジトリへ反映する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg commit -m &quot;メッセージ&quot;
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg commit -m "メッセージ"
+</code></pre>
 
 <p>子リポジトリを親リポジトリへ反映する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg push default
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg push default
+</code></pre>
 
 <h2 id="section-9">親ホストで子ホストの更新を取り込む</h2>
 
@@ -260,21 +227,15 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
 <p>注：diff を取っても出てこない。作業ディレクトリの元となった履歴と
 他ホストから追加された履歴が別に（ブランチとして）区別されるためらしい。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg merge
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg merge
+</code></pre>
 
 <p>衝突があると手作業が必要になったりする。</p>
 
 <p>内容を確認したら親リポジトリへ反映する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ hg commit -m &quot;メッセージ&quot;
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ hg commit -m "メッセージ"
+</code></pre>
 
 <h1 id="section-10">環境の識別</h1>
 
@@ -432,8 +393,8 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -444,12 +405,12 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -477,8 +438,38 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -489,6 +480,27 @@ Mercurial の方に慣れている事と、検索で手順が見つかりやす�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

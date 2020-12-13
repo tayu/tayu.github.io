@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>radiko の放送局一覧を作った</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="作業めも等。日記、雑記、その他何でも">
+    <link rel="canonical" href="http://tayu.github.io./radiko/xml/2020/10/04/radiko-xml/">
+    <!-- Custom CSS -->
+    
+
+
+
+
+    
+    <link rel="stylesheet" href="./../../../../../../css/main.css">
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="./">めもなど</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+
+	<a class="page-link"
+	   href="./../../../../../../old/">
+	  old</a>
+	<a class="page-link"
+	   href="./../../../../../../lang/">
+	  lang</a>
+
+        
+        
+	<a class="page-link"
+	   href="./../../../../../..//about/">
+	  About</a>
+	
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	<a class="page-link"
+	   href="./../../../../../../feed.xml">
+	  RSS</a>
+
+      </div>
+    </nav>
+
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>radiko の放送局一覧を作った</h1>
+    <p class="meta">Oct 4, 2020</p>
+  </header>
+
+  <article class="post-content">
+  <p>radiko の放送局の ID 一覧が欲しかったので一覧を作成した。</p>
+
+<p>ちょっと遠くに持ち出した影響か、しばらく前から外部接続の IP アドレスが
+安定しない。そうすると radiko に東京リージョン(JP13)と認めてもらえず
+東京圏の放送が聞けない。</p>
+
+<p>とはいえ、どこからにはつながっているので、その時点で聞ける放送局が
+何かを探すのが、毎回となると結構大変って事で。</p>
+
+<p>なので、ID の一覧。</p>
+
+<ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">背景</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">構想</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">スクリプト</a>    <ul>
+      <li><a href="#section-3" id="markdown-toc-section-3">注釈</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">感想</a></li>
+      <li><a href="#todo" id="markdown-toc-todo">ToDo</a></li>
+      <li><a href="#section-5" id="markdown-toc-section-5">スクリプト</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="section">背景</h1>
+<p>radiko をスクリプトで聞いている。のだが、上述の様な事になって、
+東京圏の放送局が聞けたり聞けなくなったりしていた。</p>
+
+<p>状況は、（時々）radiko のエリア判定で他の地域と判定されるって状態。
+しかも、それが一定でなく、本当に北海道から沖縄までの判定を食らったりしている。</p>
+
+<p>でも、何か音を出しておく状態に慣れてしまったので、他局ではあっても
+radiko で放送を聞きたい。幸い、スクリプトは ID を指定すれば<sup id="fnref:areacode"><a href="#fn:areacode" class="footnote">1</a></sup>
+どこの放送局でも聞ける様になっている。</p>
+
+<p>問題は「今、どの放送局が聞けるのか。その ID は」を迅速に見つけること</p>
+
+<h1 id="section-1">構想</h1>
+<p>日本には 47 都道府県があり、JP13 が東京都ってのも
+<a href="https://ja.wikipedia.org/wiki/ISO_3166-2:JP">ISO_3166-2:JP</a>
+の様に標準の規定に則っているものだ。</p>
+
+<p>つまり、県単位って事。</p>
+
+<p>この辺の話は
+<a href="http://www.dcc-jpl.com/foltia/wiki/radikomemo">ここ</a>にお世話になった</p>
+
+<p>入力は県（JP* ってやつ）毎に xml ファイルとして取得できる。
+それをいい感じに処理して、出力は html とすることにした。</p>
+
+<p>xml の扱いは xpath で扱えることが録音スクリプトの作成時に分かっていた。
+実はここが一番大きい。ここの見通しが立っていたので周辺の作業をスクリプト化
+することで多くない作業量で作成できる見通しが立っていた。</p>
+
+<h1 id="section-2">スクリプト</h1>
+
+<p>スクリプトは最後に</p>
+
+<h2 id="section-3">注釈</h2>
+
+<p>途中で IFS を設定しているのは項目を for 文に並べるときに間に空白があると
+うまく動かないので、そのために一時的に区切り文字からスペースを抜くため。</p>
+
+<p>他の言語なら必要無いだろう</p>
+
+<p>最初に JP13 を処理し、その後 47 までループしつつ JP13 をスキップするのは
+自分が良く使う JP13 を先頭に持ってくるため。
+全く同じ処理を 2 度書いたのは残念だったけど、1st バージョンとして
+とにかく動かすのを急いだため。</p>
+
+<h2 id="section-4">感想</h2>
+<p>最初は手作業でやろうかなとも考えたけど、スクリプトの力って
+やっぱり大きい。</p>
+
+<p>一度、スクリプトを作っておけば何度でも実行できるし、
+なによりヒューマンエラーが入らない。</p>
+
+<p>もっともデータのエラーには無力で、今回で言うと放送局へのリンクに使った画像が
+幾つか入っていない。</p>
+
+<h2 id="todo">ToDo</h2>
+<p>上記の<a href="http://www.dcc-jpl.com/foltia/wiki/radikomemo">ページ</a>によると
+V3 が出ているので、そっちへの対応。</p>
+
+<p>新バージョンが出てるって事は、今の v2 が何時まで使えるか分からないって事だから</p>
+
+<h2 id="section-5">スクリプト</h2>
+
+<pre><code class="language-sh">#! /bin/bash
+
+HTML="radiko.html"
+ODIR="area"
+HRER="13"
+
+declare AREANAME=(
+    "北海道"
+    "青森県"
+    "岩手県"
+    "宮城県"
+    "秋田県"
+    "山形県"
+    "福島県"
+    "茨城県"
+    "栃木県"
+    "群馬県"
+    "埼玉県"
+    "千葉県"
+    "東京都"
+    "神奈川県"
+    "新潟県"
+    "富山県"
+    "石川県"
+    "福井県"
+    "山梨県"
+    "長野県"
+    "岐阜県"
+    "静岡県"
+    "愛知県"
+    "三重県"
+    "滋賀県"
+    "京都府"
+    "大阪府"
+    "兵庫県"
+    "奈良県"
+    "和歌山県"
+    "鳥取県"
+    "島根県"
+    "岡山県"
+    "広島県"
+    "山口県"
+    "徳島県"
+    "香川県"
+    "愛媛県"
+    "高知県"
+    "福岡県"
+    "佐賀県"
+    "長崎県"
+    "熊本県"
+    "大分県"
+    "宮崎県"
+    "鹿児島県"
+    "沖縄県"
+)
+
+
+# IN: エリアコード
+_genHtml() {
+    local area xml opt
+    local ids names hrefs banners
+    local i w e
+
+    ids=()
+    names=()
+    hrefs=()
+    banners=()
+
+    area=$1
+    xml="${ODIR}/${area}.xml"
+    if [ ! -f ${xml} ]; then
+	opt="-q -O ${xml} http://radiko.jp/v2/station/list/${area}.xml"
+	wget ${opt}
+    fi
+
+    for w in $(cat ${xml} | xpath -q -e 'stations/station/id/text()'); do
+	ids+=(${w})
+    done
+    for w in $(cat ${xml} | xpath -q -e 'stations/station/href/text()'); do
+	hrefs+=(${w})
+    done
+    for w in $(cat ${xml} | xpath -q -e 'stations/station/banner/text()'); do
+	banners+=(${w})
+    done
+    IFS='	
+'
+    for w in $(cat ${xml} | xpath -q -e 'stations/station/name/text()'); do
+	names+=(${w})
+    done
+    IFS=' 	
+'
+
+    for i in $(seq 0 $((${#ids[@]} - 1))); do
+	cat &lt;&lt;EOF
+&lt;tr class="radiko_tr"&gt;
+&lt;td class="radiko_td"&gt;${names[i]}&lt;/td&gt;
+&lt;td class="radiko_td"&gt;${ids[i]}&lt;/td&gt;
+&lt;td class="radiko_td"&gt;
+  &lt;a href="${hrefs[i]}"&gt;
+    &lt;img class="banner"
+    src="${banners[i]}"
+    alt="${names[i]}"
+    /&gt;
+  &lt;/a&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+EOF
+    done
+}
+
+_head() {
+    cat &lt;&lt;EOF
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" lang="ja-JP" xml:lang="ja-JP"&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8" /&gt;
+    &lt;link rel="INDEX" href="./index.html" /&gt;
+    &lt;link rel="stylesheet" type="text/css" href="web/index.css" /&gt;
+    &lt;title&gt;radiko&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;div class="title"&gt;radiko&lt;/div&gt;
+  &lt;hr /&gt;
+EOF
+}
+_foot() {
+    cat &lt;&lt;EOF
+  &lt;/body&gt;
+&lt;/html&gt;
+EOF
+}
+
+_areahead() {
+    local aid aname
+
+    aid=$1
+    aname=$2
+
+    cat &lt;&lt;EOF
+  &lt;div id="${aid}"&gt;
+  &lt;span class="area_name"&gt;${aid} ${aname}&lt;/span&gt;
+  &lt;table&gt;
+EOF
+}
+
+_areafoot() {
+    cat &lt;&lt;EOF
+  &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;hr /&gt;
+EOF
+}
+
+
+_toc() {
+    local i
+
+    cat &lt;&lt;EOF
+  &lt;div&gt;
+  &lt;span class="area_list"&gt;
+EOF
+    for i in $(seq ${HRER} ${HRER}); do
+	cat &lt;&lt;EOF
+  &lt;a href="#JP${i}"&gt;JP${i}:${AREANAME[$((i - 1))]}&lt;/a&gt;
+EOF
+    done
+    for i in $(seq 1 47); do
+	if [ ${HRER} -eq $i ]; then continue; fi
+	cat &lt;&lt;EOF
+  &lt;a href="#JP${i}"&gt;JP${i}:${AREANAME[$((i - 1))]}&lt;/a&gt;
+EOF
+    done
+    cat &lt;&lt;EOF
+  &lt;/span&gt;
+  &lt;/div&gt;
+  &lt;hr /&gt;
+EOF
+}
+
+
+_main() {
+    local i n
+
+    echo "" &gt; ${HTML}
+    _head &gt;&gt; ${HTML}
+
+    _toc &gt;&gt; ${HTML}
+    for i in $(seq ${HRER} ${HRER}); do
+	n="${AREANAME[$((i - 1))]}"
+	_areahead JP${i} ${n} &gt;&gt; ${HTML}
+	_genHtml JP${i} ${n} &gt;&gt; ${HTML}
+	_areafoot JP${i} ${n} &gt;&gt; ${HTML}
+    done
+    for i in $(seq 1 47); do
+
+	if [ ${HRER} -eq $i ]; then continue; fi
+
+	n="${AREANAME[$((i - 1))]}"
+	_areahead JP${i} ${n} &gt;&gt; ${HTML}
+	_genHtml JP${i} ${n} &gt;&gt; ${HTML}
+	_areafoot JP${i} ${n} &gt;&gt; ${HTML}
+    done
+
+    _foot &gt;&gt; ${HTML}
+}
+_main
+</code></pre>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:areacode">
+      <p>radiko 側の地域判定に沿っている限り <a href="#fnref:areacode" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </article>
+
+</div>
+      </div>
+    </div>
+
+    <header class="side-header">
+  <nav class="side-nav">
+
+    全記事
+    <ul>
+      <li>
+	<a class="post-link"
+       href="./../../../../../../allpost/">
+      一覧</a>
+      </li>
+    </ul>
+  <hr/>
+  カテゴリ
+  <ul>
+    
+    <li>
+      <a href="./../../../../../../categories/#jekyll">
+	jekyll</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#config">
+	config</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tips">
+	tips</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#html5">
+	html5</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#validator">
+	validator</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#tomcat">
+	tomcat</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#java">
+	java</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#install">
+	install</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#css">
+	css</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#w3c">
+	w3c</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#ruby">
+	ruby</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#rubydoc">
+	rubydoc</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#audio">
+	audio</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#convert">
+	convert</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#jm">
+	jm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#man">
+	man</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#local">
+	local</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#mail">
+	mail</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#msmtp">
+	msmtp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#proxy">
+	proxy</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#zsh">
+	zsh</a>
+      (2)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#pklink">
+	pklink</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#radiko">
+	radiko</a>
+      (3)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#conf">
+	conf</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#manage">
+	manage</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#bash">
+	bash</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#script">
+	script</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#sudo">
+	sudo</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#backup">
+	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
+      (1)</li>
+    
+  </ul>
+  <hr/>
+  日付
+  <ul>
+    
+    
+    
+
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Jan">
+	2020 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2018-Sep">
+	2018 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Sep">
+	2017 Sep</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Jun">
+	2017 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-May">
+	2017 May</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Feb">
+	2017 Feb</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2017-Jan">
+	2017 Jan</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Dec">
+	2016 Dec</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Oct">
+	2016 Oct</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jul">
+	2016 Jul</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Jun">
+	2016 Jun</a></li>
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-May">
+	2016 May</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Apr">
+	2016 Apr</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2016-Mar">
+	2016 Mar</a></li>
+    
+    
+    
+    
+    
+  </ul>
+
+</nav>
+</header>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">めもなど</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:"></a></li>
+        <li><a href="https://github.com/tayu/pages">ソース</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">作業めも等。日記、雑記、その他何でも</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

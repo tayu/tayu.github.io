@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -103,20 +91,20 @@
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#section">現象</a></li>
-  <li><a href="#section-1">変換方法</a></li>
-  <li><a href="#section-2">原因</a></li>
-  <li><a href="#section-3">ストーリー</a></li>
-  <li><a href="#section-4">実際のところは</a></li>
-  <li><a href="#section-5">解決に向けて</a></li>
-  <li><a href="#section-6">要望</a>    <ul>
-      <li><a href="#wav-">wav 以外のフォーマットの採用</a></li>
-      <li><a href="#section-7">パイプ処理に適したフォーマットの提案</a></li>
-      <li><a href="#wav--1">wav フォーマットの拡張</a></li>
+  <li><a href="#section" id="markdown-toc-section">現象</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">変換方法</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">原因</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">ストーリー</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">実際のところは</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">解決に向けて</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">要望</a>    <ul>
+      <li><a href="#wav-" id="markdown-toc-wav-">wav 以外のフォーマットの採用</a></li>
+      <li><a href="#section-7" id="markdown-toc-section-7">パイプ処理に適したフォーマットの提案</a></li>
+      <li><a href="#wav--1" id="markdown-toc-wav--1">wav フォーマットの拡張</a></li>
     </ul>
   </li>
-  <li><a href="#section-8">参考</a></li>
-  <li><a href="#section-9">その後の展開</a></li>
+  <li><a href="#section-8" id="markdown-toc-section-8">参考</a></li>
+  <li><a href="#section-9" id="markdown-toc-section-9">その後の展開</a></li>
 </ul>
 
 <h1 id="section">現象</h1>
@@ -135,12 +123,9 @@
 
 <p>変換は以下の様にやっていた</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>mplayer -really-quiet -ao pcm:file=/dev/stdout infile.flv \
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  | lame  /dev/stdin outfile.mp3
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">mplayer -really-quiet -ao pcm:file=/dev/stdout infile.flv \
+  | lame  /dev/stdin outfile.mp3
+</code></pre>
 
 <p>入力は mplayer にお任せで wav ファイルをパイプで lame に渡して mp3 を
 作成する。lame 側にはビットレートの指定などオプションも入る。</p>
@@ -194,31 +179,25 @@
 
 <p>調査の一環としてパイプに出力されるサイズを見てみた</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
+0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
+0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</code></pre>
 <p><code>24  f0  ff  7f</code> の部分がサイズで 0x7ffff024 、10 進で 2,147,479,588 となる。
 負数にされない様に MSB は落としてあるので約 2G となっている。</p>
 
 <p>パイプでなく wav ファイルに出力させたものは</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ls -l sample.wav
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>-rwxrwx--- 1 root vboxsf 2768666668  4月 12 01:47 sample.wav
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>$ od -tax1 sample.wav | head -4
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000000   R   I   F   F   $ nul ack   %   W   A   V   E   f   m   t  sp
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         52  49  46  46  24  80  06  a5  57  41  56  45  66  6d  74  20
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
-<span class="line-numbers"><a href="#n7" name="n7">7</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ ls -l sample.wav
+-rwxrwx--- 1 root vboxsf 2768666668  4月 12 01:47 sample.wav
+$ od -tax1 sample.wav | head -4
+0000000   R   I   F   F   $ nul ack   %   W   A   V   E   f   m   t  sp
+         52  49  46  46  24  80  06  a5  57  41  56  45  66  6d  74  20
+0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</code></pre>
 <p>と、なっていた。サイズは 2768666668 バイト。ヘッダ中の <code>24  80  06  a5</code> に
 フォーマット規約の通り +8 して、ちゃんと一致する。</p>
 
@@ -229,15 +208,12 @@
 <p>ちなみに、もっと大きなファイル、5 時間位のものを wav に変換してみた
 所、3 時間位で終わっていた。そのヘッダは以下の様になっていた。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ od -tax1 sample2.wav | head -4
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  ff  57  41  56  45  66  6d  74  20
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ od -tax1 sample2.wav | head -4
+0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+         52  49  46  46  24  f0  ff  ff  57  41  56  45  66  6d  74  20
+0000020 dle nul nul nul etx nul stx nul nul   ; nul nul nul   \ enq nul
+         10  00  00  00  03  00  02  00  80  bb  00  00  00  dc  05  00
+</code></pre>
 <p><code>24  f0  ff  ff</code> になっている。上位バイトが 0xFF 0xFF 。ここが上限なのだろう。</p>
 
 <h1 id="section-5">解決に向けて</h1>
@@ -302,15 +278,12 @@
 
 <p>同じ様にパイプの先頭を見ると</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>0000020 dle nul nul nul soh nul stx nul nul   ; nul nul nul   n stx nul
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>         10  00  00  00  01  00  02  00  80  bb  00  00  00  ee  02  00
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ mplayer -really-quiet -ao pcm:file=/dev/stdout sample.flv | od -tax1 | head -4
+0000000   R   I   F   F   $   p del del   W   A   V   E   f   m   t  sp
+         52  49  46  46  24  f0  ff  7f  57  41  56  45  66  6d  74  20
+0000020 dle nul nul nul soh nul stx nul nul   ; nul nul nul   n stx nul
+         10  00  00  00  01  00  02  00  80  bb  00  00  00  ee  02  00
+</code></pre>
 <p>と、なっている。サイズ情報は変わらない。</p>
 
 <p>次にファイル出力させたものをプレイヤーのプロパティで見てみたら、</p>
@@ -462,8 +435,8 @@
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -474,12 +447,12 @@
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -507,8 +480,38 @@
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -519,6 +522,27 @@
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

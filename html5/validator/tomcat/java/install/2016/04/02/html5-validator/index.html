@@ -14,24 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../../../../css/main.css">
 </head>
@@ -109,22 +91,22 @@
 
   <article class="post-content">
   <ul id="markdown-toc">
-  <li><a href="#html5--lint-">HTML5 の lint が欲しい</a></li>
-  <li><a href="#section">必要なもの</a></li>
-  <li><a href="#tomcat-">Tomcat のインストール</a></li>
-  <li><a href="#java-">Java のインストール</a>    <ul>
-      <li><a href="#section-1">入手</a></li>
-      <li><a href="#section-2">展開</a></li>
-      <li><a href="#section-3">移動</a></li>
-      <li><a href="#section-4">リンクを張る</a></li>
-      <li><a href="#java--1">デフォルトの java 関連コマンドのすり替え</a></li>
-      <li><a href="#tomcat--1">Tomcat の再起動</a></li>
+  <li><a href="#html5--lint-" id="markdown-toc-html5--lint-">HTML5 の lint が欲しい</a></li>
+  <li><a href="#section" id="markdown-toc-section">必要なもの</a></li>
+  <li><a href="#tomcat-" id="markdown-toc-tomcat-">Tomcat のインストール</a></li>
+  <li><a href="#java-" id="markdown-toc-java-">Java のインストール</a>    <ul>
+      <li><a href="#section-1" id="markdown-toc-section-1">入手</a></li>
+      <li><a href="#section-2" id="markdown-toc-section-2">展開</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">移動</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">リンクを張る</a></li>
+      <li><a href="#java--1" id="markdown-toc-java--1">デフォルトの java 関連コマンドのすり替え</a></li>
+      <li><a href="#tomcat--1" id="markdown-toc-tomcat--1">Tomcat の再起動</a></li>
     </ul>
   </li>
-  <li><a href="#nu-html-checker-">Nu Html Checker のインストール</a></li>
-  <li><a href="#section-5">おまけ</a>    <ul>
-      <li><a href="#nu-html-checker--1">Nu Html Checker の再起動</a></li>
-      <li><a href="#jar-">.jar 版を動かす</a></li>
+  <li><a href="#nu-html-checker-" id="markdown-toc-nu-html-checker-">Nu Html Checker のインストール</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">おまけ</a>    <ul>
+      <li><a href="#nu-html-checker--1" id="markdown-toc-nu-html-checker--1">Nu Html Checker の再起動</a></li>
+      <li><a href="#jar-" id="markdown-toc-jar-">.jar 版を動かす</a></li>
     </ul>
   </li>
 </ul>
@@ -168,11 +150,8 @@
 <h1 id="tomcat-">Tomcat のインストール</h1>
 <p>パッケージを入れる</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get install tomcat8
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># apt-get install tomcat8
+</code></pre>
 
 <p>確認の為に <code>http://localhost:8080/</code> にアクセスする。
 <code>It works !</code> の表示が出たら OK 。</p>
@@ -195,40 +174,28 @@
 <h2 id="section-2">展開</h2>
 <p>適当なディレクトリで</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ tar xvf jdk-8u77-linux-x64.tar.gz
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ tar xvf jdk-8u77-linux-x64.tar.gz
+</code></pre>
 
 <p>する。<code>jdk1.8.0_77/</code> ディレクトリが作成され、その中に展開される。</p>
 
 <h2 id="section-3">移動</h2>
 <p>ディレクトリ一式を <code>/usr/lib/jvm</code> 配下へ移動する。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># mv jdk1.8.0_77 /usr/lib/jvm
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># mv jdk1.8.0_77 /usr/lib/jvm
+</code></pre>
 
 <p>また、他（OpenJDK など）と同様にオーナーを root にしておく。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># chown -R root:root jdk1.8.0_77
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># chown -R root:root jdk1.8.0_77
+</code></pre>
 
 <h2 id="section-4">リンクを張る</h2>
 <p><code>/usr/lib/jvm</code> 中の <code>default-java</code> が <code>jdk1.8.0_77</code> を指すようにする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># rm default-java
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># ln -sf jdk1.8.0_77 default-java
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># rm default-java
+# ln -sf jdk1.8.0_77 default-java
+</code></pre>
 
 <p>Tomcat の起動スクリプト(<code>/etc/init.d/tomcat8</code>) を見てみると
 <code>/usr/lib/jvm</code> 中で Oracel等の JDK がインストールされているか、
@@ -241,35 +208,26 @@
 <h2 id="java--1">デフォルトの java 関連コマンドのすり替え</h2>
 <p>Debian の機構を使って java コマンドなどを Oracel の JDK に向けてやる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># update-alternatives --install /usr/bin/java java /usr/lib/jvm/default-java/bin/java 1
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/default-java/bin/javac 1
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span># update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/default-java/bin/javaws 1
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span># update-alternatives --config java
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span># update-alternatives --config javac
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span># update-alternatives --config javaws
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># update-alternatives --install /usr/bin/java java /usr/lib/jvm/default-java/bin/java 1
+# update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/default-java/bin/javac 1
+# update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/default-java/bin/javaws 1
+# update-alternatives --config java
+# update-alternatives --config javac
+# update-alternatives --config javaws
+</code></pre>
 <p>選択を求められたら Java8 を選択する。</p>
 
 <h2 id="tomcat--1">Tomcat の再起動</h2>
 <p>java 関連のパスが変わったので、再起動して反映させる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># /etc/init.d/tomcat8 restart
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># /etc/init.d/tomcat8 restart
+</code></pre>
 
 <h1 id="nu-html-checker-">Nu Html Checker のインストール</h1>
 <p>取得した .war ファイルを <code>/var/lib/tomcat8/webapps</code> にコピーする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># cp vnu.war /var/lib/tomcat8/webapps
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># cp vnu.war /var/lib/tomcat8/webapps
+</code></pre>
 
 <p>Tomcat が自動的に展開し、<code>vnu</code> ディレクトリが作られる。</p>
 
@@ -283,20 +241,14 @@
 保存するとサーブレットの再読み込みが行われる。簡単にやるなら、
 単にファイルの時刻を更新するだけで良い。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># touch /var/lib/tomcat8/webapps/vnu/WEB-INF/web.xml
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console"># touch /var/lib/tomcat8/webapps/vnu/WEB-INF/web.xml
+</code></pre>
 
 <h2 id="jar-">.jar 版を動かす</h2>
 <p>ドキュメントにある通り</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ java -cp ./vnu.jar nu.validator.servlet.Main 8888
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ java -cp ./vnu.jar nu.validator.servlet.Main 8888
+</code></pre>
 <p>とする。<code>http://localhost:8888</code> にアクセスすると画面が表示される。</p>
 
 
@@ -427,8 +379,8 @@
       (2)</li>
     
     <li>
-      <a href="./../../../../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -439,12 +391,12 @@
     <li>
       <a href="./../../../../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../../../../categories/#conf">
@@ -472,8 +424,38 @@
       (1)</li>
     
     <li>
+      <a href="./../../../../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -484,6 +466,27 @@
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

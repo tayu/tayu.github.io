@@ -14,20 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../../css/main.css">
 </head>
@@ -111,14 +97,14 @@
 最低限の、読める程度のものを生成してみた。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">概要</a></li>
-  <li><a href="#section-1">手順</a>    <ul>
-      <li><a href="#section-2">準備</a></li>
-      <li><a href="#section-3">アーカイブの取得</a></li>
-      <li><a href="#html-">静的 html の生成</a></li>
+  <li><a href="#section" id="markdown-toc-section">概要</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">手順</a>    <ul>
+      <li><a href="#section-2" id="markdown-toc-section-2">準備</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">アーカイブの取得</a></li>
+      <li><a href="#html-" id="markdown-toc-html-">静的 html の生成</a></li>
     </ul>
   </li>
-  <li><a href="#todo">ToDo</a></li>
+  <li><a href="#todo" id="markdown-toc-todo">ToDo</a></li>
 </ul>
 
 <h1 id="section">概要</h1>
@@ -147,12 +133,9 @@
 <p>2016/05/17 現在。毎月 15 日に更新されるそうなので、ファイル名は
 毎月変わる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ wget http://linuxjm.osdn.jp/man-pages-ja-20160515.tar.gz
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>$ tar xvf man-pages-ja-20160515.tar.gz
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ wget http://linuxjm.osdn.jp/man-pages-ja-20160515.tar.gz
+$ tar xvf man-pages-ja-20160515.tar.gz
+</code></pre>
 <p>man-pages-ja-20160515 ディレクトリが作成される。</p>
 
 <h2 id="html-">静的 html の生成</h2>
@@ -162,69 +145,66 @@
 
 <p>出力先は DST_DIR に設定する。ここでは html としている。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#34b">#! /usr/bin/env ruby</span>
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span><span style="color:#777"># encoding: utf-8</span>
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">find</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pathname</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fileutils</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span><span style="color:#036;font-weight:bold">SRC_DIR</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">man-pages-ja-20160515</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span><span style="color:#036;font-weight:bold">DST_DIR</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">html</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span><span style="color:#036;font-weight:bold">TOPPAGE</span> = <span style="color:#036;font-weight:bold">DST_DIR</span> + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/index.html</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span><span style="color:#036;font-weight:bold">MAN2HTML</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/usr/bin/man2html</span><span style="color:#710">&quot;</span></span>
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">conv</span>( infile, outdir, fd )
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>  odir = <span style="color:#036;font-weight:bold">Pathname</span>.new( outdir )
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>  odir = odir.join( <span style="color:#036;font-weight:bold">File</span>.basename( <span style="color:#036;font-weight:bold">File</span>.dirname( <span style="color:#036;font-weight:bold">File</span>.dirname( infile ) ) ) )
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>  odir = odir.join( <span style="color:#036;font-weight:bold">File</span>.basename( <span style="color:#036;font-weight:bold">File</span>.dirname( infile ) ) )
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>  outfile = <span style="color:#036;font-weight:bold">Pathname</span>.new( odir )
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>  outfile = outfile.join( <span style="color:#036;font-weight:bold">File</span>.basename( infile ) )
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span>  outfile = outfile.sub_ext( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">.html</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span>
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>  <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> <span style="color:#036;font-weight:bold">File</span>.directory? ( odir ) <span style="color:#080;font-weight:bold">then</span>
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>    <span style="color:#036;font-weight:bold">FileUtils</span>.mkdir_p( odir )
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>  <span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n23" name="n23">23</a></span>
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>  system( <span style="color:#036;font-weight:bold">MAN2HTML</span> + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20"> </span><span style="color:#710">&quot;</span></span> + infile + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20"> &gt; </span><span style="color:#710">&quot;</span></span> + outfile.to_path )
-<span class="line-numbers"><a href="#n25" name="n25">25</a></span>
-<span class="line-numbers"><a href="#n26" name="n26">26</a></span>  link = <span style="color:#036;font-weight:bold">Pathname</span>.new( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n27" name="n27">27</a></span>  link = link.join( <span style="color:#036;font-weight:bold">File</span>.basename( <span style="color:#036;font-weight:bold">File</span>.dirname( <span style="color:#036;font-weight:bold">File</span>.dirname( infile ) ) ) )
-<span class="line-numbers"><a href="#n28" name="n28">28</a></span>  link = link.join( <span style="color:#036;font-weight:bold">File</span>.basename( <span style="color:#036;font-weight:bold">File</span>.dirname( infile ) ) )
-<span class="line-numbers"><a href="#n29" name="n29">29</a></span>  link = link.join( <span style="color:#036;font-weight:bold">File</span>.basename( infile ) )
-<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>  link = link.sub_ext( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">.html</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n31" name="n31">31</a></span>  tag = <span style="color:#036;font-weight:bold">File</span>.basename( infile )
-<span class="line-numbers"><a href="#n32" name="n32">32</a></span>
-<span class="line-numbers"><a href="#n33" name="n33">33</a></span>  fd.puts( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">&lt;a href=</span><span style="color:#b0b">\&quot;</span><span style="color:#710">&quot;</span></span> + link.to_path + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#b0b">\&quot;</span><span style="color:#D20">/&gt;</span><span style="color:#710">&quot;</span></span> + tag + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">&lt;/a&gt;</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n34" name="n34">34</a></span><span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n35" name="n35">35</a></span>
-<span class="line-numbers"><a href="#n36" name="n36">36</a></span><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">heada</span>( fd )
-<span class="line-numbers"><a href="#n37" name="n37">37</a></span>  fd.puts( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">&lt;html&gt;&lt;body&gt;</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n38" name="n38">38</a></span><span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n39" name="n39">39</a></span><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">foota</span>( fd )
-<span class="line-numbers"><strong><a href="#n40" name="n40">40</a></strong></span>  fd.puts( <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">&lt;/body&gt;&lt;/html&gt;</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n41" name="n41">41</a></span><span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n42" name="n42">42</a></span>
-<span class="line-numbers"><a href="#n43" name="n43">43</a></span><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">main</span>( argv )
-<span class="line-numbers"><a href="#n44" name="n44">44</a></span>  <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> <span style="color:#036;font-weight:bold">File</span>.directory? ( <span style="color:#036;font-weight:bold">DST_DIR</span> ) <span style="color:#080;font-weight:bold">then</span>
-<span class="line-numbers"><a href="#n45" name="n45">45</a></span>    <span style="color:#036;font-weight:bold">FileUtils</span>.mkdir_p( <span style="color:#036;font-weight:bold">DST_DIR</span> )
-<span class="line-numbers"><a href="#n46" name="n46">46</a></span>  <span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n47" name="n47">47</a></span>
-<span class="line-numbers"><a href="#n48" name="n48">48</a></span>  fd = open( <span style="color:#036;font-weight:bold">TOPPAGE</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">w</span><span style="color:#710">&quot;</span></span> )
-<span class="line-numbers"><a href="#n49" name="n49">49</a></span>  heada( fd )
-<span class="line-numbers"><strong><a href="#n50" name="n50">50</a></strong></span>  <span style="color:#777"># man page ファイルのみ取り出す。 *.[1-9]</span>
-<span class="line-numbers"><a href="#n51" name="n51">51</a></span>  <span style="color:#036;font-weight:bold">Find</span>.find( <span style="color:#036;font-weight:bold">SRC_DIR</span> ) <span style="color:#080;font-weight:bold">do</span> |f|
-<span class="line-numbers"><a href="#n52" name="n52">52</a></span>    <span style="color:#080;font-weight:bold">if</span> <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#D20">\.</span><span style="color:#808">[1-9]</span><span style="color:#404">/</span></span>.match( <span style="color:#036;font-weight:bold">File</span>.extname( f ) ) <span style="color:#080;font-weight:bold">then</span>
-<span class="line-numbers"><a href="#n53" name="n53">53</a></span>      conv( f, <span style="color:#036;font-weight:bold">DST_DIR</span>, fd )
-<span class="line-numbers"><a href="#n54" name="n54">54</a></span>    <span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n55" name="n55">55</a></span>  <span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n56" name="n56">56</a></span>  foota( fd )
-<span class="line-numbers"><a href="#n57" name="n57">57</a></span>  fd.close()
-<span class="line-numbers"><a href="#n58" name="n58">58</a></span><span style="color:#080;font-weight:bold">end</span>
-<span class="line-numbers"><a href="#n59" name="n59">59</a></span>main <span style="color:#069">ARGV</span>
-</pre></div>
-</div>
-</div>
+<pre><code class="language-ruby">#! /usr/bin/env ruby
+# encoding: utf-8
+require "find"
+require "pathname"
+require "fileutils"
+
+SRC_DIR = "man-pages-ja-20160515"
+DST_DIR = "html"
+TOPPAGE = DST_DIR + "/index.html"
+MAN2HTML = "/usr/bin/man2html"
+
+def conv( infile, outdir, fd )
+  odir = Pathname.new( outdir )
+  odir = odir.join( File.basename( File.dirname( File.dirname( infile ) ) ) )
+  odir = odir.join( File.basename( File.dirname( infile ) ) )
+  outfile = Pathname.new( odir )
+  outfile = outfile.join( File.basename( infile ) )
+  outfile = outfile.sub_ext( ".html" )
+
+  if not File.directory? ( odir ) then
+    FileUtils.mkdir_p( odir )
+  end
+
+  system( MAN2HTML + " " + infile + " &gt; " + outfile.to_path )
+
+  link = Pathname.new( "" )
+  link = link.join( File.basename( File.dirname( File.dirname( infile ) ) ) )
+  link = link.join( File.basename( File.dirname( infile ) ) )
+  link = link.join( File.basename( infile ) )
+  link = link.sub_ext( ".html" )
+  tag = File.basename( infile )
+
+  fd.puts( "&lt;a href=\"" + link.to_path + "\"/&gt;" + tag + "&lt;/a&gt;" )
+end
+
+def heada( fd )
+  fd.puts( "&lt;html&gt;&lt;body&gt;" )
+end
+def foota( fd )
+  fd.puts( "&lt;/body&gt;&lt;/html&gt;" )
+end
+
+def main( argv )
+  if not File.directory? ( DST_DIR ) then
+    FileUtils.mkdir_p( DST_DIR )
+  end
+
+  fd = open( TOPPAGE, "w" )
+  heada( fd )
+  # man page ファイルのみ取り出す。 *.[1-9]
+  Find.find( SRC_DIR ) do |f|
+    if /\.[1-9]/.match( File.extname( f ) ) then
+      conv( f, DST_DIR, fd )
+    end
+  end
+  foota( fd )
+  fd.close()
+end
+main ARGV
+</code></pre>
 
 <p>変換元ファイルは *.1 の様に「末尾（拡張子）が 1 桁の数字」で
 識別している。</p>
@@ -377,8 +357,8 @@ html5 の lint を設定したので、それでやるかな。</p>
       (2)</li>
     
     <li>
-      <a href="./../../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -389,12 +369,12 @@ html5 の lint を設定したので、それでやるかな。</p>
     <li>
       <a href="./../../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../../categories/#conf">
@@ -422,8 +402,38 @@ html5 の lint を設定したので、それでやるかな。</p>
       (1)</li>
     
     <li>
+      <a href="./../../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -434,6 +444,27 @@ html5 の lint を設定したので、それでやるかな。</p>
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

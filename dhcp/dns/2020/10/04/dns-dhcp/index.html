@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>zsh で predict-on を使う</title>
+    <title>DHCP で配られる以外の DNS サーバを登録する</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="作業めも等。日記、雑記、その他何でも">
-    <link rel="canonical" href="http://tayu.github.io./zsh/config/2016/06/02/zsi-config/">
+    <link rel="canonical" href="http://tayu.github.io./dhcp/dns/2020/10/04/dns-dhcp/">
     <!-- Custom CSS -->
     
 
@@ -85,122 +85,161 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>zsh で predict-on を使う</h1>
-    <p class="meta">Jun 2, 2016</p>
+    <h1>DHCP で配られる以外の DNS サーバを登録する</h1>
+    <p class="meta">Oct 4, 2020</p>
   </header>
 
   <article class="post-content">
-  <p>zsh の補完機能は非常に便利。その、さらに便利なモードが先方予測機能
-ってやつ。ただ、先鋭過ぎてちょっと困っている。</p>
+  <p>諸般の事情で常時稼働のサーバに登録しておく DNS サーバを
+DHCP で配る以外にも登録しておきたかった。</p>
+
+<p>ところが情報がなかなか見つからない。</p>
+
+<p>しばらく寝かせておいたけど、解決できたので、めもめも。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section" id="markdown-toc-section">先方予測機能とは</a></li>
-  <li><a href="#section-1" id="markdown-toc-section-1">つ、使いにくい</a></li>
-  <li><a href="#section-2" id="markdown-toc-section-2">調査</a></li>
-  <li><a href="#section-3" id="markdown-toc-section-3">とりあえず回避</a></li>
-  <li><a href="#section-4" id="markdown-toc-section-4">追記：数ヶ月使った結果</a></li>
+  <li><a href="#section" id="markdown-toc-section">環境</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">原因</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">やりたいこと</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">検索</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">修正内容</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">その他の指定</a>    <ul>
+      <li><a href="#default" id="markdown-toc-default">default</a></li>
+      <li><a href="#supersede" id="markdown-toc-supersede">supersede</a></li>
+      <li><a href="#prepend" id="markdown-toc-prepend">prepend</a></li>
+      <li><a href="#append" id="markdown-toc-append">append</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h1 id="section">先方予測機能とは</h1>
-<p>コマンドラインの編集（ZLE）で、キー入力毎にヒストリを参照して
-候補を表示してくれる機能。</p>
+<h1 id="section">環境</h1>
+<p>常時稼働させているサーバがある。定期的に外に接続してなんやかんやを
+する。</p>
 
-<p>有効にするには</p>
+<p>実はこのサーバには、物理的に 2 つの出口がある。
+また、その 1 つは時々使えなくなる。</p>
 
-<pre><code class="language-sh">autoload predict-on
-predict-on
+<p>色々と伏せて書くとこんな感じ。</p>
+
+<p>で、通常はデフォルトゲートウェイから出ていくので問題は無いのだが、
+DNS だけ、他方の口から引いているため（<code>/etc/resolv.conf</code> に従って）、
+そっちが使えなくなると外部接続しなくなり、目的の作業が失敗してしまう。</p>
+
+<p>デフォルトゲートウェイを A 、もう一つを B とすると、
+通信自体は A 経由でできる状態なのに B 経由で DNS を問い合わせするために
+IP アドレスが取得できず、通信そのものが失敗するって状況。</p>
+
+<h1 id="section-1">原因</h1>
+<p>DNS をどこから引くかは <code>/etc/resolv.conf</code> にある <code>nameserver</code> エントリ
+を参照する。このエントリは 3 つまで有効。</p>
+
+<p>対象サーバの <code>/etc/resolv.conf</code> を見ると B サーバから配られた
+エントリ 1 つだけだった。</p>
+
+<p>ここに手動で A 側の <code>nameserver</code> エントリを追加してもいつの間にか<sup id="fnref:are"><a href="#fn:are" class="footnote">1</a></sup>
+消えてしまう。</p>
+
+<p>色々調べたけど、上手くヒットする情報が見つからない。基本的な情報が多すぎて、
+こういうオプション情報が埋もれている感じ。</p>
+
+<p>ただ、<code>/etc/resolv.conf</code> を書き換えるサービスが色々あるので、
+その調停が問題になる事があるって事は分かった。</p>
+
+<h1 id="section-2">やりたいこと</h1>
+
+<p>通常は B 側の DNS 引きが動いているので問題は無い。
+問題は、B 側が居なくなったとき。</p>
+
+<p>おそらく、B 側へ DNS を引きに行って失敗するだろう。今までだと
+他の <code>nameserver</code> エントリが無いので、そこで失敗が確定してしまう。</p>
+
+<p>実際には A 側へ引きに行くこともできるので、B 側で失敗したら A 側で再度
+引ける様に <code>/etc/resolv.conf</code> に <code>nameserver</code> エントリが
+もう 1 つあれば良い。</p>
+
+<p>順序として次になる様、記述としては下に来る様にする。</p>
+
+<p>何なら更なる予備として google (8.8.8.8) のエントリを入れても良いかもしれない。
+エントリが 3 個まで有効なのだから、もう 1 つ記述できる。</p>
+
+<h1 id="section-3">検索</h1>
+<p>どうやら、ディストリビューション毎に事情が違うらしいので、Debian を
+検索ワードに含めてやり直した。</p>
+
+<p>最初に Debian の <a href="https://wiki.debian.org/resolv.conf">Wiki</a> を見つけた。</p>
+
+<p><code>/etc/resolv.conf</code> を書き換えさせないために
+<code>/etc/dhcp/dhclient.conf</code> に <code>supersede domain-name-servers</code> を
+指定する例がある。
+ただ、このページの日本語ページは無かった。</p>
+
+<p><code>supersede</code> と言うワードを追加して検索し
+<a href="https://manpages.debian.org/wheezy/isc-dhcp-common/dhclient.conf.5.ja.html">man ページ</a>
+に行き着いた。やっぱり日本語は良いなぁ</p>
+
+<p>URL の通り、wheezy って事で資料としては古いけど、この辺りはあまり変わって
+いないはず。</p>
+
+<p>で、やってみたら <code>append</code> で行けた。</p>
+
+<h1 id="section-4">修正内容</h1>
+
+<p><code>/etc/dhcp/dhclient.conf</code> に以下を追加する</p>
+
+<pre><code>append domain-name-servers 127.0.0.1;
 </code></pre>
-<p>とする。</p>
 
-<p>web の解説を見ていると「鍛えれば非常に便利」とある。
-と言っても、自動的に鍛えられるので、やる事は単に使い続けるだけ。
-その一方、「合わなければ使わない方が良い」との記述もある。
-また、方々で公開されている .zshrc を見るとコメントアウト
-してある事が多い。</p>
+<p>これで <code>/etc/resolv.conf</code> が、以前の DHCP で取得した内容に加えて</p>
 
-<p>つまり、非常にクセが強いって事なのだろう。
-特にある程度使い込むまでは。</p>
-
-<h1 id="section-1">つ、使いにくい</h1>
-<p>こなれてくるまで時間がかかる。それまではむしろ使いにくいって事は
-予想していた。</p>
-
-<p>でも、コマンドラインの編集モードが変わったと思える挙動が。</p>
-
-<p>編集業の途中にカーソルを持って行き、2 文字程度入力すると
-その位置から後ろが全部消されてしまう。</p>
-
-<p>例えば、</p>
-
-<pre><code class="language-console">$ ls /some/path/some.file
+<pre><code>nameserver 127.0.0.1
 </code></pre>
-<p>として、先頭にカーソルを持っていって</p>
 
-<pre><code class="language-console">$ cat /some/path/some.file
-</code></pre>
-<p>としようとすると</p>
+<p>という行を持つようになった。</p>
 
-<pre><code class="language-console">$ ca
-</code></pre>
-<p>なんて事になるって事。</p>
+<p>これで B 側へ引きに行って失敗したら <code>append</code> で指定したサーバへ引きに
+行く（はず）だ。</p>
 
-<h1 id="section-2">調査</h1>
-<p>検索してみたけど、同様の現象に言及しているページが 1 件あっただけ
-だった。そのページでは単に使用をやめていただけなので、
-解決につながる情報は無かった。</p>
+<p>注：上記の 127.0.0.1 は例で実際には別の記述だ。8.8.8.8 でも 1.1.1.1 でも
+良い。まぁ、推奨は自分のプロバイダだったはず。</p>
 
-<p>で、いろいろ検索しつつ考えた。</p>
+<h1 id="section-5">その他の指定</h1>
 
-<p>これって「後半を消去している」んではなくて、
-「ヒストリでマッチしたものを表示」しているんではないだろうか。</p>
+<p><code>append</code> 以外にも <code>default</code>/<code>supersede</code>/<code>prepend</code> が
+指定できる。
+書式はどれも同じ。</p>
 
-<p>と、いう事は「補完候補を見つけたら単にインサートする」って
-挙動にするオプションが有れば良いってことになるのか？</p>
+<p>以下は実際には試していないものも含むので、予想を含むのだが、
+こんな感じになるのだろう。<code>nameserver</code> 行は 3 つまで有効で、
+上からトライするのだから。</p>
 
-<h1 id="section-3">とりあえず回避</h1>
-<p>当面、predict-on と predict-off を手動で切り替える事にした。
-検索すると、トグルするコマンドを作ったページも有ったが、
-そこまではせず、単純に短いエイリアスを定義した。</p>
+<p>他（domain-name や domain-search など）は不明。</p>
 
-<pre><code class="language-sh">alias pon='predict-on'
-alias poff='predict-off'
-</code></pre>
-<p>こんな感じ。行の途中で編集する場合は、先に poff を実行する。
-その後、pon で戻すって形。</p>
+<h2 id="default">default</h2>
+<p>DHCP から設定が取得できなければこちらを使う</p>
 
-<p>predict-on を使い続けるかどうか、まだ考え中。</p>
+<p><code>/etc/resolv.conf</code> 中には指定した <code>nameserver</code> 行か DHCP から取得した行の一方が記述される（予想）</p>
 
-<h1 id="section-4">追記：数ヶ月使った結果</h1>
+<h2 id="supersede">supersede</h2>
+<p>DHCP から取得した設定を使わない</p>
 
-<p>なんとなく、挙動が分かってきた。</p>
+<p><code>/etc/resolv.conf</code> 中には指定した <code>nameserver</code> 行以外の記述がなくなる</p>
 
-<p>結局 zsh がやっていることはキー入力に一致する候補をヒストリから探してきて
-コマンドラインに展開する事なんだ。まぁ、その他にもファイルとかコマンドの
-引数とか展開する候補が多いので最初は「賢い！？」とか思うのだが。</p>
+<h2 id="prepend">prepend</h2>
+<p>DHCP から取得した設定より優先する。</p>
 
-<p>入力位置を前に戻して入力すると後ろが消えるのも、単にヒストリから先方が一致する
-候補を見つけてきて展開しているだけなんだ。</p>
+<p><code>/etc/resolv.conf</code> 中で、指定した <code>nameserver</code> 行がより上になる</p>
 
-<p>この、内部の動きがある程度読める様になってからは
-（こちらの理解が合ってるかどうかはともかく）
-ストレスが軽減され、そこそこうまく使える様になった気がする。
-それこそ、1 回か 2 回のキー入力でコマンド入力が済んでしまうような
-場面も増えた。</p>
+<h2 id="append">append</h2>
+<p>DHCP から取得した設定のバックアップとして機能する</p>
 
-<p>キーを前に戻してコマンドライン編集する場合は poff （alias で predict-off）を
-実行して一時的にモードを変える様にしている。</p>
-
-<p>つまり、相手の挙動が読める様になったので、先回りしてストレスフルな動きを
-封じてしまえるようになったって事。</p>
-
-<p>結局、この、自分にとってストレスになる動きを封じる事が、少ない入力で
-できる様になったのが良かったのだと思う。そこから挙動をコントロール
-している感が広がり、predict-on を使うのに抵抗が無くなった。
-で、使っていると 1 ～ 2 回のキー入力でコマンド入力が済む場面も多くなり、
-満足度も上がった。</p>
-
-<p>まぁ、キー入力後に [CTRL+K] で以前の入力の不要部分を消すのは
-相変わらず多い。</p>
+<p><code>/etc/resolv.conf</code> 中で、指定した <code>nameserver</code> 行がより下になる</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:are">
+      <p>もちろん、次の DHCP の更新時だ <a href="#fnref:are" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </article>
 

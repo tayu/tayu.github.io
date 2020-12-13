@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -118,11 +106,11 @@
 まぁ、その程度の確実性として。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">問題は</a></li>
-  <li><a href="#section-1">方針</a></li>
-  <li><a href="#section-2">手順</a></li>
-  <li><a href="#section-3">説明</a></li>
-  <li><a href="#section-4">言い訳</a></li>
+  <li><a href="#section" id="markdown-toc-section">問題は</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">方針</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">手順</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">説明</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">言い訳</a></li>
 </ul>
 
 <h1 id="section">問題は</h1>
@@ -140,11 +128,8 @@
 
 <p>Raspberry Pi にログインして</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo dd if=/dev/mmcblk0 | ssh -p 59022 user@192.168.180.4 dd of=dump.img
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo dd if=/dev/mmcblk0 | ssh -p 59022 user@192.168.180.4 dd of=dump.img
+</code></pre>
 <p>の様にする</p>
 
 <ul>
@@ -157,22 +142,16 @@
 
 <p>レストアは母艦にて（電源を OFF にして、カードを挿し替えて）</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ sudo dd if=dump.img of=/dev/sdc
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ sudo dd if=dump.img of=/dev/sdc
+</code></pre>
 <p>の様にする。<em>sdc</em> の辺りは実環境に合わせる。</p>
 
 <h1 id="section-3">説明</h1>
 
 <p>最初は母艦側での操作で済ますつもりだった。以下の様に。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ ssh -p 22 user@raspberrypi dd if=/dev/mmcblk0 | dd of=dump.img
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ ssh -p 22 user@raspberrypi dd if=/dev/mmcblk0 | dd of=dump.img
+</code></pre>
 <p>通常のファイルならば問題なく動く。だが、/dev/mmcblk0 へのアクセスに
 root 権限が必要で、sudo を使う必要があった。
 ssh の接続先で sudo 経由のコマンド実行がうまく行かなかった。</p>
@@ -318,8 +297,8 @@ ssh の接続先で sudo 経由のコマンド実行がうまく行かなかっ�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -330,12 +309,12 @@ ssh の接続先で sudo 経由のコマンド実行がうまく行かなかっ�
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -363,8 +342,38 @@ ssh の接続先で sudo 経由のコマンド実行がうまく行かなかっ�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -375,6 +384,27 @@ ssh の接続先で sudo 経由のコマンド実行がうまく行かなかっ�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

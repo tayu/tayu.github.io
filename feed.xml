@@ -4,8 +4,52 @@
     <title>めもなど</title>
     <link>http://tayu.github.io/</link>
     <description>作業めも等。日記、雑記、その他何でも</description>
-    <pubDate>Fri, 03 Jan 2020 04:42:18 +0900</pubDate>
+    <pubDate>Sun, 04 Oct 2020 21:58:13 +0900</pubDate>
 
+    
+    <item>
+      <title>radiko の放送局一覧を作った</title>
+      <link>http://tayu.github.io/radiko/xml/2020/10/04/radiko-xml/</link>
+      <description>radiko の放送局の ID 一覧が欲しかったので一覧を作成した。
+
+ちょっと遠くに持ち出した影響か、しばらく前から外部接続の IP アドレスが
+安定しない。そうすると radiko に東京リージョン(JP13)と認めてもらえず
+東...</description>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>DHCP で配られる以外の DNS サーバを登録する</title>
+      <link>http://tayu.github.io/dhcp/dns/2020/10/04/dns-dhcp/</link>
+      <description>諸般の事情で常時稼働のサーバに登録しておく DNS サーバを
+DHCP で配る以外にも登録しておきたかった。
+
+ところが情報がなかなか見つからない。
+
+しばらく寝かせておいたけど、解決できたので、めもめも。
+
+
+  環境
+  原因
+ ...</description>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0900</pubDate>
+    </item>
+    
+    <item>
+      <title>Tera Term で scp を使う</title>
+      <link>http://tayu.github.io/teraterm/scp/2020/08/05/teraterm-scp/</link>
+      <description>Tera Term で、 scp でファイルを
+取得するスクリプトを作った。
+途中、色々引っかかったのでその記録。また、それに対する変更の要望など。
+
+
+  背景
+  環境
+  結果
+  引っかかった点    
+      ファイル名...</description>
+      <pubDate>Wed, 05 Aug 2020 00:00:00 +0900</pubDate>
+    </item>
     
     <item>
       <title>Raspberry Pi のバックアップ</title>
@@ -21,7 +65,7 @@ Debian なので時々アップデートするし、なんならカーネルの�
     <item>
       <title>mp3 ファイルへの変換が 90 分で止まる（解決？編）</title>
       <link>http://tayu.github.io/audio/convert/2018/09/20/audio-convert/</link>
-      <description>前回の続き
+      <description>前回の続き。
 
 
   簡単なまとめ
@@ -33,7 +77,7 @@ Debian なので時々アップデートするし、なんならカーネルの�
   
   ソースの修正
   その他
-  ...</description>
+ ...</description>
       <pubDate>Thu, 20 Sep 2018 00:00:00 +0900</pubDate>
     </item>
     
@@ -116,59 +160,6 @@ Debian
       親ホストでリポジトリを作成する
    ...</description>
       <pubDate>Fri, 06 Jan 2017 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Raspberry Pi 雑記</title>
-      <link>http://tayu.github.io/raspberrypi/2016/12/31/raspberry-pi/</link>
-      <description>Raspberry Pi を買った。いろいろ、細かい設定をしたので備忘録としてめも。
-
-OS は Raspbian 。
-
-
-  Raspberry Pi 本体    
-      有線 LAN (NIC) へ固定アドレスを設定する
- ...</description>
-      <pubDate>Sat, 31 Dec 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>Raspberry Pi の導入</title>
-      <link>http://tayu.github.io/raspberrypi/2016/12/30/raspberry-pi/</link>
-      <description>Raspberry Pi を買った。
-
-のだが、色々、進んでいない。
-
-何に使う？ Gateway とか radiko の録音サーバ位が現在の目標。
-つまり、普通の PC としての用途。
-
-まぁ、のんびりやるとするかな。
-
-
-  これ...</description>
-      <pubDate>Fri, 30 Dec 2016 00:00:00 +0900</pubDate>
-    </item>
-    
-    <item>
-      <title>タイムフリー視聴</title>
-      <link>http://tayu.github.io/radiko/2016/12/29/radiko-timefree/</link>
-      <description>10/11 に始まった
-radikoの
-タイムフリー視聴
-なのだが、Linux で聴けるのだろうか
-
-
-  結論
-  現状
-  方法
-  スクリプト
-  取得されるデータ形式
-  余談
-
-
-結論
-聴ける。まぁ、やったのは録音のみだけど...</description>
-      <pubDate>Thu, 29 Dec 2016 00:00:00 +0900</pubDate>
     </item>
     
 

@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -107,12 +95,12 @@
 いやぁ、ちょっとあせった。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">ディスクがフルに</a></li>
-  <li><a href="#section-1">犯人は・・・</a></li>
-  <li><a href="#section-2">とりあえず、空きをつくる</a></li>
-  <li><a href="#section-3">キャッシュさせないための設定</a></li>
-  <li><a href="#section-4">そもそもなぜ</a></li>
-  <li><a href="#section-5">環境について</a></li>
+  <li><a href="#section" id="markdown-toc-section">ディスクがフルに</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">犯人は・・・</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">とりあえず、空きをつくる</a></li>
+  <li><a href="#section-3" id="markdown-toc-section-3">キャッシュさせないための設定</a></li>
+  <li><a href="#section-4" id="markdown-toc-section-4">そもそもなぜ</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">環境について</a></li>
 </ul>
 
 <h1 id="section">ディスクがフルに</h1>
@@ -143,29 +131,20 @@
 <h1 id="section-2">とりあえず、空きをつくる</h1>
 <p>Polipo のパラメータの一覧から当たりをつける。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># polipo -v
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># polipo -v
+</code></pre>
 
 <p><code>/etc/polipo/config</code> を編集して</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>diskCacheTruncateSize = 0
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>diskCacheTruncateTime = 0
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>diskCacheUnlinkTime = 0
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>diskCacheWriteoutOnClose = 0
-</pre></div>
-</div>
-</div>
+<pre><code class="language-menuconfig">diskCacheTruncateSize = 0
+diskCacheTruncateTime = 0
+diskCacheUnlinkTime = 0
+diskCacheWriteoutOnClose = 0
+</code></pre>
 <p>として、</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># polipo -x
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># polipo -x
+</code></pre>
 
 <p>したところ、キャッシュが全て消え、無事、ディスクの空きができた。</p>
 
@@ -181,12 +160,9 @@
 
 <p>最終的に、以下を追記した。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>maxDiskCacheEntrySize = 0
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>diskCacheUnlinkTime = 0
-</pre></div>
-</div>
-</div>
+<pre><code class="language-menuconfig">maxDiskCacheEntrySize = 0
+diskCacheUnlinkTime = 0
+</code></pre>
 <p>キャッシュクリアは次の cron.daily 時。</p>
 
 <h1 id="section-4">そもそもなぜ</h1>
@@ -332,8 +308,8 @@ proxy のアドレスが変わった場合でも設定変更が 1 箇所で済�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -344,12 +320,12 @@ proxy のアドレスが変わった場合でも設定変更が 1 箇所で済�
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -377,8 +353,38 @@ proxy のアドレスが変わった場合でも設定変更が 1 箇所で済�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -389,6 +395,27 @@ proxy のアドレスが変わった場合でも設定変更が 1 箇所で済�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

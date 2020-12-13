@@ -14,18 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../css/main.css">
 </head>
@@ -110,27 +98,24 @@ stretch(testing) への接続でエラーになっていた。
 とりあえず対症療法で手当てしたのでめもめも。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">エラーの内容</a></li>
-  <li><a href="#section-1">原因</a>    <ul>
-      <li><a href="#section-2">検索してみる</a></li>
-      <li><a href="#section-3">テストしてみる</a></li>
-      <li><a href="#section-4">予想してみる</a></li>
+  <li><a href="#section" id="markdown-toc-section">エラーの内容</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">原因</a>    <ul>
+      <li><a href="#section-2" id="markdown-toc-section-2">検索してみる</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">テストしてみる</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">予想してみる</a></li>
     </ul>
   </li>
-  <li><a href="#section-5">対症療法</a></li>
-  <li><a href="#section-6">結論</a></li>
-  <li><a href="#section-7">補足：新規接続先につながらない</a></li>
+  <li><a href="#section-5" id="markdown-toc-section-5">対症療法</a></li>
+  <li><a href="#section-6" id="markdown-toc-section-6">結論</a></li>
+  <li><a href="#section-7" id="markdown-toc-section-7">補足：新規接続先につながらない</a></li>
 </ul>
 
 <h1 id="section">エラーの内容</h1>
 
 <p>接続時に</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>expected key exchange group packet from server
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">expected key exchange group packet from server
+</code></pre>
 
 <p>というメッセージボックスが表され、接続失敗になる。</p>
 
@@ -138,11 +123,8 @@ stretch(testing) への接続でエラーになっていた。
 
 <h2 id="section-2">検索してみる</h2>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>expected key exchange group packet from server
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">expected key exchange group packet from server
+</code></pre>
 
 <p>で検索してみると、「PuTTY Fatal Error: expected key exchange group packet from server」というページが先頭に来る。PuTTY が出しているメッセージらしい。</p>
 
@@ -162,40 +144,34 @@ stretch(testing) への接続でエラーになっていた。
 
 <p>接続に成功する場合は以下</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 59022 user@127.0.0.1
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 59022
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>Server version: SSH-2.0-OpenSSH_6.7p1 Debian-5+deb8u2
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>Doing Diffie-Hellman key exchange with hash SHA-256
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>Host key fingerprint is:
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>ssh-rsa 2048 2f:39:c1:1d:21:f0:13:bc:11:b2:fa:61:8d:62:b1:6c
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>Initialised AES-256 SDCTR client-&gt;server encryption
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>Initialised HMAC-SHA1 client-&gt;server MAC algorithm
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>Initialised AES-256 SDCTR server-&gt;client encryption
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>Initialised HMAC-SHA1 server-&gt;client MAC algorithm
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>Using username &quot;user&quot;.
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">&gt;plink.exe -v -P 59022 user@127.0.0.1
+Looking up host "127.0.0.1"
+Connecting to 127.0.0.1 port 59022
+Server version: SSH-2.0-OpenSSH_6.7p1 Debian-5+deb8u2
+We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
+Using SSH protocol version 2
+Doing Diffie-Hellman group exchange
+Doing Diffie-Hellman key exchange with hash SHA-256
+Host key fingerprint is:
+ssh-rsa 2048 2f:39:c1:1d:21:f0:13:bc:11:b2:fa:61:8d:62:b1:6c
+Initialised AES-256 SDCTR client-&gt;server encryption
+Initialised HMAC-SHA1 client-&gt;server MAC algorithm
+Initialised AES-256 SDCTR server-&gt;client encryption
+Initialised HMAC-SHA1 server-&gt;client MAC algorithm
+Using username "user".
+</code></pre>
 
 <p>接続に失敗する場合は以下</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 52022 user@127.0.0.1
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 52022
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span>Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
-<span class="line-numbers"><a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
-<span class="line-numbers"><a href="#n8" name="n8">8</a></span>expected key exchange group packet from server
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">&gt;plink.exe -v -P 52022 user@127.0.0.1
+Looking up host "127.0.0.1"
+Connecting to 127.0.0.1 port 52022
+Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
+We claim version: SSH-2.0-PuTTY_Release_from_0.60_2007_05_02
+Using SSH protocol version 2
+Doing Diffie-Hellman group exchange
+expected key exchange group packet from server
+</code></pre>
 
 <p>どうやら鍵交換で止まっているらしい。</p>
 
@@ -221,43 +197,40 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
 <p>Xming のインストールディレクトリ中の plink.exe を入れ替え、前回と
 同様に DOS 窓で動かしてみる。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>&gt;plink.exe -v -P 52022 user@127.0.0.1
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>Looking up host &quot;127.0.0.1&quot;
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>Connecting to 127.0.0.1 port 52022
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>We claim version: SSH-2.0-PuTTY_Release_0.67
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>Using SSH protocol version 2
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>Doing Diffie-Hellman group exchange
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>Doing Diffie-Hellman key exchange with hash SHA-256
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>Host key fingerprint is:
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>WARNING - POTENTIAL SECURITY BREACH!
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span>The server's host key does not match the one PuTTY has
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>cached in the registry. This means that either the
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>server administrator has changed the host key, or you
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>have actually connected to another computer pretending
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>to be the server.
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>The new rsa2 key fingerprint is:
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span>ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span>If you were expecting this change and trust the new key,
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>enter &quot;y&quot; to update PuTTY's cache and continue connecting.
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>If you want to carry on connecting but without updating
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>the cache, enter &quot;n&quot;.
-<span class="line-numbers"><a href="#n23" name="n23">23</a></span>If you want to abandon the connection completely, press
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>Return to cancel. Pressing Return is the ONLY guaranteed
-<span class="line-numbers"><a href="#n25" name="n25">25</a></span>safe choice.
-<span class="line-numbers"><a href="#n26" name="n26">26</a></span>Update cached key? (y/n, Return cancels connection) y
-<span class="line-numbers"><a href="#n27" name="n27">27</a></span>Initialised AES-256 SDCTR client-&gt;server encryption
-<span class="line-numbers"><a href="#n28" name="n28">28</a></span>Initialised HMAC-SHA-256 client-&gt;server MAC algorithm
-<span class="line-numbers"><a href="#n29" name="n29">29</a></span>Initialised AES-256 SDCTR server-&gt;client encryption
-<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>Initialised HMAC-SHA-256 server-&gt;client MAC algorithm
-<span class="line-numbers"><a href="#n31" name="n31">31</a></span>Using username &quot;user&quot;.
-<span class="line-numbers"><a href="#n32" name="n32">32</a></span>user@127.0.0.1's password:
-<span class="line-numbers"><a href="#n33" name="n33">33</a></span>Sent password
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">&gt;plink.exe -v -P 52022 user@127.0.0.1
+Looking up host "127.0.0.1"
+Connecting to 127.0.0.1 port 52022
+We claim version: SSH-2.0-PuTTY_Release_0.67
+Server version: SSH-2.0-OpenSSH_7.2p2 Debian-5
+Using SSH protocol version 2
+Doing Diffie-Hellman group exchange
+Doing Diffie-Hellman key exchange with hash SHA-256
+Host key fingerprint is:
+ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
+WARNING - POTENTIAL SECURITY BREACH!
+The server's host key does not match the one PuTTY has
+cached in the registry. This means that either the
+server administrator has changed the host key, or you
+have actually connected to another computer pretending
+to be the server.
+The new rsa2 key fingerprint is:
+ssh-rsa 2048 c6:6a:f6:b8:32:36:eb:1a:dd:92:47:1e:b3:94:c2:72
+If you were expecting this change and trust the new key,
+enter "y" to update PuTTY's cache and continue connecting.
+If you want to carry on connecting but without updating
+the cache, enter "n".
+If you want to abandon the connection completely, press
+Return to cancel. Pressing Return is the ONLY guaranteed
+safe choice.
+Update cached key? (y/n, Return cancels connection) y
+Initialised AES-256 SDCTR client-&gt;server encryption
+Initialised HMAC-SHA-256 client-&gt;server MAC algorithm
+Initialised AES-256 SDCTR server-&gt;client encryption
+Initialised HMAC-SHA-256 server-&gt;client MAC algorithm
+Using username "user".
+user@127.0.0.1's password:
+Sent password
+</code></pre>
 
 <p>一度入力待ちになるが、正常に接続できた。</p>
 
@@ -436,8 +409,8 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
       (2)</li>
     
     <li>
-      <a href="./../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -448,12 +421,12 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
     <li>
       <a href="./../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../categories/#conf">
@@ -481,8 +454,38 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
       (1)</li>
     
     <li>
+      <a href="./../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -493,6 +496,27 @@ ssh サーバ側はそれらを全て廃止したために、双方で使用す�
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

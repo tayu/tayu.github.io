@@ -14,16 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../css/main.css">
 </head>
@@ -110,18 +100,19 @@
 <p>そのメモ。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#debian-">なぜ Debian か</a></li>
-  <li><a href="#debian--1">Debian サーバの指定</a></li>
-  <li><a href="#section">ホスト名の設定</a></li>
-  <li><a href="#section-1">スワップの追加</a></li>
-  <li><a href="#section-2">ロケールの設定</a></li>
-  <li><a href="#lan-">無線 LAN クライアント</a>    <ul>
-      <li><a href="#section-3">関連コマンドのインストール</a></li>
-      <li><a href="#section-4">デバイスの認識</a></li>
-      <li><a href="#section-5">パーティションのリサイズ</a></li>
+  <li><a href="#debian-" id="markdown-toc-debian-">なぜ Debian か</a></li>
+  <li><a href="#debian--1" id="markdown-toc-debian--1">Debian サーバの指定</a></li>
+  <li><a href="#section" id="markdown-toc-section">ホスト名の設定</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">スワップの追加</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">ロケールの設定</a></li>
+  <li><a href="#lan-" id="markdown-toc-lan-">無線 LAN クライアント</a>    <ul>
+      <li><a href="#section-3" id="markdown-toc-section-3">関連コマンドのインストール</a></li>
+      <li><a href="#section-4" id="markdown-toc-section-4">デバイスの認識</a></li>
+      <li><a href="#section-5" id="markdown-toc-section-5">パーティションのリサイズ</a></li>
     </ul>
   </li>
-  <li><a href="#resize2fs-devsdc2">resize2fs /dev/sdc2</a></li>
+  <li><a href="#parted-devsdc" id="markdown-toc-parted-devsdc">parted /dev/sdc</a></li>
+  <li><a href="#resize2fs-devsdc2" id="markdown-toc-resize2fs-devsdc2">resize2fs /dev/sdc2</a></li>
 </ul>
 
 <h1 id="debian-">なぜ Debian か</h1>
@@ -187,12 +178,9 @@ deb-src http://cdn.debian.or.jp/debian/ jessie-updates main
 
 <p>その後、システムをアップデートしておく</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># apt-get update
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># apt-get upgrade
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># apt-get update
+# apt-get upgrade
+</code></pre>
 
 <p>まぁ、古いやり方。</p>
 
@@ -200,12 +188,9 @@ deb-src http://cdn.debian.or.jp/debian/ jessie-updates main
 
 <p>/etc/hostname に記述する。まだ FQDN は無い。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ cat /etc/hostname
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>xxx
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">$ cat /etc/hostname
+xxx
+</code></pre>
 
 <p>例なので伏字っぽく</p>
 
@@ -216,16 +201,13 @@ deb-src http://cdn.debian.or.jp/debian/ jessie-updates main
 
 <p>空きパーティションは無いのでファイルで作成する。ファイル名は /swap とする。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># dd if=/dev/zero of=/swap bs=512M count=2
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># mkswap /swap
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span># swapon /swap
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span># swapon
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>NAME  TYPE  SIZE USED PRIO
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span>/swap file 1024M   0B   -1
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># dd if=/dev/zero of=/swap bs=512M count=2
+# mkswap /swap
+# swapon /swap
+# swapon
+NAME  TYPE  SIZE USED PRIO
+/swap file 1024M   0B   -1
+</code></pre>
 <p>dd で bs=1G とするとメモリが足りないってエラーになるので、2 回に分ける。</p>
 
 <p>ブート後に有効になる様に /etc/fstab を修正する。</p>
@@ -235,16 +217,13 @@ deb-src http://cdn.debian.or.jp/debian/ jessie-updates main
 
 <p>修正した /etc/fstab をテストする</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># swapoff -a
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span># swapon
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span># swapon -a
-<span class="line-numbers"><a href="#n4" name="n4">4</a></span># swapon
-<span class="line-numbers"><a href="#n5" name="n5">5</a></span>NAME  TYPE  SIZE USED PRIO
-<span class="line-numbers"><a href="#n6" name="n6">6</a></span>/swap file 1024M   0B   -1
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># swapoff -a
+# swapon
+# swapon -a
+# swapon
+NAME  TYPE  SIZE USED PRIO
+/swap file 1024M   0B   -1
+</code></pre>
 
 <p>前項で実施したコマンドラインからのスワップの有効化を無効にするために、
 一度 swapoff -a して全てのスワップを off にする。
@@ -306,13 +285,10 @@ root で作業する時は ascii で表示されるよう、C か none 、
 
 <p>pci 接続を確認する</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span># lspci
-<span class="line-numbers"><a href="#n2" name="n2">2</a></span>pcilib: Cannot open /proc/bus/pci
-<span class="line-numbers"><a href="#n3" name="n3">3</a></span>lspci: Cannot find any working access method.
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh"># lspci
+pcilib: Cannot open /proc/bus/pci
+lspci: Cannot find any working access method.
+</code></pre>
 
 <p>usb 接続を確認する</p>
 
@@ -321,9 +297,9 @@ root で作業する時は ascii で表示されるよう、C か none 、
 
 <h2 id="section-5">パーティションのリサイズ</h2>
 
-<p><code>sh
-# parted /dev/sdc
-</code>s</p>
+<p>```sh</p>
+<h1 id="parted-devsdc">parted /dev/sdc</h1>
+<p>```s</p>
 
 <p>対話モードになる。タブによるコマンド補完やカーソルキーや ^P、^Nに
 よるヒストリが使えるので便利</p>
@@ -466,8 +442,8 @@ root で作業する時は ascii で表示されるよう、C か none 、
       (2)</li>
     
     <li>
-      <a href="./../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -478,12 +454,12 @@ root で作業する時は ascii で表示されるよう、C か none 、
     <li>
       <a href="./../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../categories/#conf">
@@ -511,8 +487,38 @@ root で作業する時は ascii で表示されるよう、C か none 、
       (1)</li>
     
     <li>
+      <a href="./../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -523,6 +529,27 @@ root で作業する時は ascii で表示されるよう、C か none 、
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     

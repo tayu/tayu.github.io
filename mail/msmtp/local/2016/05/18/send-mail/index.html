@@ -14,20 +14,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     <link rel="stylesheet" href="./../../../../../../../css/main.css">
 </head>
@@ -112,9 +98,9 @@
 <p>5 分前にメールを受け取る様にしておくとか。</p>
 
 <ul id="markdown-toc">
-  <li><a href="#section">概要</a></li>
-  <li><a href="#section-1">使用法</a></li>
-  <li><a href="#section-2">スクリプト</a></li>
+  <li><a href="#section" id="markdown-toc-section">概要</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">使用法</a></li>
+  <li><a href="#section-2" id="markdown-toc-section-2">スクリプト</a></li>
 </ul>
 
 <h1 id="section">概要</h1>
@@ -136,11 +122,8 @@
 
 <p>使用する例は以下</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>$ alartmail.sh &quot;【自動通知】本日 9 時○○で打ち合わせ&quot;
-</pre></div>
-</div>
-</div>
+<pre><code class="language-console">$ alartmail.sh "【自動通知】本日 9 時○○で打ち合わせ"
+</code></pre>
 
 <h1 id="section-2">スクリプト</h1>
 
@@ -150,48 +133,45 @@ Subject の生成に ruby と nkf モジュールを使っている。</p>
 <p>最初は msmtp への引数に <code>--serverinfo</code> や <code>--debug</code> を指定して
 設定を確認したり、動きを見たりすると良い。</p>
 
-<div><div class="CodeRay">
-  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>#! /bin/sh
-<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>
-<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>TO=&quot;xxxx@xxxxxxxx.co.jp&quot;
-<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>FROM=&quot;xxxxxx@xxxxx.co.jp&quot;
-<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>SMTPSERVER=&quot;smtp.xxxx.xxxxx.co.jp&quot;
-<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>SMTPPORT=&quot;999&quot;
-<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>SMTPUSER=&quot;username&quot;
-<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>SMTPPASS=&quot;userpass&quot;
-<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>MAILER=&quot;/usr/bin/msmtp&quot;
-<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>TIMEOUT=60
-<span class="line-numbers"><a href="#n11" name="n11">11</a></span>
-<span class="line-numbers"><a href="#n12" name="n12">12</a></span># Subject: use ARGV[1]
-<span class="line-numbers"><a href="#n13" name="n13">13</a></span>if [ ! -z &quot;$1&quot; ]; then
-<span class="line-numbers"><a href="#n14" name="n14">14</a></span>    SUBJECT=&quot;`echo $1 | ruby -e 'require \&quot;nkf\&quot;;puts NKF.nkf( \&quot;-WMm0j\&quot;, STDIN.gets )'`&quot;
-<span class="line-numbers"><a href="#n15" name="n15">15</a></span>else
-<span class="line-numbers"><a href="#n16" name="n16">16</a></span>    SUBJECT=&quot;(no subject)&quot;
-<span class="line-numbers"><a href="#n17" name="n17">17</a></span>fi
-<span class="line-numbers"><a href="#n18" name="n18">18</a></span>
-<span class="line-numbers"><a href="#n19" name="n19">19</a></span># send
-<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>cat &lt;&lt;EOF \
-<span class="line-numbers"><a href="#n21" name="n21">21</a></span>    | ${MAILER} \
-<span class="line-numbers"><a href="#n22" name="n22">22</a></span>          --auth=plain \
-<span class="line-numbers"><a href="#n23" name="n23">23</a></span>          --tls \
-<span class="line-numbers"><a href="#n24" name="n24">24</a></span>          --tls-starttls=off \
-<span class="line-numbers"><a href="#n25" name="n25">25</a></span>          --tls-trust-file=/etc/ssl/certs/ca-certificates.crt \
-<span class="line-numbers"><a href="#n26" name="n26">26</a></span>          --timeout=${TIMEOUT} \
-<span class="line-numbers"><a href="#n27" name="n27">27</a></span>          --host=${SMTPSERVER} \
-<span class="line-numbers"><a href="#n28" name="n28">28</a></span>          --port=${SMTPPORT} \
-<span class="line-numbers"><a href="#n29" name="n29">29</a></span>          --from=${FROM} \
-<span class="line-numbers"><strong><a href="#n30" name="n30">30</a></strong></span>          --user=${SMTPUSER} \
-<span class="line-numbers"><a href="#n31" name="n31">31</a></span>          --passwordeval=&quot;echo ${SMTPPASS}&quot; \
-<span class="line-numbers"><a href="#n32" name="n32">32</a></span>          -- \
-<span class="line-numbers"><a href="#n33" name="n33">33</a></span>          ${TO}
-<span class="line-numbers"><a href="#n34" name="n34">34</a></span>From: ${FROM}
-<span class="line-numbers"><a href="#n35" name="n35">35</a></span>To: ${TO}
-<span class="line-numbers"><a href="#n36" name="n36">36</a></span>Subject: ${SUBJECT}
-<span class="line-numbers"><a href="#n37" name="n37">37</a></span>
-<span class="line-numbers"><a href="#n38" name="n38">38</a></span>EOF
-</pre></div>
-</div>
-</div>
+<pre><code class="language-sh">#! /bin/sh
+
+TO="xxxx@xxxxxxxx.co.jp"
+FROM="xxxxxx@xxxxx.co.jp"
+SMTPSERVER="smtp.xxxx.xxxxx.co.jp"
+SMTPPORT="999"
+SMTPUSER="username"
+SMTPPASS="userpass"
+MAILER="/usr/bin/msmtp"
+TIMEOUT=60
+
+# Subject: use ARGV[1]
+if [ ! -z "$1" ]; then
+    SUBJECT="`echo $1 | ruby -e 'require \"nkf\";puts NKF.nkf( \"-WMm0j\", STDIN.gets )'`"
+else
+    SUBJECT="(no subject)"
+fi
+
+# send
+cat &lt;&lt;EOF \
+    | ${MAILER} \
+	  --auth=plain \
+	  --tls \
+	  --tls-starttls=off \
+	  --tls-trust-file=/etc/ssl/certs/ca-certificates.crt \
+	  --timeout=${TIMEOUT} \
+	  --host=${SMTPSERVER} \
+	  --port=${SMTPPORT} \
+	  --from=${FROM} \
+	  --user=${SMTPUSER} \
+	  --passwordeval="echo ${SMTPPASS}" \
+	  -- \
+	  ${TO}
+From: ${FROM}
+To: ${TO}
+Subject: ${SUBJECT}
+
+EOF
+</code></pre>
 
 <p>ちょっとハマったのは <code>--auth</code> と <code>--tls-trust-file</code> 。</p>
 
@@ -338,8 +318,8 @@ digest-md5、login、ntlm が指定できる。ここはサーバ依存なので
       (2)</li>
     
     <li>
-      <a href="./../../../../../../../categories/#xming">
-	xming</a>
+      <a href="./../../../../../../../categories/#Xming">
+	Xming</a>
       (1)</li>
     
     <li>
@@ -350,12 +330,12 @@ digest-md5、login、ntlm が指定できる。ここはサーバ依存なので
     <li>
       <a href="./../../../../../../../categories/#radiko">
 	radiko</a>
-      (2)</li>
+      (3)</li>
     
     <li>
-      <a href="./../../../../../../../categories/#raspberrypi">
-	raspberrypi</a>
-      (5)</li>
+      <a href="./../../../../../../../categories/#RaspberryPi">
+	RaspberryPi</a>
+      (4)</li>
     
     <li>
       <a href="./../../../../../../../categories/#conf">
@@ -383,8 +363,38 @@ digest-md5、login、ntlm が指定できる。ここはサーバ依存なので
       (1)</li>
     
     <li>
+      <a href="./../../../../../../../categories/#raspberrypi">
+	raspberrypi</a>
+      (1)</li>
+    
+    <li>
       <a href="./../../../../../../../categories/#backup">
 	backup</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#TeraTerm">
+	TeraTerm</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#scp">
+	scp</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#DHCP">
+	DHCP</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#DNS">
+	DNS</a>
+      (1)</li>
+    
+    <li>
+      <a href="./../../../../../../../categories/#xml">
+	xml</a>
       (1)</li>
     
   </ul>
@@ -395,6 +405,27 @@ digest-md5、login、ntlm が指定できる。ここはサーバ依存なので
     
     
 
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../date/#2020-Oct">
+	2020 Oct</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <li>
+      <a href="./../../../../../../../date/#2020-Aug">
+	2020 Aug</a></li>
+    
     
     
     
