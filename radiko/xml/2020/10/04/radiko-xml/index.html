@@ -96,7 +96,7 @@
 安定しない。そうすると radiko に東京リージョン(JP13)と認めてもらえず
 東京圏の放送が聞けない。</p>
 
-<p>とはいえ、どこからにはつながっているので、その時点で聞ける放送局が
+<p>とはいえ、どこかしらにはつながっているので、その時点で聞ける放送局が
 何かを探すのが、毎回となると結構大変って事で。</p>
 
 <p>なので、ID の一覧。</p>
@@ -181,7 +181,7 @@ V3 が出ているので、そっちへの対応。</p>
 
 HTML="radiko.html"
 ODIR="area"
-HRER="13"
+HERE="13"
 
 declare AREANAME=(
     "北海道"
@@ -338,13 +338,13 @@ _toc() {
   &lt;div&gt;
   &lt;span class="area_list"&gt;
 EOF
-    for i in $(seq ${HRER} ${HRER}); do
+    for i in $(seq ${HERE} ${HERE}); do
 	cat &lt;&lt;EOF
   &lt;a href="#JP${i}"&gt;JP${i}:${AREANAME[$((i - 1))]}&lt;/a&gt;
 EOF
     done
     for i in $(seq 1 47); do
-	if [ ${HRER} -eq $i ]; then continue; fi
+	if [ ${HERE} -eq $i ]; then continue; fi
 	cat &lt;&lt;EOF
   &lt;a href="#JP${i}"&gt;JP${i}:${AREANAME[$((i - 1))]}&lt;/a&gt;
 EOF
@@ -364,7 +364,7 @@ _main() {
     _head &gt;&gt; ${HTML}
 
     _toc &gt;&gt; ${HTML}
-    for i in $(seq ${HRER} ${HRER}); do
+    for i in $(seq ${HERE} ${HERE}); do
 	n="${AREANAME[$((i - 1))]}"
 	_areahead JP${i} ${n} &gt;&gt; ${HTML}
 	_genHtml JP${i} ${n} &gt;&gt; ${HTML}
@@ -372,7 +372,7 @@ _main() {
     done
     for i in $(seq 1 47); do
 
-	if [ ${HRER} -eq $i ]; then continue; fi
+	if [ ${HERE} -eq $i ]; then continue; fi
 
 	n="${AREANAME[$((i - 1))]}"
 	_areahead JP${i} ${n} &gt;&gt; ${HTML}
